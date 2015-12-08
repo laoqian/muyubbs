@@ -1,0 +1,74 @@
+
+
+@import "../../../../../Public/styles/public.less";
+
+
+
+body{
+  background: #f8f8f8;
+}
+
+
+.rg-nav{
+  width: 100%;
+  height: 60px;
+  background: #FD6440;
+}
+.rg{
+  width: 45%;
+  height:600px;
+  margin-left: 27.5%;
+  margin-top: 150px;
+  padding-top: 30px;
+  background: #ffffff;
+
+  .rg-bd{
+    padding-left: 30%;
+  }
+
+  h2{
+    text-align: center;
+    margin-bottom:100px;
+    font-family: "黑体";
+  }
+
+  .rg-input-item{
+    width: 60%;
+    height: 60px;
+    margin-bottom: 10px;
+  }
+
+  input:focus{
+    outline: none;
+  }
+  .rg-input{
+    width: 100%;
+    height: 50px;
+    padding: 5px;
+    border: solid 1px #ccc;
+  }
+
+   button{
+    margin-top: 100px;
+    background: @wb-main-color;
+    color:white;
+    &:hover{
+      background: @btn-hover-color;
+      outline: none;
+    }
+  }
+
+  p{
+    text-align:center;
+    margin-top: 60px;
+
+    a {
+      color:#aaa;
+      &:hover {
+        color: @btn-hover-color;
+        text-decoration: none;
+      }
+    }
+  }
+
+}
