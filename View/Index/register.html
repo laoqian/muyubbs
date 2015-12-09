@@ -49,19 +49,19 @@
                     <tbody>
                         <tr>
                             <td>手机号</td>
-                            <td>{$user['username']}</td>
+                            <td>{$user['phone']}</td>
                         </tr>
                         <tr>
                             <td>账号</td>
-                            <td>326535</td>
+                            <td>{$user['id']}</td>
                         </tr>
                         <tr>
                             <td>会员等级</td>
-                            <td>{$user['viplevel']}</td>
+                            <td>{$user['level']}</td>
                         </tr>
                         <tr>
                             <td>当前积分</td>
-                            <td>{$user['userpoints']}</td>
+                            <td>{$user['vmoney']}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -122,7 +122,7 @@
 
             $scope.register=function(){
                 $http.post(
-                    "./register_post",
+                    "../user/register_post",
                     {
                         "phone":$scope.phone,
                         "verify":$scope.verify,
