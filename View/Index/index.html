@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>{$bbs_title}</title>
     <!-- Bootstrap -->
-    <link href="__ROOT__/Application/Home/View/Index/styles/index.less" rel="stylesheet/less">
+    <link href="__ROOT__/Application/Home/View/Index/styles/index.css" rel="stylesheet" >
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -47,14 +47,14 @@
                                     <tr>
                                         <th colspan="2">
                                             <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
-                                            <a href="">{$it["articletitle"]}</a>
+                                            <a href={:U($it["index"])}>{$it["title"]}</a>
                                         </th>
                                         <td class="by">
-                                            <div class="name"> {$it["username"]}</div>
-                                            <div class="time"> {$it["articletime"]}</div>
+                                            <div class="name"> {$it["phone"]}</div>
+                                            <div class="time"> {$it["posttime"]}</div>
                                         </td>
-                                        <td class="num"> {$it["articlereply"]}/2341</td>
-                                        <td class="by"> {$it["articlelastreplyer"]}</td>
+                                        <td class="num"> {$it["reply"]}/2341</td>
+                                        <td class="by"> {$it["lastreplyer"]}</td>
                                     </tr>
                                 </foreach>
                             </tbody>
@@ -98,33 +98,25 @@
     <script type="text/javascript">
         $(document).ready(function(){
             //初始化输入区域
+            alert(window.location.href);
         });
 
-
-        function cookie(name){
-            var strCookie=document.cookie;
-            //将多cookie切割为多个名/值对
-            var arrCookie=strCookie.split("; ");
-            var userId;
-            //遍历cookie数组，处理每个cookie对
-            for(var i=0;i<arrCookie.length;i++){
-                var arr=arrCookie[i].split("=");
-                //找到名称为userId的cookie，并返回它的值
-                if(name==arr[0]){
-                    return arr[1];
-                }
-            }
-
-            return null;
-        }
         var app = angular.module('articleApp', []);
-        app.controller('articleCtrl', function($scope) {
-            $scope.goto_article_add = function(){
-                if(cookie("state")==1)
-                    window.location.href = "./article_add.html";
-                else
-                    window.location.href = "./login.html";
-            }
+        app.controller('articleCtrl', function($scope,$http) {
+            $scope.goto_article_add = function() {
+                $http.get("../user/login_verify")
+                    .success(function(data, status, headers, config) {
+                        if(data =="success"){
+                            window.location.href = "./article_add.html";
+                        }else{
+                            window.location.href = "./login.html";
+                        }
+                    })
+                    .error(function(data, status, headers, config) {
+                        alert("连接服务器失败");
+                    });
+
+                }
         });
     </script>
 

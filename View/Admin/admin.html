@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <title>{$bbs_title}</title>
+    <!-- Bootstrap -->
+    <link href="__ROOT__/Application/Home/View/Index/styles/admin.css" rel="stylesheet">
+    <link href="__ROOT__/Application/Home/View/Index/styles/charge.css" rel="stylesheet">
+    <link href="__ROOT__/Application/Home/View/Index/styles/actcode.css" rel="stylesheet">
+</head>
+<body>
+<!--导航栏 -->
+<include file="./Application/Home/View/Index/header.html" />
+
+
+<div class="ad-nav">
+    <ul class="menu">
+        <li><a  href="userinfo.html">用户信息</a></li>
+        <li><a  href="actcode.html">激&nbsp;活&nbsp;码</a></li>
+        <li><a  href="arttotal.html">帖子管理</a></li>
+        <li><a  href="artreply.html">回复管理</a></li>
+        <li><a  href="usercenter.html">用户管理</a></li>
+        <li><a  class=".active" href="charge.html">充值中心</a></li>
+    </ul>
+</div>
+<div class="ad-body">
+    <div>
+        <h3 class="ad-head"></h3>
+    </div>
+    <div class="ad-content">
+    </div>
+</div>
+
+<script src="__PUBLIC__/styles/jquery/jquery.min.js"></script>
+<script src="__PUBLIC__/styles/lesscss/less.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        $(".ad-content").load("userinfo.html",function(data,status,xhr){
+            var ret=JSON.parse(data);
+            if(ret.status==0){
+                window.location.href="../Index/login.html"
+            }
+        });
+
+        $(".ad-head").text("用户信息");
+
+        $(".menu li a").click(function(){
+
+            $(".menu li a").css("font-size","14px");
+            $(".menu li a").css("border-right","0");
+            $(this).css("font-size","18px");
+            $(this).css("border-right","solid 2px #FD6440");
+
+
+            $(".ad-head").text($(this).text());
+
+            $(".ad-content").load($(this).attr("href"),function(data,status,xhr){
+                var ret=JSON.parse(data);
+                if(ret.status==0){
+                    window.location.href="../Index/login.html"
+                }
+            });
+            return false;
+        })
+    });
+</script>
+</body>
+</html>
