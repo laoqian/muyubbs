@@ -6865,39 +6865,6 @@ ul li > a:hover {
   background: #fd6440;
   color: white;
 }
-html,
 body {
-  height: 100%;
-}
-h3 {
-  font-family: "黑体";
-}
-tr {
-  height: 50px;
-}
-th,
-td {
-  font-weight: normal;
-  border: 0;
-}
-th {
-  width: 160px;
-}
-td {
-  width: 300px;
-}
-button {
-  width: 200px;
-  height: 40px;
-  margin-left: 3%;
-  border: 0;
-  background: #fd6440;
-  color: white;
-}
-button:hover {
-  background: #ff936a;
-  outline: none;
-}
-button:focus {
-  outline: none;
+  background: #f8f8f8;
 }

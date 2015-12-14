@@ -7,12 +7,40 @@ class IndexController extends Controller {
     parent::__construct();
 
     $this->assign('bbs_title','木鱼网络');
+    $state = session('state');
+    if($state){
+      session('state', "1");
+      $user = session('user');
+      session('user', $user);
+    }
   }
 
   public function index(){
-    $Model = M('article');
-    $article=$Model->limit(50)->select();
-    $this->assign('article',$article);
+
+    //读取栏目表
+    $Model = M('category');
+    $category = $Model->select();
+
+    $i=$j=0;
+
+    //解析目录结构,只能支持2级目录
+    foreach($category as $value){
+      if($value['pid']==0){
+        $menu[$i++] = $value;
+        $sub_menu[$value['name']] = array();
+        foreach($category as $sub_value){
+          if($sub_value['pid']==$value['id']){
+            array_push( $sub_menu[$value['name']],$sub_value);
+          }
+        }
+      }
+    }
+
+    $this->assign('menu',$menu);
+    $this->assign('sub_menu',$sub_menu);
+
+
+    //$this->ajaxReturn($sub_menu);
 
     $this->show();
   }

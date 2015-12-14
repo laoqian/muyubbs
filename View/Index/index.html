@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>{$bbs_title}</title>
     <!-- Bootstrap -->
-    <link href="__ROOT__/Application/Home/View/Index/styles/index.css" rel="stylesheet" >
+    <link href="__ROOT__/Application/Home/View/Index/styles/index.less" rel="stylesheet/less" >
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,106 +19,142 @@
     <!--导航栏 -->
     <include file="./Application/Home/View/Index/header.html" />
 
-    <div class="lf-body">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-8  col-lg-offset-2">
-                    <div>
-                        <button class="btn-post" ng-click="goto_article_add()">发帖</button>
-                    </div>
-                    <div class="th" >
-                        <table cellpadding="0" cellspacing="0">
-                            <tbody>
-                                <tr>
-                                    <th colspan="2" class="mn-tl">
-                                        主题
-                                    </th>
-                                    <td class="by">作者/发帖时间 </td>
-                                    <td class="num">回复/查看 </td>
-                                    <td class="by">最后发表</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="tb">
-                        <table>
-                            <tbody >
-                                <foreach name='article' item="it">
-                                    <tr>
-                                        <th colspan="2">
-                                            <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
-                                            <a href={:U($it["index"])}>{$it["title"]}</a>
-                                        </th>
-                                        <td class="by">
-                                            <div class="name"> {$it["phone"]}</div>
-                                            <div class="time"> {$it["posttime"]}</div>
-                                        </td>
-                                        <td class="num"> {$it["reply"]}/2341</td>
-                                        <td class="by"> {$it["lastreplyer"]}</td>
-                                    </tr>
+    <div class="wrapper">
+        <div class="menu-body">
+            <foreach name="menu" item="value" key="k" >
+                <if condition="$value['pid'] eq 0 AND count($sub_menu[$value['name']]) gt 0 ">
+                    <div class="content">
+                        <div class = "menu">
+                            {$value.name}
+                        </div>
+
+                        <div class = "sub-menu">
+                            <table>
+                                <foreach name="sub_menu[$value['name']]" item="sub" key="j" >
+                                    <if condition="$j%3 eq 0">
+                                        <tr>
+                                    </if>
+
+                                    <td>
+                                        <div class="fl-m">
+                                            <div class="fl-icon">
+                                                <a href="">
+                                                    <img src="__ROOT__/Application/Home/View/resource/img/common_2_icon.png" alt="">
+                                                </a>
+                                            </div>
+                                            <div class="fl-right">
+                                                <div>
+                                                    <a href="" class="fl-title">{$sub['name']}</a>
+                                                <span class="fl-news">
+                                                    (24小时新帖：44)
+                                                </span>
+                                                </div>
+                                                <div class="fl-total">
+                                                    主题：111,贴数：111；
+                                                </div>
+                                                <div class="fl-tips">
+                                                    {$sub['comm']}
+                                                </div>
+                                                <div class="fl-hot">
+                                                    小号被盗有什么办法解决啊.30多 ...
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <if condition="count($sub_menu[$value['name']]) eq $j+1 AND count($sub_menu[$value['name']]) eq 1 ">
+                                        <td></td>
+                                        <td></td>
+                                    </if>
+                                    <if condition="count($sub_menu[$value['name']]) eq $j+1 AND count($sub_menu[$value['name']]) eq 2 ">
+                                        <td></td>
+                                    </if>
+                                    <if condition="$j%3 eq 2 OR count($sub_menu[$value['name']]) eq $j+1 ">
+                                        </tr>
+                                    </if>
                                 </foreach>
-                            </tbody>
-                        </table>
+                            </table>
+                        </div>
+
                     </div>
-                    <div class="pg-turn">
-                        <nav>
-                            <ul class="pagination">
-                                <li>
-                                    <a href="#" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <li><a href="#">1</a></li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">4</a></li>
-                                <li><a href="#">5</a></li>
-                                <li>
-                                    <a href="#" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+                </if>
+            </foreach>
+        </div>
+        <div class="menu-right">
+            <div class="tips">
+                <div class="tips-title bg-green">
+                    最新教程
+                </div>
+                <div class="tips-list ">
+                    <ul class="last-study">
+                        <li><a href="">教程1</a></li>
+                        <li><a href="">教程1</a></li>
+                        <li><a href="">教程1</a></li>
+                        <li><a href="">教程1</a></li>
+                        <li><a href="">教程1</a></li>
+                        <li><a href="">教程1</a></li>
+                        <li><a href="">教程1</a></li>
+                        <li><a href="">教程1</a></li>
+                        <li><a href="">教程1</a></li>
+                        <li><a href="">教程1</a></li>
+                        <li><a href="">教程1</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tips">
+                <div class="tips-title bg-blue">
+                    热门教程
+                </div>
+                <div class="tips-list">
+                    <ul class="hot-study">
+                        <li>教程1</li>
+                        <li>教程2</li>
+                        <li>教程3</li>
+                        <li>教程4</li>
+                        <li>教程1</li>
+                        <li>教程2</li>
+                        <li>教程3</li>
+                        <li>教程4</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tips">
+                <div class="tips-title bg-rand">
+                    随机推荐
+                </div>
+                <div class="tips-list">
+                    <ul class="rand-recommend">
+                        <li>教程1</li>
+                        <li>教程2</li>
+                        <li>教程3</li>
+                        <li>教程4</li>
+                        <li>教程1</li>
+                        <li>教程2</li>
+                        <li>教程3</li>
+                        <li>教程4</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
+
     <include file="./Application/Home/View/Index/footer.html" />
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="__PUBLIC__/styles/bootstrap/js/bootstrap.min.js"></script>
-    <script src="__PUBLIC__/styles/angular-1.4.0/angular.js"></script>
     <script src="__PUBLIC__/styles/lesscss/less.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function(){
             //初始化输入区域
-            alert(window.location.href);
         });
 
-        var app = angular.module('articleApp', []);
-        app.controller('articleCtrl', function($scope,$http) {
-            $scope.goto_article_add = function() {
-                $http.get("../user/login_verify")
-                    .success(function(data, status, headers, config) {
-                        if(data =="success"){
-                            window.location.href = "./article_add.html";
-                        }else{
-                            window.location.href = "./login.html";
-                        }
-                    })
-                    .error(function(data, status, headers, config) {
-                        alert("连接服务器失败");
-                    });
-
-                }
-        });
     </script>
+
+
 
 </body>
 </html>

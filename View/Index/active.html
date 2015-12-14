@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN" ng-app="rgApp" ng-controller="rgCtrl">
+<head>
+    <meta charset="UTF-8">
+    <title>{$bbs_title}</title>
+    <!-- Bootstrap -->
+    <link href="__ROOT__/Application/Home/View/Index/styles/active.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!--导航栏 -->
+    <include file="./Application/Home/View/Index/header.html" />
+
+    <div class="container-fulid">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <div>
+                    <span>第一步:填写邀请码</span>
+                </div>
+                <div>
+                    <input id="act-code" type="text" placeholder="请填写邀请码" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                    <button class="act-verify">验证</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="__PUBLIC__/styles/bootstrap/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+            $("act-verify").click(function(){
+                var code = $("#act-code").val();
+
+
+                $.post("../user/active_verify",
+                    {"active":code}
+                    ,function(data, status) {
+
+                    });
+            });
+
+        });
+    </script>
+</body>
+</html>

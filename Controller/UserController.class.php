@@ -6,7 +6,12 @@ class UserController extends Controller {
   function __construct() {
     parent::__construct();
     //构造函数
-
+    $state = session('state');
+    if($state){
+      session('state', "1");
+      $user = session('user');
+      session('user', $user);
+    }
   }
 
 
@@ -44,7 +49,7 @@ class UserController extends Controller {
 
     //注册成功就保存状态本次不再登录
     session('state', "2");
-    session('phone', $params["phone"] );
+    session('user', $params["phone"] );
 
     $this->ajaxReturn("success");
   }
@@ -63,7 +68,7 @@ class UserController extends Controller {
     if($params['passwd']==$User[0]['password']){
 
       session('state', "1");
-      session('phone', $params["phone"]);
+      session('user', $params["phone"]);
 
       $this->ajaxReturn( "登录成功!");
     }else{
@@ -72,9 +77,13 @@ class UserController extends Controller {
   }
 
   public function logout_post(){
-    session('state', "1");
-    session('phone', $params["phone"]);
+    session('state', null);
+    session('user', null);
+
+    $data["status"] =1;
+    $this->success($data,"Index/index");
   }
+
   public function login_verify(){
     if(session("state")==1){
       $this->ajaxReturn( "success");
@@ -82,7 +91,7 @@ class UserController extends Controller {
       $this->ajaxReturn( "failed");
     }
   }
-
+    //通过算法生成14位邀请码
     private function active_code_rand($num){
      $arr = array("0", "1", "2", '3',
                   "4", "5", "6", '7',
@@ -96,12 +105,12 @@ class UserController extends Controller {
                 );
 
 
-    for ($i = 0; $i < 15; $i++) {
+    for ($i = 0; $i < 14; $i++) {
       $result[$i] = rand(0, 1000) % 36;
     }
 
     $sum = 0;
-    for ($i = 0; $i < 15; $i++) {
+    for ($i = 0; $i < 14; $i++) {
       $sum += $result[$i];
       if ($sum >= 35) {
         $sum = $sum - 35;
@@ -112,7 +121,7 @@ class UserController extends Controller {
 
     $str = $arr[$result[0]];
 
-    for ($i = 1; $i < 16; $i++) {
+    for ($i = 1; $i < 15; $i++) {
       $str = $str . "" . $arr[$result[$i]];
     }
     return $str;
@@ -128,7 +137,6 @@ class UserController extends Controller {
 
   public function active_code()
   {
-
     $num = $_POST["num"];
 
     if($num>20) $num=20;
@@ -138,8 +146,19 @@ class UserController extends Controller {
     $ret["status"] = 1;
     $ret["act_code"] = $arr;
 
-    $this->ajaxReturn($ret);
 
+
+    $this->ajaxReturn($ret);
+  }
+
+  public  function login_get(){
+    if(session("state")==1){
+      $data["status"]=1;
+    }else{
+      $data["status"]=0;
+    }
+
+    $this->ajaxReturn($data);
   }
 }
 

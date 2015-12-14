@@ -1,25 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <body>
-    <div class="container-fluid">
-        <div class="lf-header">
-            <a href="./">
-                <img src="__ROOT__/Application/Home/View/Index/image/logo.svg" class="bbs-logo">
-            </a>
 
-            <div class="lf-nav">
-                <ul>
-                    <li><a href="{:U('Index/index')}">首页</a></li>
-                    <if condition="$_SESSION['state'] neq 1">
-                        <li><a href="{:U('Index/register')}">注册</a></li>
-                        <li><a href="{:U('Index/login')}">登录</a></li>
-                    <else />
-                        <li><a href="{:U('Index/login')}">{$_SESSION['phone']}</a></li>
-                        <li><a href="{:U('Index/login')}">退出</a></li>
-                    </if>
-                </ul>
+<div class="wrapper">
+    <div class="header">
+        <div class="logo">
+            <a href="./"><img src="__ROOT__/Application/Home/View/resource/img/logo.png" ></a>
+        </div>
+        <div class="login-bar">
+            <div class="login">
+                <div>
+                    <span>用户名</span>
+                    <input type="text" placeholder="用户名">
+                    <input type="checkbox">
+                    <span>记住</span>
+                </div>
+                <div>
+                    <span>密&nbsp;&nbsp;码</span>
+                    <input type="text" placeholder="密码">
+                    <button>登录</button>
+                </div>
+            </div>
+            <div class="reg-bar">
+                <a href="">找回密码</a>
+                <a href="">免费注册</a>
             </div>
         </div>
     </div>
+</div>
+
+
+<div class="wrapper">
+    <div class="nav">
+        <ul>
+            <li>网站首页</li>
+            <li>会员注册</li>
+            <li>使用教程</li>
+            <li>软件下载</li>
+            <li>会员分享区</li>
+            <li>绝密电商干货</li>
+            <li>淘宝美工教程</li>
+        </ul>
+    </div>
+</div>
+
+<div class="wrapper">
+    <div class="ad-lg">
+        <a href="#">
+            <img src="__ROOT__/Application/Home/View/resource/img/logo.png" alt="">
+        </a>
+    </div>
+    <div class="ad-lg">
+        <div class="ad-sm">
+            <a href="#">
+                <img src="__ROOT__/Application/Home/View/resource/img/logo.png" alt="">
+            </a>
+        </div>
+        <div class="ad-sm">
+            <a href="#">
+                <img src="__ROOT__/Application/Home/View/resource/img/logo.png" alt="">
+            </a>
+        </div>
+        <div class="ad-sm">
+            <a href="#">
+                <img src="__ROOT__/Application/Home/View/resource/img/logo.png" alt="">
+            </a>
+        </div>
+        <div class="ad-sm">
+            <a href="#">
+                <img src="__ROOT__/Application/Home/View/resource/img/logo.png" alt="">
+            </a>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
