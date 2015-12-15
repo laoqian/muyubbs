@@ -1,0 +1,150 @@
+
+@wb-main-color: #FD6440;
+@btn-hover-color:#FF936A;
+
+html{
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  font-family: 'Microsoft Yahei', Simsun;
+  background: #F7FBFE;
+  margin: 0;
+}
+
+button{
+  border: 0;
+
+  &:focus{
+    outline: none;
+  }
+}
+
+ul{
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+.wrapper{
+  width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2px;
+
+}
+
+.header{
+  width: 100%;
+  height: 120px;
+  background: #2aabd2;
+  margin-top: 10px;
+  .logo{
+    width: 235px;
+    height: 68px;
+    float: left;
+  }
+
+  .login-bar{
+    float: right;
+    font-size: 12px;
+    padding-top: 20px;
+    font-family: 'Microsoft Yahei', Simsun;
+
+    span{
+      width: 50px;
+      height: 40px;
+      display: inline-block;
+    }
+    input[type="text"]{
+      width: 140px;
+      height: 20px;
+    }
+
+    .login{
+      float: left;
+    }
+    .reg-bar{
+
+      float: right;
+      border-left: solid 1px #ccc;
+      margin-top: -10px;
+      margin-bottom: 20px;
+      margin-right: 20px;
+      padding-top: 15px;
+
+      a{
+        display:block;
+        margin-left: 20px;
+        margin-bottom: 20px;
+      }
+    }
+  }
+}
+
+
+.nav{
+  width: 100%;
+  height: 44px;
+  opacity:0.9;
+  border-radius: 2px;
+  background:#2B7ACD url(../../resource/img/nv.png) repeat-x;
+
+  ul{
+    list-style: none;
+    padding-left: 10px;
+
+    li{
+      height: 44px;
+      padding-left: 10px;
+      padding-right: 10px;
+      line-height: 44px;
+      float: left;
+      vertical-align: middle;
+      font-size: 16px;
+      color: white;
+
+      &:hover{
+        background: #F2B125;
+      }
+    }
+  }
+}
+
+.ad-lg{
+  width: 100%;
+  height: 48px;
+  margin-bottom: 2px;
+
+  img{
+    width: 100%;
+    height: 100%;
+    border: solid 1px #444;
+  }
+}
+
+.ad-sm{
+  width: 25%;
+  height: 48px;
+  float: left;
+
+  img{
+    width: 100%;
+    height: 100%;
+    border: solid 1px #444;
+  }
+}
+
+
+.footer{
+  width: 100%;
+  height: 120px;
+  margin-top: 50px;
+  padding-top: 20px;
+  font-size: 12px;
+  background: #F3F3F3;
+  text-align: center;
+  float: right;
+}
+
