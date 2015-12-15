@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <title>{$bbs_title}</title>
+    <!-- Bootstrap -->
+    <link href="__ROOT__/Application/Home/View/Index/styles/admin.less" rel="stylesheet/less">
+</head>
+<body>
+
+
+
+<div class="config">
+    <table>
+        <tbody>
+            <tr class="nav-tr">
+                <td >序号</td>
+                <td >配置项(双击修改)</td>
+                <td >当前值(双击修改)</td>
+            </tr>
+
+
+        </tbody>
+    </table>
+
+    <div class="config-bot">
+        <button class="config-add">增加配置</button>
+        <button class="config-save">保存配置</button>
+    </div>
+    <div class="config-new">
+
+    </div>
+</div>
+
+
+//配置加载模板
+<script id="conf-load-tpl" type="text/html">
+    <tr class="tr-key">
+        <td class="index">{$k}</td>
+        <td class="key td-chg">{$conf['ebkey']}</td>
+        <td class="value td-chg">{$conf['ebvalue']}</td>
+    </tr>
+</script>
+//新增配置项模板
+<script id="conf-add-tpl" type="text/html">
+    <tr class="tr-key">
+        <td class="index">{{index}}</td>
+        <td class="key td-chg">
+            <input class="key-in" type="text" placeholder="输入配置项名称">
+            </td>
+        <td class="value td-chg">
+            <input class="key-in" type="text" placeholder="输入配置值">
+            </td>
+        </tr>
+</script>
+
+
+<script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+<script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
+<script src="__ROOT__/Application/Home/View//styles/arttemplate/template.js"></script>
+<script type="text/javascript">
+
+    var config;
+
+
+
+
+    function value_chg(col){
+        var text = $(col).text();
+        $(col).text("");
+        var e =document.createElement("input");
+        e.type  = "text";
+        e.value = text;
+
+        $(e).addClass("key-in");
+        $(col).append(e);
+
+        $(e).focus();
+
+        $(col).unbind("dblclick");
+
+        $(e).blur(function(){
+            var t = $(this).val();
+
+            $(col).text(t);
+            $(col).dblclick(function(the){
+                value_chg(this);
+            });
+        });
+    }
+
+    //加载配置列表
+    function config_add(){
+        $.get("config_load",function(data,status){
+           if(data.status==1){
+
+           }else{
+               alert("配置加载失败");
+           }
+        })
+    }
+
+    $(document).ready(function(){
+
+        $(".td-chg").dblclick(function(){
+            value_chg(this);
+        });
+
+        $(".config-add").click(function(){
+
+            var index = $(".index").length;
+
+            var tpl = template('conf-add-tpl',{index:index});
+
+            var html = $(".config table tbody").html();
+            var html =html+tpl;
+
+
+            $(".config table tbody").html(html);
+
+            $(".key-in").blur(function(){
+                var t = $(this).val();
+                var td = $(this).parent();
+                $(td).text(t);
+                $(td).dblclick(function(){
+                    value_chg(td);
+                });
+            });
+
+            $(".td-chg").dblclick(function(){
+                value_chg(this);
+            });
+
+            $(".key-in").parent().unbind("dblclick");
+        });
+
+        $(".config-save").click(function(){
+            var  text  = $(".tr-key").find("input");
+            var t = $(text).val();
+            $(text).parent().text(t);
+            var key = $(".key");
+            var value = $(".value");
+            var conf_key =[];
+            var conf_value=[];
+            var j=0;
+            $.each(key,function(i,t){
+                conf_key[i] =$(t).text();
+                j++;
+            });
+            $.each(value,function(i,t){
+                conf_value[i] =$(t).text();
+            });
+
+            $.post("./config_post",{
+                key:conf_key,
+                value:conf_value
+            },function(data,status){
+                if(data.status==1){
+                    alert("添加配置成功");
+                }else{
+                    alert("添加配置失败")
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

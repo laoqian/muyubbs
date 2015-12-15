@@ -44,4 +44,52 @@ class AdminController extends Controller {
 
     $this->show();
   }
+
+
+  public  function  config(){
+
+//    $config = M("config");
+//
+//    $data = $config->select();
+//
+//    $this->assign("config",$data);
+
+    $this->show();
+  }
+
+  public  function  config_get(){
+    $config = M("config");
+
+    $data = $config->select();
+    if($data){
+      $ret["status"] =1;
+      $ret["config"]=$data;
+    }else{
+      $ret["status"]=0;
+    }
+
+    $this->ajaxReturn($ret);
+  }
+
+  public  function  config_post(){
+
+    $len = count($_POST["key"]);
+
+    for($i=0;$i<$len;$i++){
+      $data[$i]['ebkey']= $_POST["key"][$i];
+      $data[$i]['ebvalue']= $_POST["value"][$i];
+    }
+
+
+    $config = M("config");
+
+    $ret = $config->addAll($data);
+
+    if($ret==true){
+      $dd["status"]=1;
+    }else{
+      $dd["status"]=0;
+    }
+    $this->ajaxReturn($dd);
+  }
 }

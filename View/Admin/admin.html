@@ -4,40 +4,45 @@
     <meta charset="UTF-8">
     <title>{$bbs_title}</title>
     <!-- Bootstrap -->
-    <link href="__ROOT__/Application/Home/View/Index/styles/admin.css" rel="stylesheet">
-    <link href="__ROOT__/Application/Home/View/Index/styles/charge.css" rel="stylesheet">
-    <link href="__ROOT__/Application/Home/View/Index/styles/actcode.css" rel="stylesheet">
+    <link href="__ROOT__/Application/Home/View/Index/styles/admin.less" rel="stylesheet/less">
 </head>
 <body>
 <!--导航栏 -->
-<include file="./Application/Home/View/Index/header.html" />
 
-
-<div class="ad-nav">
-    <ul class="menu">
-        <li><a  href="userinfo.html">用户信息</a></li>
-        <li><a  href="actcode.html">激&nbsp;活&nbsp;码</a></li>
-        <li><a  href="arttotal.html">帖子管理</a></li>
-        <li><a  href="artreply.html">回复管理</a></li>
-        <li><a  href="usercenter.html">用户管理</a></li>
-        <li><a  class=".active" href="charge.html">充值中心</a></li>
+<div class="nav-ad">
+    <div>
+        欢迎使用木鱼后台管理系统
+    </div>
+</div>
+<div class="sub-nav">
+    <ul>
+        <li><a href="bbs.html">板块管理</a></li>
+        <li><a href="user.html">用户管理</a></li>
+        <li><a href="th.html">主题管理</a></li>
+        <li><a href="offer.html">邀&nbsp;请&nbsp;码</a></li>
+        <li><a href="reply.html">回复管理</a></li>
+        <li><a href="ad.html">广告管理</a></li>
+        <li><a href="config.html">配置管理</a></li>
     </ul>
 </div>
+
 <div class="ad-body">
-    <div>
+    <div class="ad-top">
         <h3 class="ad-head"></h3>
     </div>
     <div class="ad-content">
     </div>
 </div>
 
-<script src="__PUBLIC__/styles/jquery/jquery.min.js"></script>
-<script src="__PUBLIC__/styles/lesscss/less.min.js"></script>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function(){
 
-        $(".ad-content").load("userinfo.html",function(data,status,xhr){
+        $(".ad-content").load("config.html",function(data,status,xhr){
             var ret=JSON.parse(data);
             if(ret.status==0){
                 window.location.href="../Index/login.html"
@@ -46,7 +51,7 @@
 
         $(".ad-head").text("用户信息");
 
-        $(".menu li a").click(function(){
+        $(".sub-nav li a").click(function(){
 
             $(".menu li a").css("font-size","14px");
             $(".menu li a").css("border-right","0");

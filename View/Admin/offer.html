@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<style type="text/css">
+
+</style>
+<body>
+
+    <script id="act-code" type="text/html">
+        <table>
+            <tr>
+                <th>序号</th>
+                <td>激活码</td>
+            </tr>
+            {{each list as value i}}
+            <tr>
+                <th>{{i+1}}</th>
+                <td>{{value}}</td>
+            </tr>
+            {{/each}}
+        </table>
+    </script>
+
+    <div class="act-code">
+        <div class="at">
+            <input type="number" placeholder="输入要生成的激活码个数"/>
+            <button>生成激活码</button>
+        </div>
+
+        <div class="at-li">
+        </div>
+    </div>
+    <script src="__PUBLIC__/styles/jquery/jquery.min.js"></script>
+    <script src="__PUBLIC__/styles/arttemplate/template.js"></script>
+
+    <script type="text/javascript">
+     $(document).ready(function(){
+         $(".at button").click(function(){
+             var code_num =parseInt( $(".at input").val());
+
+             if(code_num>0){
+                 $.post("../User/active_code",
+                     {num:code_num},
+                     function(data,status){
+                         if(data.status==1){
+                            var list ={list:data.act_code};
+                             var html = template('act-code', list);
+                             if(html){
+                                 $(".at-li").html(html);
+                             }
+                         }else{
+                             alert("failed");
+                         }
+                     });
+             }
+         });
+     });
+    </script>
+</body>
+</html>
