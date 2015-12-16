@@ -57,7 +57,7 @@ class AdminController extends Controller {
     $this->show();
   }
 
-  public  function  config_get(){
+  public  function  config_load(){
     $config = M("config");
 
     $data = $config->select();
@@ -72,24 +72,59 @@ class AdminController extends Controller {
   }
 
   public  function  config_post(){
-
-    $len = count($_POST["key"]);
-
-    for($i=0;$i<$len;$i++){
-      $data[$i]['ebkey']= $_POST["key"][$i];
-      $data[$i]['ebvalue']= $_POST["value"][$i];
-    }
-
+    $data = $_POST["config"];
 
     $config = M("config");
-
-    $ret = $config->addAll($data);
-
-    if($ret==true){
-      $dd["status"]=1;
-    }else{
-      $dd["status"]=0;
+    foreach($data as $value){
+      $ret = $config->save($value);
     }
+
+
+    $dd["status"]=1;
+
+    $this->ajaxReturn($dd);
+  }
+
+
+  public function  bbs_blk_load(){
+
+    $config = M("category");
+
+    $data = $config->select();
+    if($data){
+      $ret["status"] =1;
+      $ret["config"]=$data;
+    }else{
+      $ret["status"]=0;
+    }
+
+    $this->ajaxReturn($ret);
+  }
+
+  public  function  bbs_blk_post(){
+    $data = $_POST["config"];
+
+    $config = M("category");
+    foreach($data as $value){
+
+      if($value['attr'] != "new"){
+        $config->save($value);
+      }else{
+        $map['name']= $value['name'];
+        if($config->where($map)->select()){
+          continue;
+        }
+
+        $config->name=$value["name"];
+        $config->pid=$value["pid"];
+        $config->comm=$value["comm"];
+        $config->add();
+      }
+
+    }
+
+    $dd["status"]=1;
+
     $this->ajaxReturn($dd);
   }
 }

@@ -7,38 +7,45 @@
 <body>
 
     <script id="act-code" type="text/html">
-        <table>
-            <tr>
-                <th>序号</th>
-                <td>激活码</td>
+        <table class="conf_page">
+            <tr class="nav-tr">
+                <td>序号</td>
+                <td>邀请码</td>
             </tr>
             {{each list as value i}}
-            <tr>
-                <th>{{i+1}}</th>
-                <td>{{value}}</td>
+            <tr class="tr-key">
+                <td style="width: 10%">{{i+1}}</td>
+                <td >{{value}}</td>
             </tr>
             {{/each}}
         </table>
     </script>
 
-    <div class="act-code">
-        <div class="at">
-            <input type="number" placeholder="输入要生成的激活码个数"/>
-            <button>生成激活码</button>
+    <div class="config">
+        <div class="offer-in">
+            <input type="text" placeholder="邀请码个数(不超过10)"/>
+            <button>生成邀请码</button>
         </div>
 
-        <div class="at-li">
+
+        <div class="conf_container">
         </div>
     </div>
-    <script src="__PUBLIC__/styles/jquery/jquery.min.js"></script>
-    <script src="__PUBLIC__/styles/arttemplate/template.js"></script>
 
+    <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+    <script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
+    <script src="__ROOT__/Application/Home/View//styles/arttemplate/template.js"></script>
+    <script src="__ROOT__/Application/Home/View//admin/js/paged.js"></script>
     <script type="text/javascript">
+
      $(document).ready(function(){
-         $(".at button").click(function(){
-             var code_num =parseInt( $(".at input").val());
+         $(".offer-in button").click(function(){
+             var code_num =parseInt($(".offer-in input").val());
 
              if(code_num>0){
+
+                 if(code_num>10) code_num=10;
+
                  $.post("../User/active_code",
                      {num:code_num},
                      function(data,status){
@@ -46,7 +53,7 @@
                             var list ={list:data.act_code};
                              var html = template('act-code', list);
                              if(html){
-                                 $(".at-li").html(html);
+                                 $(".conf_container").html(html);
                              }
                          }else{
                              alert("failed");

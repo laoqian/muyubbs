@@ -11,61 +11,56 @@
 
 
 <div class="config">
-    <table>
-        <tbody>
-            <tr class="nav-tr">
-                <td >序号</td>
-                <td >配置项(双击修改)</td>
-                <td >当前值(双击修改)</td>
-            </tr>
-
-
-        </tbody>
-    </table>
-
-    <div class="config-bot">
-        <button class="config-add">增加配置</button>
-        <button class="config-save">保存配置</button>
+    <div class="conf_container">
     </div>
-    <div class="config-new">
+    <div class="conf-page-turn">
 
+    </div>
+    <div class="config-bot">
+        <span class="page-info" style="font-size: 14px"></span>
+        <button class="page-down">上一页</button>
+        <button class="page-up">下一页</button>
+        <button class="config-save">保存配置</button>
     </div>
 </div>
 
-
-//配置加载模板
+<!--//配置加载模板-->
 <script id="conf-load-tpl" type="text/html">
-    <tr class="tr-key">
-        <td class="index">{$k}</td>
-        <td class="key td-chg">{$conf['ebkey']}</td>
-        <td class="value td-chg">{$conf['ebvalue']}</td>
-    </tr>
-</script>
-//新增配置项模板
-<script id="conf-add-tpl" type="text/html">
-    <tr class="tr-key">
-        <td class="index">{{index}}</td>
-        <td class="key td-chg">
-            <input class="key-in" type="text" placeholder="输入配置项名称">
-            </td>
-        <td class="value td-chg">
-            <input class="key-in" type="text" placeholder="输入配置值">
-            </td>
-        </tr>
+    {{each config.data as value k}}
+        {{if (k%num)==0}}
+            <div>
+            <table class="conf_page">
+                <tbody>
+                <tr class="nav-tr">
+                    <td >序号</td>
+                    <td >配置项</td>
+                    <td >当前值(双击修改)</td>
+                </tr>
+        {{/if}}
+                <tr class="tr-key">
+                    <td class="index">{{config.cur_index+k+1}}</td>
+                    <td class="key">{{value.ebkey}}</td>
+                    <td class="value td-chg">{{value.ebvalue}}</td>
+                </tr>
+        {{if (!((k+1)%num) ||(config.data.length==(k+1)) ) }}
+
+                </tbody>
+            </table>
+            </div>
+        {{/if}}
+    {{/each}}
 </script>
 
 
 <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
 <script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
 <script src="__ROOT__/Application/Home/View//styles/arttemplate/template.js"></script>
+<script src="__ROOT__/Application/Home/View//admin/js/paged.js"></script>
+
 <script type="text/javascript">
+    var config= new Object();
 
-    var config;
-
-
-
-
-    function value_chg(col){
+    function config_chg(col){
         var text = $(col).text();
         $(col).text("");
         var e =document.createElement("input");
@@ -81,19 +76,38 @@
 
         $(e).blur(function(){
             var t = $(this).val();
+            var td = $(this).parent();
 
-            $(col).text(t);
-            $(col).dblclick(function(the){
-                value_chg(this);
+            $(td).text(t);
+            var index = parseInt($(td).parent().find(".index").text());
+            //配置保存
+            config.source[index-1].ebvalue = t;
+            $(td).dblclick(function(the){
+                config_chg(td);
             });
         });
     }
 
+    function config_to_html(){
+        var list ={config:config,num:10};
+        var html = template('conf-load-tpl', list);
+        $(".conf_container").html(html);
+
+        var t = "总共："+config.total+"页,当前第"+config.cur+"页。";
+        $(".page-info").text(t);
+
+        $(".td-chg").dblclick(function(){
+            config_chg(this);
+        });
+    }
+
     //加载配置列表
-    function config_add(){
+    function config_load(){
         $.get("config_load",function(data,status){
            if(data.status==1){
-
+               config = data_paged(data.config,20);
+               config.page_turn(1);
+               config_to_html();
            }else{
                alert("配置加载失败");
            }
@@ -102,58 +116,49 @@
 
     $(document).ready(function(){
 
-        $(".td-chg").dblclick(function(){
-            value_chg(this);
+        config_load();
+
+//        $(".config-add").click(function(){
+//
+//            var index = $(".index").length;
+//
+//            var tpl = template('conf-add-tpl',{index:index});
+//
+//            var html = $(".config table tbody").html();
+//            var html =html+tpl;
+//
+//
+//            $(".config table tbody").html(html);
+//
+//            $(".key-in").blur(function(){
+//                var t = $(this).val();
+//                var td = $(this).parent();
+//                $(td).text(t);
+//                $(td).dblclick(function(){
+//                    config_chg(td);
+//                });
+//            });
+//
+//            $(".td-chg").dblclick(function(){
+//                config_chg(this);
+//            });
+//
+//            $(".key-in").parent().unbind("dblclick");
+//        });
+
+        $(".page-up").click(function(){
+            config.page_turn("up");
+            config_to_html();
         });
 
-        $(".config-add").click(function(){
-
-            var index = $(".index").length;
-
-            var tpl = template('conf-add-tpl',{index:index});
-
-            var html = $(".config table tbody").html();
-            var html =html+tpl;
-
-
-            $(".config table tbody").html(html);
-
-            $(".key-in").blur(function(){
-                var t = $(this).val();
-                var td = $(this).parent();
-                $(td).text(t);
-                $(td).dblclick(function(){
-                    value_chg(td);
-                });
-            });
-
-            $(".td-chg").dblclick(function(){
-                value_chg(this);
-            });
-
-            $(".key-in").parent().unbind("dblclick");
+        $(".page-down").click(function(){
+            config.page_turn("down");
+            config_to_html();
         });
 
         $(".config-save").click(function(){
-            var  text  = $(".tr-key").find("input");
-            var t = $(text).val();
-            $(text).parent().text(t);
-            var key = $(".key");
-            var value = $(".value");
-            var conf_key =[];
-            var conf_value=[];
-            var j=0;
-            $.each(key,function(i,t){
-                conf_key[i] =$(t).text();
-                j++;
-            });
-            $.each(value,function(i,t){
-                conf_value[i] =$(t).text();
-            });
-
             $.post("./config_post",{
-                key:conf_key,
-                value:conf_value
+                config:config.source
             },function(data,status){
                 if(data.status==1){
                     alert("添加配置成功");

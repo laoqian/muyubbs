@@ -42,7 +42,7 @@
 <script type="text/javascript">
     $(document).ready(function(){
 
-        $(".ad-content").load("config.html",function(data,status,xhr){
+        $(".ad-content").load("bbs.html",function(data,status,xhr){
             var ret=JSON.parse(data);
             if(ret.status==0){
                 window.location.href="../Index/login.html"
@@ -53,10 +53,11 @@
 
         $(".sub-nav li a").click(function(){
 
-            $(".menu li a").css("font-size","14px");
-            $(".menu li a").css("border-right","0");
-            $(this).css("font-size","18px");
-            $(this).css("border-right","solid 2px #FD6440");
+            $(".sub-nav li a").css("font-size","14px");
+            $(".sub-nav li a").css("background","#E6F2FB");
+
+            $(this).css("font-size","16px");
+            $(this).css("background","#F7FBFE");
 
 
             $(".ad-head").text($(this).text());
