@@ -1,6 +1,6 @@
 
-@wb-main-color: #FD6440;
-@btn-hover-color:#FF936A;
+@wb-main-color: #2B7ACD;
+@btn-hover-color:darken(@wb-main-color,10%);
 
 html{
   height: 100%;
@@ -18,6 +18,10 @@ button{
 
   &:focus{
     outline: none;
+  }
+
+  &:hover{
+    cursor:pointer;
   }
 }
 
@@ -45,7 +49,6 @@ input{
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 2px;
-
 }
 
 .header{

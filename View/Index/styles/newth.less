@@ -1,0 +1,95 @@
+
+
+@import "public.less";
+
+
+
+body{
+  background: #f8f8f8;
+}
+
+
+.ac{
+  width:96%;
+  height: 700px;
+  margin-top: 20px;
+  margin-bottom: 100px;
+  padding: 2%;
+  padding-bottom: 100px;
+  background: #fff;
+
+  .am {
+    margin-bottom: 20px;
+    input{
+      width: 350px;
+      height: 24px;
+      padding: 2px;
+      padding-left: 5px;
+    }
+
+    button{
+      width: 120px;
+      height: 32px;
+      padding: 0;
+      background: @wb-main-color;
+      color:white;
+      position: relative;
+      display: inline-block;
+
+      &:hover{
+        background: @btn-hover-color;
+        li{
+          display: block;
+        }
+      }
+
+      span{
+        width: 120px;
+        height: 32px;
+        line-height: 32px;
+        vertical-align: middle;
+      }
+
+      li:nth-last-child(1){
+        border-bottom: solid 1px darken(#f0f0f0,10%);
+      }
+
+      li{
+        width: 118px;
+        height: 32px;
+        line-height: 32px;
+        vertical-align: middle;
+        text-align: center;
+        position: relative;
+        z-index: 1000;
+        background: white;
+        color: #444;
+        border-left: solid 1px darken(#f0f0f0,10%);
+        border-right: solid 1px darken(#f0f0f0,10%);
+        display: none;
+
+        &:hover{
+          background: lighten(@btn-hover-color,20%);
+          color:white;
+        }
+      }
+
+    }
+  }
+
+
+
+
+  .am-btn{
+    margin-top: 20px;
+    width: 200px;
+    height: 30px;
+    color: white;
+    border: 0;
+    background: @wb-main-color;
+
+    &:hover{
+      background: @btn-hover-color;
+    }
+  }
+}
