@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{$bbs_title}</title>
+    <!-- Bootstrap -->
+    <link href="__ROOT__/Application/Home/View/Index/styles/thread.less" rel="stylesheet/less">
+    <link href="__ROOT__/Application/Home/View/styles/umeditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+    <link href="__ROOT__/Application/Home/View/styles/Font-Awesome-3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!--导航栏 -->
+    <include file="./Application/Home/View/Index/header.html" />
+
+    <div class="wrapper">
+        <div class="thread">
+            <div class="th-title">
+                <div class="reply-total">
+                    <div>查看:<span>1002</span></div>
+                    <div> 回复: <span>4322</span></div>
+                </div>
+                <h4>这只是我的第一篇文章</h4>
+            </div>
+            <div class="th-content">
+                <div class="wr-l">
+                    <div class="user-img">
+                        <h5>我不是悟空</h5>
+                        <img src="__ROOT__/Application/Home/View/resource/img/user-photo.jpg" alt="">
+                    </div>
+                    <div class="user-info">
+                        <div class="th-total">
+                            <div class="th-num">
+                                <p>8</p>
+                                <p>主题</p>
+                            </div>
+                            <div class="reply-num">
+                                <p>8</p>
+                                <p>帖子</p>
+                            </div>
+                        </div>
+                        <div class="vip-level">
+                           <img src="__ROOT__/Application/Home/View/resource/img/5zuan.gif" alt="">
+                            <p>五钻会员</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="th-r">
+                    <div class="th-art">
+                        <div class="art-post-time">
+                            <span><i class="icon-user"></i>发表于2015年12月17日15:26:09</span>
+                        </div>
+                        <div class="art-content">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="th-reply">
+                <div class="wr-l">
+                    <div class="user-img">
+                        <h5>我不是悟空</h5>
+                        <img src="__ROOT__/Application/Home/View/resource/img/user-photo.jpg" alt="">
+                    </div>
+                    <div class="user-info">
+                        <div class="th-total">
+                            <div class="th-num">
+                                <p>8</p>
+                                <p>主题</p>
+                            </div>
+                            <div class="reply-num">
+                                <p>8</p>
+                                <p>帖子</p>
+                            </div>
+                        </div>
+                        <div class="vip-level">
+                            <img src="__ROOT__/Application/Home/View/resource/img/5zuan.gif" alt="">
+                            <p>五钻会员</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="th-r">
+                    <div class="th-art">
+                        <div class="art-post-time">
+                            <span><i class="icon-user"></i>发表于2015年12月17日15:26:09</span>
+                        </div>
+                        <div class="art-content">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/lesscss/less.min.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/umeditor/umeditor.config.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/umeditor/umeditor.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/lesscss/less.min.js"></script>
+
+
+
+    <script type="text/javascript">
+        var ue;
+
+        $(document).ready(function(){
+            //初始化输入区域
+            ue = UM.getEditor('container');
+
+            if($(".wr-l").height()!=$(".wr-l").next().height()){
+                $(".wr-l").css("height",$(".wr-l").next().height());
+            }
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+
+
+@import "public.less";
+
+
+@th-color: #E5EDF2;
+
+.thread{
+  width: 100%;
+  min-height: 600px;
+  margin-top: 10px;
+  padding-bottom: 20px;
+  background: white;
+  overflow:hidden;
+  margin-bottom: 100px;
+
+  .th-title{
+    width: 100%;
+    height: 32px;
+
+    h4{
+      width: 87%;
+      height: 32px;
+      margin: 0;
+      padding: 0;
+      float: left;
+      border-bottom: solid 5px lighten(@th-color,3%);
+
+    }
+    .reply-total{
+      width: 13%;
+      height: 100%;
+      background: #E5EDF2;
+      float: left;
+      border-bottom: solid 5px darken(@th-color,10%);
+
+      div{
+        width: 49%;
+        float: left;
+        font-size: 12px;
+        height: 32px;
+        line-height: 32px;
+        vertical-align: middle;
+        text-align: center;
+        color: #999;
+        span{
+          color:lighten(red,10%)
+        }
+      }
+
+      div:nth-child(1){
+        border-right: solid 1px #ccc;
+      }
+
+    }
+
+  }
+
+
+  .th-content{
+    width: 100%;
+  }
+
+  .wr-l{
+    width: 13%;
+    height: 100%;
+    background: #E5EDF2;
+    float: left;
+    border-bottom: solid 5px darken(@th-color,10%);
+
+    .user-img{
+      width: 70%;
+      margin: 5px auto;
+      img{
+        width: 100%;
+        border: solid 5px #fff;
+      }
+    }
+
+    .user-info{
+      width: 70%;
+      margin: 5px auto;
+      font-size: 12px;
+
+      .th-total{
+        .th-num{
+          border-right: solid 1px #ccc;
+        }
+        div{
+          width: 49%;
+          float: left;
+
+          p{
+            margin: 0;
+            padding: 0;
+            text-align: center;
+          }
+        }
+      }
+    }
+
+    .vip-level{
+      width: 70%;
+      height: 30px;
+      margin: 10px auto;
+
+      img{
+        padding-top: 20px;
+      }
+
+      p{
+        color: red;
+      }
+    }
+  }
+
+  .th-r{
+    width: 87%;
+    min-height: 360px;
+    float: left;
+    border-bottom: solid 5px lighten(@th-color,3%);
+
+
+    .th-art{
+      width: 96%;
+      padding-left: 2%;
+      padding-right: 2%;
+
+      .art-post-time{
+        width: 100%;
+        height: 32px;
+        border-bottom: dashed 1px lighten(@th-color,3%);
+
+        span{
+          font-size: 13px;
+          color:#888;
+          i{
+            font-size: 14px;
+            color: green;
+            margin-right: 5px;
+          }
+        }
+      }
+    }
+  }
+}
