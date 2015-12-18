@@ -41,18 +41,22 @@
                     <button>发表主题</button>
                 </div>
                 <div class="art-page">
-                    <button class="pre-page">上一页</button>
+                    <button class="pre-page">
+                        <a href=<?php echo "theme.html?page="."".($paged['pre_page']);?> >上一页</a></button>
                     <ul>
-                        <li><a href="">1</a></li>
-                        <li><a href="">2</a></li>
-                        <li><a href="">3</a></li>
-                        <li><a href="">4</a></li>
-                        <li><a href="">5</a></li>
-                        <li><a href="">6</a></li>
-                        <li><a href="">7</a></li>
-                        <li><a class="page-total" href="">...33</a></li>
+                        <for start="$paged['menu_start']" end="$paged['menu_end']" >
+                            <if condition="$i eq $paged['cur_page']">
+                                <li><a style="background: #2681D5;color:white" href=<?php echo "theme.html?page="."".$i ?> >{$i}</a></li>
+                            <else />
+                                <li><a href=<?php echo "theme.html?page="."".$i ?> >{$i}</a></li>
+                            </if>
+
+                        </for>
+                        <if condition="$paged['last-page-show'] eq 1">
+                            <li><a class="page-total" href=<?php echo "theme.html?page="."".($paged['page_total']);?>>...{$paged['page_total']}</a></li>
+                        </if>
                     </ul>
-                    <button class="next-page">下一页</button>
+                    <button class="next-page"><a href=<?php echo "theme.html?page="."".($paged['next_page']);?> >下一页</a></button>
                 </div>
             </div>
             <div class="content-body">
@@ -68,55 +72,17 @@
                 </div>
                 <div class="theme-list">
                     <table>
-                        <tr>
-                            <td class="th-all" >
-                                <img src="__ROOT__/Application/Home/View/resource/img/folder_new.gif" alt="">
-                                <span>全部主题</span>
-                            </td>
-                            <td class="th-write">作者</td>
-                            <td class="th-reply">回复/查看</td>
-                            <td class="th-last">最后发表</td>
-                        </tr>                        <tr>
-                            <td class="th-all" >
-                                <img src="__ROOT__/Application/Home/View/resource/img/folder_new.gif" alt="">
-                                <span>全部主题</span>
-                            </td>
-                            <td class="th-write">作者</td>
-                            <td class="th-reply">回复/查看</td>
-                            <td class="th-last">最后发表</td>
-                        </tr>                        <tr>
-                            <td class="th-all" >
-                                <img src="__ROOT__/Application/Home/View/resource/img/folder_new.gif" alt="">
-                                <span>全部主题</span>
-                            </td>
-                            <td class="th-write">作者</td>
-                            <td class="th-reply">回复/查看</td>
-                            <td class="th-last">最后发表</td>
-                        </tr>                        <tr>
-                            <td class="th-all" >
-                                <img src="__ROOT__/Application/Home/View/resource/img/folder_new.gif" alt="">
-                                <span>全部主题</span>
-                            </td>
-                            <td class="th-write">作者</td>
-                            <td class="th-reply">回复/查看</td>
-                            <td class="th-last">最后发表</td>
-                        </tr>                        <tr>
-                            <td class="th-all" >
-                                <img src="__ROOT__/Application/Home/View/resource/img/folder_new.gif" alt="">
-                                <span>全部主题</span>
-                            </td>
-                            <td class="th-write">作者</td>
-                            <td class="th-reply">回复/查看</td>
-                            <td class="th-last">最后发表</td>
-                        </tr>                        <tr>
-                        <td class="th-all" >
-                                <img src="__ROOT__/Application/Home/View/resource/img/folder_new.gif" alt="">
-                                <span>全部主题</span>
-                            </td>
-                            <td class="th-write">作者</td>
-                            <td class="th-reply">回复/查看</td>
-                            <td class="th-last">最后发表</td>
-                        </tr>
+                        <foreach name="theme" item="art">
+                            <tr>
+                                <td class="th-all" >
+                                    <img src="__ROOT__/Application/Home/View/resource/img/folder_new.gif" alt="">
+                                    <span><a href=<?php echo "thread.html?articleid="."".($art['id']);?>>{$art['title']}</a></span>
+                                </td>
+                                <td class="th-write"><div>{$art['authorid']}</div><div>{$art['publishtime']}</div></td>
+                                <td class="th-reply">{$art['replynum']}/{$art['reviewnum']}</td>
+                                <td class="th-last">{$art['lastreplyer']}</td>
+                            </tr>
+                        </foreach>
                     </table>
                 </div>
             </div>

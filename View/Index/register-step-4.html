@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN" ng-app="rgApp" ng-controller="rgCtrl">
+<head>
+    <meta charset="UTF-8">
+    <title>{$bbs_title}</title>
+    <!-- Bootstrap -->
+    <link href="__ROOT__/Application/Home/View/Index/styles/register.less" rel="stylesheet/less">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+        <!--导航栏 -->
+    <include file="./Application/Home/View/Index/header.html" />
+
+    <div class="wrapper">
+        <div class="rg-container">
+            <h3>注册信息</h3>
+            <div class="step">
+                <ul>
+                    <li class="step-2">第一步：校验邀请码</li>
+                    <li class="step-2">第二步：填写注册信息</li>
+                    <li class="step-2">第三步：提交店铺审核</li>
+                    <li class="step-1">第四步：提交电脑配置审核</li>
+                </ul>
+            </div>
+            <div class="rg-content">
+                <form action="" class="rg-form-group">
+                    <div class="form-item">
+                        <span>电脑1图片*：</span>
+                        <input type="file"  placeholder="真实姓名">
+                    </div>
+                    <div class="form-item">
+                        <span>电脑2图片*：</span>
+                        <input type="file"  placeholder="真实姓名">
+                    </div>
+                    <div class="form-item">
+                        <span>两台电脑放一起图片*：</span>
+                        <input type="file"  placeholder="真实姓名">
+                    </div>
+                    <div class="form-item">
+                        <span>两台光猫放一起图片*：</span>
+                        <input type="file"  placeholder="真实姓名">
+                    </div>
+                </form>
+                <div class="form-submit">
+                    <button class="rg-submit">提交</button>
+                    <button class="rg-cancel">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".offer-verify button").click(function(){
+                var offer = $(".offer-verify input").val().tolocaleLowerCase();
+
+                $.post("../user/offer_verify",{offer:offer},function(data,status){
+
+                });
+            });
+        });
+    </script>
+</body>
+</html>

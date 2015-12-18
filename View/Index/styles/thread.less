@@ -12,7 +12,7 @@
   padding-bottom: 20px;
   background: white;
   overflow:hidden;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
 
   .th-title{
     width: 100%;
@@ -140,6 +140,49 @@
             margin-right: 5px;
           }
         }
+      }
+    }
+  }
+}
+
+
+.reply-post{
+  width: 100%;
+  height: 300px;
+  background: white;
+  border: solid 1px #f0f0f0;
+
+  .post-left{
+    width: 13%;
+    height: 300px;
+    float: left;
+    background: #E5EDF2;
+    border-top:solid 4px @wb-main-color;
+  }
+  .post-area{
+    width: 85%;
+    height: 300px;
+    float: left;
+    padding-left:2%;
+    border-top:solid 4px @wb-main-color;
+    padding-top: 20px;
+    .ue-st{
+      width: 98%;
+      height: 180px;
+      margin: auto;
+    }
+  }
+  .reply-a{
+    clear: left;
+    padding-top: 10px;
+    button{
+      width: 140px;
+      height: 24px;
+      background: @wb-main-color;
+      color: white;
+      font-weight: bold;
+      &:hover{
+        background: darken(@wb-main-color,10%);
       }
     }
   }

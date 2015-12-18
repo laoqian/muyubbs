@@ -27,7 +27,7 @@
                     <div>查看:<span>1002</span></div>
                     <div> 回复: <span>4322</span></div>
                 </div>
-                <h4>这只是我的第一篇文章</h4>
+                <h4>{$article['title']}</h4>
             </div>
             <div class="th-content">
                 <div class="wr-l">
@@ -55,10 +55,10 @@
                 <div class="th-r">
                     <div class="th-art">
                         <div class="art-post-time">
-                            <span><i class="icon-user"></i>发表于2015年12月17日15:26:09</span>
+                            <span><i class="icon-user"></i>发表于{$article['publishtime']}</span>
                         </div>
                         <div class="art-content">
-
+                            {$article['content']}
                         </div>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                             <span><i class="icon-user"></i>发表于2015年12月17日15:26:09</span>
                         </div>
                         <div class="art-content">
-
+                            {$article['content']}
                         </div>
                     </div>
                 </div>
@@ -101,9 +101,26 @@
         </div>
     </div>
 
+    <div class="wrapper">
+        <div class="reply-post">
+            <div class="post-left">
+
+            </div>
+            <div class="post-area">
+                <script id="post-container" name="content" type="text/plain" class="ue-st">我觉得我可以发表了</script>
+                <div class="reply-a">
+                    <button>发表回复</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <include file="./Application/Home/View/Index/footer.html" />
+
     <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
     <script src="__ROOT__/Application/Home/View/styles/lesscss/less.min.js"></script>
-    <script src="__ROOT__/Application/Home/View/styles/umeditor/umeditor.config.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/umeditor/umeditor.config-for-reply.js"></script>
     <script src="__ROOT__/Application/Home/View/styles/umeditor/umeditor.js"></script>
     <script src="__ROOT__/Application/Home/View/styles/lesscss/less.min.js"></script>
 
@@ -114,7 +131,7 @@
 
         $(document).ready(function(){
             //初始化输入区域
-            ue = UM.getEditor('container');
+            ue = UM.getEditor('post-container');
 
             if($(".wr-l").height()!=$(".wr-l").next().height()){
                 $(".wr-l").css("height",$(".wr-l").next().height());

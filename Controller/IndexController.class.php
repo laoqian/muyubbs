@@ -30,6 +30,7 @@ class IndexController extends Controller {
         $sub_menu[$value['name']] = array();
         foreach($category as $sub_value){
           if($sub_value['pid']==$value['id']){
+            $sub_value["index"] ="theme?categoryid="."".$sub_value['id'];
             array_push( $sub_menu[$value['name']],$sub_value);
           }
         }
@@ -38,9 +39,6 @@ class IndexController extends Controller {
 
     $this->assign('menu',$menu);
     $this->assign('sub_menu',$sub_menu);
-
-
-    //$this->ajaxReturn($sub_menu);
 
     $this->show();
   }
@@ -86,4 +84,104 @@ class IndexController extends Controller {
 
 
 
+  public function theme(){
+
+    $art = M('article');
+
+    //如果有栏目id提取出来
+    if($_GET["categoryid"]){
+     $map['categoryid'] = $_GET['categoryid'];
+    }else{
+     $map['categoryid'] = 4;
+    }
+
+    $th['category'] = $map['categoryid'];
+    if($_GET['page']){
+      $th['cur_page'] = (int)($_GET['page']);
+    }else{
+      $th['cur_page'] = 1;
+    }
+
+    //每页数量
+    $per_page_num = 20;
+
+    $art_sum = $art->where($map)->count();
+    $page = intval($art_sum)/$per_page_num;
+    if(floor($page)<$page){
+      $page=(int)(floor($page));
+      $page++;
+    }
+
+    //
+    if($th['cur_page']>$page || $th['cur_page']<1){
+      $th["cur_page"]=1;
+    }
+
+    $th['page_total'] = $page;
+    $th["per_page_num"] = $per_page_num;
+
+    $menu_num = 10; //定义显示多少页按钮,定义为偶数
+    if($th['page_total']<= $menu_num){
+      $th["menu_start"] = 1;
+      $th["menu_end"] = $th["page_total"]+1;
+    }else{
+      if($th['cur_page']>$menu_num/2){
+        $th["menu_start"] = $th['cur_page']-$menu_num/2;
+
+        if($th['menu_start']+$menu_num>$th['page_total']){
+          $th["menu_end"] = $th["page_total"]+1;
+          $th["menu_start"] =$th["menu_end"] -$menu_num;
+        }else{
+          $th["menu_end"] = $th["menu_start"]+$menu_num;
+        }
+      }else{
+        $th["menu_start"] = 1;
+        $th["menu_end"] = $th["menu_start"]+$menu_num;
+      }
+    }
+
+    //计算列表
+    if($th["menu_start"]+$menu_num>=$th['page_total']+1){
+      $th["last-page-show"]=0;
+    }else{
+      $th["last-page-show"]=1;
+    }
+
+    //计算上一页
+    if($th['cur_page']>1){
+      $th['pre_page'] =$th['cur_page']-1;
+    }else{
+      $th['pre_page'] = 1;
+    }
+    //和下一页
+    if($th['cur_page']<$th['page_total']){
+      $th['next_page'] =$th['cur_page']+1;
+    }else{
+      $th['next_page'] = $th['page_total'];
+    }
+
+    $query  =$th["cur_page"].",".$per_page_num;
+    $ret = $art->where($map)->page($query)->select();
+
+    $this->assign("paged",$th);
+    $this->assign("theme",$ret);
+
+    $this->show();
+  }
+
+  public function thread(){
+
+    if($_GET["articleid"]){
+      $map['id'] = $_GET['articleid'];
+    }else{
+      $this->error("页面错误");
+    }
+
+    $model = M('article');
+
+    $article = $model->where($map)->select();
+
+    $this->assign("article",$article[0]);
+    $this->show();
+  }
 }

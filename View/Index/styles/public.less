@@ -152,6 +152,40 @@ input{
   }
 }
 
+
+.map{
+  width: 100%;
+  margin-top: 5px;
+  height: 30px;
+  font-size: 13px;
+
+  li{
+    float: left;
+    line-height: 30px;
+    vertical-align: middle;
+    a{
+      color: #444;
+    }
+  }
+
+  li:nth-last-child(1){
+    em{
+      display: none;
+    }
+  }
+
+  &:after{
+    clear: left;
+  }
+
+  em{
+    width: 20px;
+    background: url(../../resource/img/pt_item.png) no-repeat 3px 10px;
+    display: inline-block;
+    color: white;
+  }
+}
+
 .footer{
   width: 100%;
   height: 120px;
