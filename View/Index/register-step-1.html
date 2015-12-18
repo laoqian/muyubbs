@@ -32,26 +32,39 @@
             </div>
             <div class="rg-content">
                 <div class="offer-verify">
-                    <input type="text" placeholder="输入邀请码">
-                    <button>下一步</button>
+                    <span>邀请码:</span>
+                    <input type="text" placeholder="输入16位邀请码" value="cjw2bic822ghozz">
+                    <span class="error"></span>
+                    <button class="next-step">下一步</button>
                 </div>
+
+
             </div>
         </div>
     </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
+
 
 
     <script type="text/javascript">
         $(document).ready(function(){
             $(".offer-verify button").click(function(){
-                var offer = $(".offer-verify input").val().tolocaleLowerCase();
+                var offer = $(".offer-verify input").val();
 
+                if(offer.length!=15){
+                   $(".error").text("邀请码不正确");
+                }
                 $.post("../user/offer_verify",{offer:offer},function(data,status){
+                    if(data.status!=1){
+                        $(".error").text("邀请码不正确");
+                        return ;
+                    }
 
+                    location.href = "register-step-2.html";
                 });
             });
         });

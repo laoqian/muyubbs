@@ -15,43 +15,54 @@ class UserController extends Controller {
   }
 
 
-
-  public function  register_post()
+  public function  register()
   {
-    $params = json_decode(file_get_contents('php://input'), true);
+    $upload = new \Think\Upload();// 实例化上传类
+    $upload->maxSize   =     2*1024*1024 ;// 设置附件上传大小
+    $upload->exts      =     array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
+    $upload->rootPath  =     './Application/Home/View/image/'; // 设置附件上传根目录
+    $upload->savePath  =     ''; // 设置附件上传（子）目录
 
-    $Model = M('user');
-
-    $map["phone"] = $params["phone"];
-
-    $user = $Model->where($map)->select();
-    if($user[0]){
-      //测试用存在就删除，方便重新插入
-      $Model->where($map)->delete();
-      //$this->ajaxReturn("failed");
-    }
-
-    $Model->phone = $params["phone"];
-    $Model->passwd = $params["passwd"];
-    $Model->level = 7;
-    $Model->name = sprintf("user_%d",rand(1000,10000));
-    $Model->vmoney = 456;
-    $Model->charged = 456;
-    $Model->signup_date  = date('Y-m-d H:i:s');
-    $Model->admin = 0;
-
-    $res = $Model->add();
-    if ($res != true) {
-      //注册失败
-      $this->ajaxReturn("添加用户到数据库失败！");
+    // 上传文件
+    $info   =   $upload->upload();
+    if(!$info) {// 上传错误提示错误信息
+      $this->ajaxReturn("11111");
+      return;
     }
 
 
-    //注册成功就保存状态本次不再登录
-    session('state', "2");
-    session('user', $params["phone"] );
+    $invite = M("invitecode");
 
-    $this->ajaxReturn("success");
+    $query['code'] =session("register")['offer'];
+
+    $ret = $invite->where($query)->select();
+    if(!$ret){
+      $this->ajaxReturn("22222");
+      return;
+    }
+
+    //保存用户表
+    $user = M('vip');
+    $vip['adminid'] =$ret[0]['adminid'];
+    $vip['account'] =$_POST['account'];
+    $vip['pwd'] =$_POST['password'];
+    $vip['sn'] = 111;
+    $vip['name'] =$_POST['name'];
+    $vip['sex'] =$_POST['sex-man'];
+    $vip['area'] =$_POST['area'];
+    $vip['address'] =$_POST['address'];
+    $vip['referrerqq'] =$_POST['refer-qq'];
+    $vip['serverdate'] = date("Y-m-d h:i:sa");
+    $vip['isaudit'] =  0;
+    $vip['status'] =1;
+
+
+    $ret = $user->add();
+    if($ret){
+      $this->display("../index/register-step-3");
+    }else{
+      $this->ajaxReturn("3333");
+    }
   }
 
   //登录处理
@@ -117,7 +128,7 @@ class UserController extends Controller {
       }
     }
 
-    $result[15] = 35 - $sum;
+    $result[14] = 35 - $sum;
 
     $str = $arr[$result[0]];
 
@@ -143,10 +154,16 @@ class UserController extends Controller {
     elseif($num<=0) $num=1;
     $arr = $this->active_code_rand_by($num);
 
+    $invite = M('invitecode');
+
+    foreach($arr as $value){
+      $invite->adminid = 1;
+      $invite->code= $value;
+      $invite->add();
+    }
+
     $ret["status"] = 1;
     $ret["act_code"] = $arr;
-
-
 
     $this->ajaxReturn($ret);
   }
@@ -156,6 +173,36 @@ class UserController extends Controller {
       $data["status"]=1;
     }else{
       $data["status"]=0;
+    }
+
+    $this->ajaxReturn($data);
+  }
+
+
+  public  function offer_verify(){
+    //校验邀请码
+
+    $invite = M('invitecode');
+
+    $query['code'] = $_POST["offer"];
+
+    //$query['status'] = 0; //测试用先关闭。可以重复使用这个激活码
+    $ret = $invite->where($query)->select();
+
+    //理论上查询成功的话，就只有一条数据
+    if(count($ret)!=1){
+      $this->$data['status'] = 0;
+    }else{
+        //校验成功保存数据库
+        $invite->id = $ret[0]['id'];
+        $invite->status = 1;
+        $invite->save();
+
+        //校验成功保存在session，后面还要使用
+        $register['offer'] = $_POST['offer'];
+        session("register",$register);
+
+        $data['status'] = 1;
     }
 
     $this->ajaxReturn($data);
