@@ -280,25 +280,37 @@ class UserController extends Controller {
 
   public function  submit_tb()
   {
+    /*以下代码只是测试时候使用,获取用户数据*/
+    $user = M("vip");
+    $user->id = 10015;
+    $vip = $user->select();
+    if($vip){
+      session("user",$vip[0]);
+    }else{
+      $data['status'] = 0;
+      $data['error'] = "读取用户数据错误。";
+      $this->ajaxReturn($data);
+      return;
+    }
+    //先判断是否登录，不能登录不能进行操作。登录成功后，会将改用户信息保存在session的user字段中
+    $user = session("user");
+    if(!$user){
+      $data['status'] = 0;
+      $data['error'] = "没有登录，请先登录。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    //登录成功后才能处理
+
+    // 上传文件
     $upload = new \Think\Upload();// 实例化上传类
     $upload->maxSize   =     2*1024*1024 ;// 设置附件上传大小
     $upload->exts      =     array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
     $upload->rootPath  =     './Application/Home/View/image/'; // 设置附件上传根目录
     $upload->savePath  =     ''; // 设置附件上传（子）目录
-
-    //先判断是否登录，不能登录不能进行操作。登录成功后，会将改用户信息保存在session的user字段中
-    $user = session("user");
-    if(!$user){
-      $data['status'] = 0;
-      $this->ajaxReturn($data);
-      return;
-    }
-
-
-    //登录成功
-
-    // 上传文件
     $info   =   $upload->upload();
+
     if(!$info) {// 上传错误提示错误信息
       $data['status'] = 0;
       $data['error'] = "上传图片失败，请稍后重试。";
@@ -308,10 +320,111 @@ class UserController extends Controller {
 
     $account = M("account");
 
+    $acc['ownerid'] = $user['id'];
+    $acc['name'] = $_POST['tb-name'];
+    $acc['accountlevel'] = $_POST['level'];
+    $acc['img'] = "Application/Home/View/image/"."".$info["tb-img"]['savepath']."".$info["tb-img"]['savename'];
+    $acc['sex'] = $_POST['sex'];
+    $acc['age'] = $_POST['age'];
+    $acc['consume'] = $_POST['consume'];
+    $acc['category'] = "初出茅庐";
+    $acc['accounttype'] = $_POST['accounttype'];
 
+    $query['name'] = $acc["name"];
 
+    $ret = $account->where($query)->select();
+    if($ret){
+      $data['status'] = 0;
+      $data['error'] = "该小号已存在,请更改后重试。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    //保存数据库
+    $ret = $account->data($acc)->add();
+    if($ret){
+      $data['status'] = 1;
+      $data['next'] = "register-step-4.html";
+      $this->ajaxReturn($data);
+    }else{
+      $data['status'] = 0;
+      $data['error'] = "注册失败，请稍后重试。";
+      $this->ajaxReturn($data);
+      return;
+    }
   }
 
+
+  public function  submit_shop()
+  {
+    /*以下代码只是测试时候使用,获取用户数据*/
+    $user = M("vip");
+    $user->id = 10015;
+    $vip = $user->select();
+    if($vip){
+      session("user",$vip[0]);
+    }else{
+      $data['status'] = 0;
+      $data['error'] = "读取用户数据错误。";
+      $this->ajaxReturn($data);
+      return;
+    }
+    
+    //先判断是否登录，不能登录不能进行操作。登录成功后，会将改用户信息保存在session的user字段中
+    $user = session("user");
+    if(!$user){
+      $data['status'] = 0;
+      $data['error'] = "没有登录，请先登录。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    //登录成功后才能处理
+
+    // 上传文件
+    $upload = new \Think\Upload();// 实例化上传类
+    $upload->maxSize   =     2*1024*1024 ;// 设置附件上传大小
+    $upload->exts      =     array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
+    $upload->rootPath  =     './Application/Home/View/image/'; // 设置附件上传根目录
+    $upload->savePath  =     ''; // 设置附件上传（子）目录
+    $info   =   $upload->upload();
+
+    if(!$info) {// 上传错误提示错误信息
+      $data['status'] = 0;
+      $data['error'] = "上传图片失败，请稍后重试。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $shop = M("shop");
+
+    $acc['ownerid'] = $user['id'];
+    $acc['name'] = $_POST['name'];
+    $acc['shoplevel'] = $_POST['level'];
+    $acc['img'] = "Application/Home/View/image/"."".$info["img"]['savepath']."".$info["img"]['savename'];
+
+    $query['ownerid'] = $acc["ownerid"];
+    $ret = $shop->where($query)->select();
+    if($ret){
+      $data['status'] = 0;
+      $data['error'] = "该用户店铺资料已存在,请更改后重试。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    //保存数据库
+    $ret = $shop->data($acc)->add();
+    if($ret){
+      $data['status'] = 1;
+      $data['next'] = "register-step-5.html";
+      $this->ajaxReturn($data);
+    }else{
+      $data['status'] = 0;
+      $data['error'] = "注册失败，请稍后重试。";
+      $this->ajaxReturn($data);
+      return;
+    }
+  }
 }
 
 

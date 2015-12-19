@@ -24,10 +24,11 @@
             <h3>注册信息</h3>
             <div class="step">
                 <ul>
-                    <li class="step-2">第一步：校验邀请码</li>
-                    <li class="step-2">第二步：填写注册信息</li>
-                    <li class="step-1">第三步：提交店铺审核</li>
-                    <li class="step-4">第四步：提交电脑配置审核</li>
+                    <li >第一步：校验邀请码</li>
+                    <li >第二步：填写注册信息</li>
+                    <li class="step-active">第三步：提交淘宝/京东用户资料</li>
+                    <li >第四步：提交店铺资料</li>
+                    <li >第五步：提交电脑配置审核</li>
                 </ul>
             </div>
             <div class="rg-content">
@@ -42,7 +43,7 @@
                     </div>
                     <div class="form-item">
                         <span>账号等级：</span>
-                        <input class="pwd2" type="number"  maxlength="24"  name="tb-level" placeholder="密码确认" value="123456">
+                        <input class="pwd2" type="number"  maxlength="24"  name="level" placeholder="密码确认" value="123456">
                         <label class="pwd2-error"></label>
                     </div>
                     <div class="form-item">
@@ -68,7 +69,7 @@
                     <div class="form-item">
                         <span>消费范围：</span>
                         <div class="form-item-addon">
-                            <select name="consume" id="">
+                            <select  name="consume" id="">
                                 <option value="0">0-100</option>
                                 <option value="1">101-200</option>
                                 <option value="2">201-300</option>
@@ -78,8 +79,17 @@
                     </div>
                     <div class="form-item">
                         <span>淘宝小号照片*：</span>
-                        <input class="tb-img" type="file"  >
+                        <input name="tb-img" class="tb-img" type="file"  >
                         <label class="tb-img-error"></label>
+                    </div>
+                    <div class="form-item">
+                        <span>账号类别：</span>
+                        <div class="form-item-addon">
+                            <select name="accounttype" id="">
+                                <option value="0">淘宝</option>
+                                <option value="1">京东</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-submit">
                         <div>
@@ -152,6 +162,7 @@
                         if(data.status==0){
                             $(".submit-error").text(data.error);
                         }else{
+                            alert("1");
                             location.href = data.next;
                         }
                     },

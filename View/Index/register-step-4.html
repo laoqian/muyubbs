@@ -24,53 +24,115 @@
             <h3>注册信息</h3>
             <div class="step">
                 <ul>
-                    <li class="step-2">第一步：校验邀请码</li>
-                    <li class="step-2">第二步：填写注册信息</li>
-                    <li class="step-2">第三步：提交店铺审核</li>
-                    <li class="step-1">第四步：提交电脑配置审核</li>
+                    <li >第一步：校验邀请码</li>
+                    <li >第二步：填写注册信息</li>
+                    <li >第三步：提交淘宝/京东用户资料</li>
+                    <li class="step-active">第四步：提交店铺资料</li>
+                    <li >第五步：提交电脑配置审核</li>
                 </ul>
             </div>
             <div class="rg-content">
-                <form action="" class="rg-form-group">
+                <div>
+
+                </div>
+                <form method="post" action="../user/submit_shop" class="rg-form-group" enctype="multipart/form-data">
                     <div class="form-item">
-                        <span>电脑1图片*：</span>
-                        <input type="file"  placeholder="真实姓名">
+                        <span>店铺名称*：</span>
+                        <input class="name" type="text"  maxlength="24"  name="name" placeholder="密码确认" value="123456">
+                        <label class="account-error"></label>
                     </div>
                     <div class="form-item">
-                        <span>电脑2图片*：</span>
-                        <input type="file"  placeholder="真实姓名">
+                        <span>店铺等级：</span>
+                        <input class="level" type="number"  maxlength="24"  name="level" placeholder="密码确认" value="123456">
+                        <label class="pwd2-error"></label>
                     </div>
                     <div class="form-item">
-                        <span>两台电脑放一起图片*：</span>
-                        <input type="file"  placeholder="真实姓名">
+                        <span>店铺照片*：</span>
+                        <input name="img" class="img" type="file"  >
+                        <label class="tb-img-error"></label>
                     </div>
-                    <div class="form-item">
-                        <span>两台光猫放一起图片*：</span>
-                        <input type="file"  placeholder="真实姓名">
+                    <div class="form-submit">
+                        <div>
+                            <label class="submit-error"></label>
+                        </div>
+                        <input type="submit" class="rg-submit" value="下一步">
                     </div>
                 </form>
-                <div class="form-submit">
-                    <button class="rg-submit">提交</button>
-                    <button class="rg-cancel">取消</button>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+        <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
 
 
     <script type="text/javascript">
+
+        function tb_img_verify(){
+            var path = $(".img").val();
+
+            if(!path){
+                $(".tb-img-error").text("没有选择照片");
+                return false;
+            }else{
+                $(".tb-img-error").text("");
+            }
+
+            return true;
+        }
+
+
+        function account_verify(){
+            var account = $(".name").val();
+
+            if(account.length<6){
+                $(".account-error").text("用户名长度过短");
+                return false;
+
+            }else{
+                $(".account-error").text("");
+            }
+
+            return true;
+        }
+
         $(document).ready(function(){
-            $(".offer-verify button").click(function(){
-                var offer = $(".offer-verify input").val().tolocaleLowerCase();
+            $(".name").blur(function(){
+                account_verify();
+            });
 
-                $.post("../user/offer_verify",{offer:offer},function(data,status){
+            //身份证照片验证
+            $(".img").change(function(){
+                tb_img_verify();
+            });
 
-                });
+            $(".rg-submit").click(function(){
+
+                if(!account_verify()||!tb_img_verify())
+                {
+                    $(".submit-error").text("资料错误，请核实后重新点击下一步");
+                    return false;
+                }
+
+                var options = {
+                    success: function(data,status){
+                        if(data.status==0){
+                            $(".submit-error").text(data.error);
+                        }else{
+                            alert("1");
+                            location.href = data.next;
+                        }
+                    },
+                    timeout: 3000
+                };
+
+                $(".submit-error").text("提交店铺信息中，请等待....");
+
+                $(".rg-form-group").ajaxSubmit(options);
+                return false;
             });
         });
     </script>
