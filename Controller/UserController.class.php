@@ -26,42 +26,104 @@ class UserController extends Controller {
     // 上传文件
     $info   =   $upload->upload();
     if(!$info) {// 上传错误提示错误信息
-      $this->ajaxReturn("11111");
+      $data['status'] = 0;
+      $data['error'] = "上传图片失败，请稍后重试。";
+      $this->ajaxReturn($data);
       return;
     }
 
 
     $invite = M("invitecode");
 
-    $query['code'] =session("register")['offer'];
+    $query['code'] = session("register")['offer'];
 
     $ret = $invite->where($query)->select();
     if(!$ret){
-      $this->ajaxReturn("22222");
+      $data['status'] = 0;
+      $data['error'] = "服务器异常，请稍后重试。";
+      $this->ajaxReturn($data);
       return;
     }
 
     //保存用户表
     $user = M('vip');
+
     $vip['adminid'] =$ret[0]['adminid'];
     $vip['account'] =$_POST['account'];
     $vip['pwd'] =$_POST['password'];
-    $vip['sn'] = 111;
+
     $vip['name'] =$_POST['name'];
-    $vip['sex'] =$_POST['sex-man'];
+
+    if($_POST['sex-man']=="on"){
+      $vip['sex'] =0;
+    } else{
+      $vip['sex'] =1;
+    }
+
     $vip['area'] =$_POST['area'];
     $vip['address'] =$_POST['address'];
+    $vip['qq'] =$_POST['qq'];
     $vip['referrerqq'] =$_POST['refer-qq'];
+    $vip['tel'] =$_POST['phone'];
     $vip['serverdate'] = date("Y-m-d h:i:sa");
     $vip['isaudit'] =  0;
     $vip['status'] =1;
 
+    $vip['handidpath'] = "Application/Home/View/image/"."".$info["user-hand-id"]['savepath']."".$info["user-hand-id"]['savename'];
+    $vip['useridpath'] = "Application/Home/View/image/"."".$info["user-id"]['savepath']."".$info["user-id"]['savename'];
 
-    $ret = $user->add();
+    //先检查重复
+    $query=[];
+    $query['account'] = $vip['account'];
+
+    $acc = $user->where($query)->select();
+    if($acc){
+      $data['status'] = 0;
+      $data['error'] = "用户名重复,请更改后重试。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    //qq号码检查重复
+    $query=[];
+    $query['qq'] = $vip['qq'];
+
+    $acc = $user->where($query)->select();
+    if($acc){
+      $data['status'] = 0;
+      $data['error'] = "QQ号码重复,请更改后重试。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    //手机号码检查重复
+    $query=[];
+    $query['tel'] = $vip['tel'];
+
+    $acc = $user->where($query)->select();
+    if($acc){
+      $data['status'] = 0;
+      $data['error'] = "手机号码重复,请更改后重试。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    //编号生成
+    $query=[];
+    $acc = $user->select();
+    $vip['sn'] = count($acc)+10000;
+
+    //用户数据存进数据库
+    $ret = $user->data($vip)->add();
     if($ret){
-      $this->display("../index/register-step-3");
+      $data['status'] = 1;
+      $data['next'] = "register-step-3.html";
+      $this->ajaxReturn($data);
     }else{
-      $this->ajaxReturn("3333");
+      $data['status'] = 0;
+      $data['error'] = "注册失败，请稍后重试。";
+      $this->ajaxReturn($data);
+      return;
     }
   }
 
@@ -207,6 +269,49 @@ class UserController extends Controller {
 
     $this->ajaxReturn($data);
   }
+
+  function register_phone_verify(){
+    //申请验证码
+
+    $data['status'] =1;
+    $this->ajaxReturn($data);
+  }
+
+
+  public function  submit_tb()
+  {
+    $upload = new \Think\Upload();// 实例化上传类
+    $upload->maxSize   =     2*1024*1024 ;// 设置附件上传大小
+    $upload->exts      =     array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
+    $upload->rootPath  =     './Application/Home/View/image/'; // 设置附件上传根目录
+    $upload->savePath  =     ''; // 设置附件上传（子）目录
+
+    //先判断是否登录，不能登录不能进行操作。登录成功后，会将改用户信息保存在session的user字段中
+    $user = session("user");
+    if(!$user){
+      $data['status'] = 0;
+      $this->ajaxReturn($data);
+      return;
+    }
+
+
+    //登录成功
+
+    // 上传文件
+    $info   =   $upload->upload();
+    if(!$info) {// 上传错误提示错误信息
+      $data['status'] = 0;
+      $data['error'] = "上传图片失败，请稍后重试。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $account = M("account");
+
+
+
+  }
+
 }
 
 

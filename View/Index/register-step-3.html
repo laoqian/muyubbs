@@ -34,46 +34,134 @@
                 <div>
 
                 </div>
-                <form action="" class="rg-form-group">
+                <form method="post" action="../user/submit_tb" class="rg-form-group" enctype="multipart/form-data">
                     <div class="form-item">
-                        <span>淘宝小号1*：</span>
-                        <input type="file"  >
+                        <span>淘宝小号*：</span>
+                        <input class="tb-name" type="text"  maxlength="24"  name="tb-name" placeholder="密码确认" value="123456">
+                        <label class="account-error"></label>
                     </div>
                     <div class="form-item">
-                        <span>淘宝小号2*：</span>
-                        <input type="file"  >
+                        <span>账号等级：</span>
+                        <input class="pwd2" type="number"  maxlength="24"  name="tb-level" placeholder="密码确认" value="123456">
+                        <label class="pwd2-error"></label>
                     </div>
                     <div class="form-item">
-                        <span>淘宝小号3*：</span>
-                        <input type="file"  >
+                        <span>性别：</span>
+                        <div class="form-item-addon">
+                            <select name="sex" id="">
+                                <option value="0">男</option>
+                                <option value="1">女</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-item">
-                        <span>店铺*：</span>
-                        <input type="file"  >
+                        <span>年龄段：</span>
+                        <div class="form-item-addon">
+                            <select name="age" id="">
+                                <option value="0">70后</option>
+                                <option value="1">80后</option>
+                                <option value="2">90后</option>
+                                <option value="3">00后</option>
+                            </select>
+                         </div>
+                    </div>
+                    <div class="form-item">
+                        <span>消费范围：</span>
+                        <div class="form-item-addon">
+                            <select name="consume" id="">
+                                <option value="0">0-100</option>
+                                <option value="1">101-200</option>
+                                <option value="2">201-300</option>
+                                <option value="3">301-400</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <span>淘宝小号照片*：</span>
+                        <input class="tb-img" type="file"  >
+                        <label class="tb-img-error"></label>
+                    </div>
+                    <div class="form-submit">
+                        <div>
+                            <label class="submit-error"></label>
+                        </div>
+                        <input type="submit" class="rg-submit" value="下一步">
                     </div>
                 </form>
-                <div class="form-submit">
-                    <button class="rg-submit">下一步</button>
-                    <button class="rg-cancel">取消</button>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+        <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
 
 
     <script type="text/javascript">
+
+        function tb_img_verify(){
+            var path = $(".tb-img").val();
+
+            if(!path){
+                $(".tb-img-error").text("没有选择照片");
+                return false;
+            }else{
+                $(".tb-img-error").text("");
+            }
+
+            return true;
+        }
+
+
+        function account_verify(){
+            var account = $(".tb-name").val();
+
+            if(account.length<6){
+                $(".account-error").text("用户名长度过短");
+                return false;
+
+            }else{
+                $(".account-error").text("");
+            }
+
+            return true;
+        }
+
         $(document).ready(function(){
-            $(".offer-verify button").click(function(){
-                var offer = $(".offer-verify input").val().tolocaleLowerCase();
+            $(".tb-name").blur(function(){
+                account_verify();
+            });
 
-                $.post("../user/offer_verify",{offer:offer},function(data,status){
+            //身份证照片验证
+            $(".tb-img").change(function(){
+                tb_img_verify();
+            });
 
-                });
+            $(".rg-submit").click(function(){
+
+                if(!account_verify()||!tb_img_verify())
+                {
+                    $(".submit-error").text("资料错误，请核实后重新点击下一步");
+                    return false;
+                }
+
+                var options = {
+                    success: function(data,status){
+                        if(data.status==0){
+                            $(".submit-error").text(data.error);
+                        }else{
+                            location.href = data.next;
+                        }
+                    },
+                    timeout: 3000
+                };
+
+                $(".submit-error").text("提交淘宝小号中，请等待....");
+
+                $(".rg-form-group").ajaxSubmit(options);
+                return false;
             });
         });
     </script>

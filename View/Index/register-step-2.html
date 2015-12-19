@@ -34,102 +34,114 @@
                 <form method="post" action="../user/register" class="rg-form-group" enctype="multipart/form-data">
                     <div class="form-item">
                         <span>用户名*：</span>
-                        <input class="account" type="text" name="account" placeholder="6-24位用户名" value="jiaran">
+                        <input class="account" type="text" maxlength="24"  name="account" placeholder="6-24位用户名" value="jiaran">
+                        <label class="account-error"></label>
                     </div>
                     <div class="form-item">
                         <span>密码*：</span>
-                        <input class="pwd1" type="password" name="password" placeholder="6-24位密码" value="123456">
+                        <input class="pwd1" type="password" maxlength="24"  name="password" placeholder="6-24位密码" value="123456">
+                        <label class="pwd1-error"></label>
                     </div>
                     <div class="form-item">
                         <span>再一次输入密码*：</span>
-                        <input class="pwd2" type="password" name="password1" placeholder="密码确认" value="123456">
+                        <input class="pwd2" type="password"  maxlength="24"  name="password1" placeholder="密码确认" value="123456">
+                        <label class="pwd2-error"></label>
                     </div>
                     <div class="form-item">
                         <span>性别*：</span>
                         <div class="form-item-addon">
-                            <span>男</span>
-                            <input class="sex-man"  checked name="sex-man" type="checkbox" >
-                            <span>女</span>
-                            <input class="sex-woman" name="sex-woman" type="checkbox" >
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <span>真实姓名*：</span>
-                        <input class="name" type="text" name="name" placeholder="真实姓名" value="贾然">
-                    </div>
-                    <div class="form-item">
-                        <span>手持身份证上传*：</span>
-                        <input class="hand-id" type="file" name="user-hand-id" placeholder="真实姓名">
-                    </div>
-                    <div class="form-item">
-                        <span>身份证正面*：</span>
-                        <input class="user-id" type="file" name="user-id" placeholder="真实姓名" >
-                    </div>
-                    <div class="form-item">
-                        <span>省份：</span>
-                        <div class="form-item-addon">
-                            <select>
-                                <option value="">请选择：</option>
-                                <option value="1">北京</option>
-                                <option value="2">上海</option>
-                                <option value="3">天津</option>
-                                <option value="4">重庆</option>
-                                <option value="5">河北</option>
-                                <option value="6">山西</option>
-                                <option value="7">河南</option>
-                                <option value="8">辽宁</option>
-                                <option value="9">吉林</option>
-                                <option value="10">黑龙江</option>
-                                <option value="11">内蒙古</option>
-                                <option value="12">江苏</option>
-                                <option value="13">山东</option>
-                                <option value="14">安徽</option>
-                                <option value="15">浙江</option>
-                                <option value="16">福建</option>
-                                <option value="17">湖北</option>
-                                <option value="18">湖南</option>
-                                <option value="19">广东</option>
-                                <option value="20">广西</option>
-                                <option value="21">江西</option>
-                                <option value="22" selected="selected">四川</option>
-                                <option value="23">海南</option>
-                                <option value="24">贵州</option>
-                                <option value="25">云南</option>
-                                <option value="26">西藏</option>
-                                <option value="27">陕西</option>
-                                <option value="28">甘肃</option>
-                                <option value="29">青海</option>
-                                <option value="30">宁夏</option>
-                                <option value="31">新疆</option>
-                                <option value="32">台湾</option>
-                                <option value="42">香港</option>
-                                <option value="43">澳门</option>
-                                <option value="84">钓鱼岛</option>
+                            <select name="sex" id="">
+                                <option value="0">男</option>
+                                <option value="1">女</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-item">
+                        <span>真实姓名*：</span>
+                        <input class="name" type="text" name="name" maxlength="24"  placeholder="真实姓名" value="贾然">
+                        <label class="name-error"></label>
+                    </div>
+                    <div class="form-item">
+                        <span>手持身份证上传*：</span>
+                        <input class="hand-id" type="file" name="user-hand-id" placeholder="真实姓名">
+                        <label class="hand-id-error"></label>
+                    </div>
+                    <div class="form-item">
+                        <span>身份证正面*：</span>
+                        <input class="user-id" type="file" name="user-id" placeholder="真实姓名" >
+                        <label class="user-id-error"></label>
+                    </div>
+                    <div class="form-item">
+                        <span>省份*：</span>
+                        <div class="form-item-addon">
+                            <select name="area" class="area">
+                                <option value="北京">北京</option>
+                                <option value="上海">上海</option>
+                                <option value="天津">天津</option>
+                                <option value="重庆">重庆</option>
+                                <option value="河北">河北</option>
+                                <option value="陕西">山西</option>
+                                <option value="河南">河南</option>
+                                <option value="辽宁">辽宁</option>
+                                <option value="吉林">吉林</option>
+                                <option value="黑龙江">黑龙江</option>
+                                <option value="内蒙古">内蒙古</option>
+                                <option value="江苏">江苏</option>
+                                <option value="山东">山东</option>
+                                <option value="安徽">安徽</option>
+                                <option value="浙江">浙江</option>
+                                <option value="福建">福建</option>
+                                <option value="湖北">湖北</option>
+                                <option value="湖南">湖南</option>
+                                <option value="广东">广东</option>
+                                <option value="广西">广西</option>
+                                <option value="江西">江西</option>
+                                <option value="四川" selected="selected">四川</option>
+                                <option value="海南">海南</option>
+                                <option value="贵州">贵州</option>
+                                <option value="云南">云南</option>
+                                <option value="西藏">西藏</option>
+                                <option value="陕西">陕西</option>
+                                <option value="甘肃">甘肃</option>
+                                <option value="青海">青海</option>
+                                <option value="宁夏">宁夏</option>
+                                <option value="新疆">新疆</option>
+                                <option value="台湾">台湾</option>
+                                <option value="香港">香港</option>
+                                <option value="澳门">澳门</option>
+                                <option value="钓鱼岛">钓鱼岛</option>
+                            </select>
+                        </div>
+                        <label class="shengfen-error"></label>
+                    </div>
+                    <div class="form-item">
                         <span>完整住所地址：</span>
-                        <input type="text" name="address" placeholder="完整住所地址" value="成都市武侯区永盛南街8号">
+                        <input type="text" name="address" placeholder="完整住所地址" maxlength="140"  value="成都市武侯区永盛南街8号">
                     </div>
                     <div class="form-item">
                         <span>QQ：</span>
-                        <input type="text" name="qq" placeholder="QQ" value="858385135">
+                        <input type="number" name="qq" placeholder="QQ" maxlength="12"  value="858385135">
                     </div>
                     <div class="form-item">
                         <span>推荐人QQ：</span>
-                        <input type="text" name="refer-qq" placeholder="推荐人QQ" value="858385135">
+                        <input type="number" name="refer-qq" placeholder="推荐人QQ" maxlength="12"  value="858385135">
                     </div>
                     <div class="form-item">
                         <span>手机号码*：</span>
-                        <input type="text" name="phone" placeholder="手机号码" value="18200326535">
+                        <span class="get-verify">获取验证码</span>
+                        <input id="phone" class="phone" type="number" name="phone" placeholder="手机号码" maxlength="12"  value="18200326535">
+                        <label class="phone-error"></label>
                     </div>
                     <div class="form-item">
                         <span>验证码*：</span>
-                        <input type="text" name="verify" placeholder="验证码" value="123">
+                        <input class="verify" type="number" name="verify" placeholder="验证码" maxlength="6"  value="123123">
+                        <label class="verify-error"></label>
                     </div>
 
                     <div class="form-submit">
+                        <div>
+                            <label class="submit-error"></label>
+                        </div>
                         <input type="submit" class="rg-submit" value="下一步">
                     </div>
                 </form>
@@ -138,24 +150,208 @@
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
 
 
     <script type="text/javascript">
+
+        function  get_verify(){
+            var phone = $(".phone").val();
+            if(phone.length != 11){
+                $(".phone-error").text("手机号码长度不正确");
+                return false;
+            }else{
+                $(".phone-error").text("");
+            }
+
+            $(".get-verify").unbind("click");
+
+            var timeout=3;
+            var timer = setInterval(function(){
+                var str = "已发送等待"+timeout+"秒";
+                $(".get-verify").text(str);
+                timeout--;
+                if(timeout<0){
+                    clearInterval(timer);
+                    str = "重新获取验证";
+                    $(".get-verify").text(str);
+                    $(".get-verify").click(function(){
+                        get_verify();
+                    });
+                }
+            },1000);
+
+            //这个地方就是获取短信验证码
+            $.post("../user/register_phone_verify",{phone:phone},function(data,status){
+                if(data.status != 1){
+                    return false;
+                }
+
+
+            });
+        }
+
+        function account_verify(){
+            var account = $(".account").val();
+
+            if(account.length<6){
+                $(".account-error").text("用户名长度过短");
+                return false;
+
+            }else{
+                $(".account-error").text("");
+            }
+
+            return true;
+        }
+
+        function pwd1_verify(){
+            var pwd1 = $(".pwd1").val();
+
+            if(pwd1.length<6){
+                $(".pwd1-error").text("密码长度过短");
+                return false;
+
+            }else{
+                $(".pwd1-error").text("");
+            }
+
+            return true;
+        }
+
+        function pwd2_verify(){
+            var pwd1 = $(".pwd1").val();
+            var pwd2 = $(".pwd2").val();
+
+            if(pwd1 != pwd2){
+                $(".pwd2-error").text("两次密码不一样");
+                return false;
+            }else{
+                $(".pwd2-error").text("");
+            }
+
+            return true;
+        }
+
+        function hand_id_verify(){
+            var path = $(".hand-id").val();
+
+            if(!path){
+                $(".hand-id-error").text("没有选择照片");
+                return false;
+            }else{
+                $(".hand-id-error").text("");
+            }
+
+            return true;
+        }
+
+        function user_id_varify(){
+            var path = $(".user-id").val();
+
+            if(!path){
+                $(".user-id-error").text("没有选择照片");
+                return false;
+            }else{
+                $(".user-id-error").text("");
+            }
+
+            return true;
+        }
+
+        function phone_verify(){
+            var phone = $(".phone").val();
+
+            if(phone.length != 11){
+                $(".phone-error").text("手机号码长度不正确");
+                return false;
+            }else{
+                $(".phone-error").text("");
+            }
+
+            return true;
+        }
+
+        function code_varify(){
+            var verify = $(".verify").val();
+
+            if(verify.length != 6){
+                $(".verify-error").text("验证码错误！");
+                return false;
+            }else{
+                $(".verify-error").text("");
+            }
+
+            return true;
+        }
+
         $(document).ready(function(){
 
-            //性别互斥
-            $('.sex-man').click(function(){
-                $(".sex-woman").removeAttr("checked");
+            $(".account").blur(function(){
+                account_verify();
             });
 
-            $('.sex-woman').click(function(){
-                $(".sex-man").removeAttr("checked");
+            //密码
+            $(".pwd1").blur(function(){
+                pwd1_verify();
+            });
+
+            $(".pwd2").blur(function(){
+                pwd2_verify();
+            });
+
+            //手持身份证照片验证
+            $(".hand-id").change(function(){
+                hand_id_verify();
+            });
+
+            //身份证照片验证
+            $(".user-id").change(function(){
+                user_id_varify();
+            });
+
+
+            //手机号码验证
+            $(".phone").blur(function(){
+                phone_verify();
+            });
+
+            //验证码验证
+            $(".verify").blur(function(){
+                code_varify();
+            });
+
+            $(".get-verify").click(function(){
+                get_verify();
             });
 
             $(".rg-submit").click(function(){
+
+                if(!account_verify()||!pwd1_verify()||!pwd2_verify()||!hand_id_verify() ||!user_id_varify()||!phone_verify()
+                    || !code_varify()
+                )
+                {
+                    $(".submit-error").text("资料错误，请核实后重新点击下一步");
+                    return false;
+                }
+
+                var options = {
+                    success: function(data,status){
+                        if(data.status==0){
+                            $(".submit-error").text(data.error);
+                        }else{
+                            location.href = data.next;
+                        }
+                    },
+                    timeout: 3000
+                };
+
+                $(".submit-error").text("注册中，请等待....");
+
+                $(".rg-form-group").ajaxSubmit(options);
                 return false;
             });
 
