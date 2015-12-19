@@ -21,7 +21,7 @@
 
     <div class="wrapper">
         <div class="rg-container">
-            <h3>注册信息</h3>
+            <h3>提交资料</h3>
             <div class="step">
                 <ul>
                     <li >第一步：校验邀请码</li>
@@ -32,46 +32,100 @@
                 </ul>
             </div>
             <div class="rg-content">
-                <form action="" class="rg-form-group">
+                <form method="post" action="../user/submit_com" class="rg-form-group" enctype="multipart/form-data">
                     <div class="form-item">
                         <span>电脑1图片*：</span>
-                        <input type="file"  placeholder="真实姓名">
+                        <input class="com1-img" name="com1-img" type="file"  placeholder="真实姓名">
+                        <label class="com1-img-error"></label>
                     </div>
                     <div class="form-item">
                         <span>电脑2图片*：</span>
-                        <input type="file"  placeholder="真实姓名">
+                        <input class="com2-img" name="com1-img"  type="file"  placeholder="真实姓名">
+                        <label class="com2-img-error"></label>
                     </div>
                     <div class="form-item">
                         <span>两台电脑放一起图片*：</span>
-                        <input type="file"  placeholder="真实姓名">
+                        <input class="com-to-img" name="com-to-img"  type="file"  placeholder="真实姓名">
+                        <label class="com-to-error"></label>
                     </div>
                     <div class="form-item">
                         <span>两台光猫放一起图片*：</span>
-                        <input type="file"  placeholder="真实姓名">
+                        <input class="cat-to-img" name="cat-to-img"  type="file"  placeholder="真实姓名">
+                        <label class="cat-to-error"></label>
+                    </div>
+                    <div class="form-submit">
+                        <div>
+                            <label class="submit-error"></label>
+                        </div>
+                        <input type="submit" class="rg-submit" value="完成">
                     </div>
                 </form>
-                <div class="form-submit">
-                    <button class="rg-submit">提交</button>
-                    <button class="rg-cancel">取消</button>
-                </div>
+
             </div>
         </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
 
 
     <script type="text/javascript">
+
+        function img_verify(img,error){
+            if(!$(img).val()){
+                $(error).text("没有选择照片");
+                return false;
+            }else{
+                $(error).text("");
+            }
+            return true;
+        }
+
+
         $(document).ready(function(){
-            $(".offer-verify button").click(function(){
-                var offer = $(".offer-verify input").val().tolocaleLowerCase();
+            //身份证照片验证
+            $(".com1-img").change(function(){
+                img_verify(this,$(".com1-img-error"));
+            });
+            $(".com2-img").change(function(){
+                img_verify(this,$(".com2-img-error"));
+            });
+            $(".com-to-img").change(function(){
+                img_verify(this,$(".com-to-error"));
+            });
+            $(".cat-to-img").change(function(){
+                img_verify(this,$(".cat-to-error"));
+            });
 
-                $.post("../user/offer_verify",{offer:offer},function(data,status){
+            $(".rg-submit").click(function(){
+                if(!img_verify($('.com1-img'),$(".com1-img-error"))||
+                   !img_verify($('.com2-img'),$(".com2-img-error")) ||
+                   !img_verify($('.com-to-img'),$(".com-to-error")) ||
+                   !img_verify($('.cat-to-img'),$(".cat-to-error"))
+                )
+                {
+                    $(".submit-error").text("资料错误，请核实后重新点击完成");
+                    return false;
+                }
 
-                });
+                var options = {
+                    success: function(data,status){
+                        if(data.status==0){
+                            $(".submit-error").text(data.error);
+                        }else{
+                            location.href = data.next;
+                        }
+                    },
+                    timeout: 3000
+                };
+
+                $(".submit-error").text("提交电脑配置信息中，请等待....");
+
+                $(".rg-form-group").ajaxSubmit(options);
+                return false;
             });
         });
     </script>

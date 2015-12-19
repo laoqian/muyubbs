@@ -21,7 +21,7 @@
 
     <div class="wrapper">
         <div class="rg-container">
-            <h3>注册信息</h3>
+            <h3>提交资料</h3>
             <div class="step">
                 <ul>
                     <li >第一步：校验邀请码</li>
@@ -122,7 +122,6 @@
                         if(data.status==0){
                             $(".submit-error").text(data.error);
                         }else{
-                            alert("1");
                             location.href = data.next;
                         }
                     },

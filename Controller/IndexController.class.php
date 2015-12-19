@@ -7,12 +7,7 @@ class IndexController extends Controller {
     parent::__construct();
 
     $this->assign('bbs_title','木鱼网络');
-    $state = session('state');
-    if($state){
-      session('state', "1");
-      $user = session('user');
-      session('user', $user);
-    }
+    $this->assign('user',session("user"));
   }
 
   public function index(){

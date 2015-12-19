@@ -8,27 +8,42 @@
             <a href="./"><img src="__ROOT__/Application/Home/View/resource/img/logo.png" ></a>
         </div>
         <div class="login-bar">
-            <div class="login">
-                <div>
-                    <span>用户名</span>
-                    <input type="text" placeholder="用户名">
-                    <input type="checkbox">
-                    <span>记住</span>
+            <if condition="$user">
+                <div class="user-pin">
+                    <ul>
+                        <li><a href="">{$user['account']}</a><span>|</span></li>
+                        <li><a href="">设置</a><span>|</span></li>
+                        <li><a href="">用户组</a><span>|</span></li>
+                        <li><a href="../user/logout">退出</a></li>
+                    </ul>
                 </div>
-                <div>
-                    <span>密&nbsp;&nbsp;码</span>
-                    <input type="text" placeholder="密码">
-                    <button>登录</button>
+             <else/>
+                <div class="login-bar">
+                    <div class="pin1">
+                        <span>用户名</span>
+                        <span>密&nbsp;&nbsp;码</span>
+                    </div>
+                    <div class="pin2">
+                        <input class="name" type="text" placeholder="用户名" value="jiaran">
+                        <input class="pwd" type="password" placeholder="密码" value="123456">
+                        <span class="login-error"></span>
+                    </div>
+                    <div class="pin3">
+                        <input type="checkbox">
+                        <span>记住</span>
+                        <button class="login-btn">登录</button>
+                    </div>
+                    <div class="reg-bar">
+                        <a href="">找回密码</a>
+                        <a href="register.html">免费注册</a>
+                    </div>
+
                 </div>
-            </div>
-            <div class="reg-bar">
-                <a href="">找回密码</a>
-                <a href="register.html">免费注册</a>
-            </div>
+            </if>
+
         </div>
     </div>
 </div>
-
 
 <div class="wrapper">
     <div class="nav">
@@ -83,6 +98,31 @@
         </ul>
     </div>
 </div>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="__ROOT__/Application/Home/View/styles/lesscss/less.min.js"></script>
 
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".login-btn").click(function(){
+                var account = $(".name").val();
+                var pwd = $(".pwd").val();
+
+                $.post("../user/login",
+                        {   account:account,
+                            pwd:pwd,
+                        },
+
+                        function(data,status){
+                            if(data.status!=1){
+                                $("login-error").text("用户名/密码错误");
+                            }else{
+                                location.href = location.href;
+                            }
+                        });
+            });
+        });
+    </script>
 </body>
 </html>

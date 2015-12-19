@@ -6,12 +6,7 @@ class UserController extends Controller {
   function __construct() {
     parent::__construct();
     //构造函数
-    $state = session('state');
-    if($state){
-      session('state', "1");
-      $user = session('user');
-      session('user', $user);
-    }
+
   }
 
 
@@ -109,13 +104,20 @@ class UserController extends Controller {
     }
 
     //编号生成
-    $query=[];
     $acc = $user->select();
     $vip['sn'] = count($acc)+10000;
 
     //用户数据存进数据库
     $ret = $user->data($vip)->add();
     if($ret){
+
+      //注册成功后就自动进入登录状态
+      $query=[];
+      $query["tel"] = $vip['tel'];
+      $vip = $user->where($query)->select();
+      session("user",$vip);
+
+      //返回注册成功信息
       $data['status'] = 1;
       $data['next'] = "register-step-3.html";
       $this->ajaxReturn($data);
@@ -128,33 +130,28 @@ class UserController extends Controller {
   }
 
   //登录处理
-  public function login_post(){
+  public function login(){
+    $vip = M('vip');
 
-    $params = json_decode(file_get_contents('php://input'),true);
+    $vip->account = $_POST['account'];
+    $vip->pwd = $_POST['pwd'];
 
-    $Model = M('user');
-
-    $map["phone"] = $params["phone"];
-
-    $User = $Model->where($map)->select();
-
-    if($params['passwd']==$User[0]['password']){
-
-      session('state', "1");
-      session('user', $params["phone"]);
-
-      $this->ajaxReturn( "登录成功!");
-    }else{
-      $this->ajaxReturn( "用户名或者密码错误！");
+    $user = $vip->select();
+    if(!$user){
+      $data['status'] =0;
+      $this->ajaxReturn($data);
+      return;
     }
+
+    session('user',$user[0]);
+    $data['status'] =1;
+    $this->ajaxReturn($data);
   }
 
-  public function logout_post(){
-    session('state', null);
-    session('user', null);
+  public function logout(){
+    session("user",null);
 
-    $data["status"] =1;
-    $this->success($data,"Index/index");
+    $this->success('新增成功');
   }
 
   public function login_verify(){
@@ -243,7 +240,6 @@ class UserController extends Controller {
 
   public  function offer_verify(){
     //校验邀请码
-
     $invite = M('invitecode');
 
     $query['code'] = $_POST["offer"];
@@ -280,18 +276,6 @@ class UserController extends Controller {
 
   public function  submit_tb()
   {
-    /*以下代码只是测试时候使用,获取用户数据*/
-    $user = M("vip");
-    $user->id = 10015;
-    $vip = $user->select();
-    if($vip){
-      session("user",$vip[0]);
-    }else{
-      $data['status'] = 0;
-      $data['error'] = "读取用户数据错误。";
-      $this->ajaxReturn($data);
-      return;
-    }
     //先判断是否登录，不能登录不能进行操作。登录成功后，会将改用户信息保存在session的user字段中
     $user = session("user");
     if(!$user){
@@ -300,8 +284,6 @@ class UserController extends Controller {
       $this->ajaxReturn($data);
       return;
     }
-
-    //登录成功后才能处理
 
     // 上传文件
     $upload = new \Think\Upload();// 实例化上传类
@@ -348,7 +330,7 @@ class UserController extends Controller {
       $this->ajaxReturn($data);
     }else{
       $data['status'] = 0;
-      $data['error'] = "注册失败，请稍后重试。";
+      $data['error'] = "上传小号资料失败，请稍后重试。";
       $this->ajaxReturn($data);
       return;
     }
@@ -357,19 +339,7 @@ class UserController extends Controller {
 
   public function  submit_shop()
   {
-    /*以下代码只是测试时候使用,获取用户数据*/
-    $user = M("vip");
-    $user->id = 10015;
-    $vip = $user->select();
-    if($vip){
-      session("user",$vip[0]);
-    }else{
-      $data['status'] = 0;
-      $data['error'] = "读取用户数据错误。";
-      $this->ajaxReturn($data);
-      return;
-    }
-    
+
     //先判断是否登录，不能登录不能进行操作。登录成功后，会将改用户信息保存在session的user字段中
     $user = session("user");
     if(!$user){
@@ -380,7 +350,6 @@ class UserController extends Controller {
     }
 
     //登录成功后才能处理
-
     // 上传文件
     $upload = new \Think\Upload();// 实例化上传类
     $upload->maxSize   =     2*1024*1024 ;// 设置附件上传大小
@@ -420,11 +389,84 @@ class UserController extends Controller {
       $this->ajaxReturn($data);
     }else{
       $data['status'] = 0;
-      $data['error'] = "注册失败，请稍后重试。";
+      $data['error'] = "保存店铺资料失败，请稍后重试。";
       $this->ajaxReturn($data);
       return;
     }
   }
+
+
+
+  public function  submit_com()
+  {
+    //先判断是否登录，不能登录不能进行操作。登录成功后，会将改用户信息保存在session的user字段中
+    $user = session("user");
+    if(!$user){
+      $data['status'] = 0;
+      $data['error'] = "没有登录，请先登录。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    //登录成功后才能处理
+
+    // 上传文件
+    $upload = new \Think\Upload();// 实例化上传类
+    $upload->maxSize   =     2*1024*1024 ;// 设置附件上传大小
+    $upload->exts      =     array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
+    $upload->rootPath  =     './Application/Home/View/image/'; // 设置附件上传根目录
+    $upload->savePath  =     ''; // 设置附件上传（子）目录
+    $info   =   $upload->upload();
+
+    if(!$info) {// 上传错误提示错误信息
+      $data['status'] = 0;
+      $data['error'] = "上传图片失败，请稍后重试。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $hd = M("hardware");
+
+    $acc['ownerid'] = $user['id'];
+    $acc['img1config'] = "Application/Home/View/image/"."".$info["com1-img"]['savepath']."".$info["com1-img"]['savename'];
+    $acc['img2config'] = "Application/Home/View/image/"."".$info["com2-img"]['savepath']."".$info["com2-img"]['savename'];
+    $acc['imgpc'] = "Application/Home/View/image/"."".$info["com-to-img"]['savepath']."".$info["com-to-img"]['savename'];
+    $acc['imgmodem'] = "Application/Home/View/image/"."".$info["cat-to-img"]['savepath']."".$info["cat-to-img"]['savename'];
+
+    //检查是否有重复
+    $query['ownerid'] = $acc["ownerid"];
+    $ret = $hd->where($query)->select();
+    if($ret){
+      $data['status'] = 0;
+      $data['error'] = "电脑配置资料已存在,无法上传。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    //保存数据库
+    $ret = $hd->data($acc)->add();
+    if($ret){
+      $data['status'] = 1;
+      $data['next'] = "../user/register_result.html";
+      $this->ajaxReturn($data);
+    }else{
+      $data['status'] = 0;
+      $data['error'] = "保存电脑配置失败，请稍后重试。";
+      $this->ajaxReturn($data);
+      return;
+    }
+  }
+
+  public function register_result(){
+    $reg_result = session("register")["reg_result"];
+
+    if($reg_result){
+      $this->display("index/register_result");
+    }else{
+      $this->error("访问错误");
+    }
+  }
+
 }
 
 

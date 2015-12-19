@@ -23,6 +23,10 @@
         <div class="rg-container">
             <h3>注册结果</h3>
             <div class="rg-content">
+                <div class="rg-result">
+                    &nbsp;&nbsp;&nbsp;&nbsp;感谢您注册本论坛成功。<span class="timeout"></span>秒后跳转到主页。
+                    <a href="index.html">立即跳转</a>
+                </div>
             </div>
         </div>
     </div>
@@ -35,13 +39,15 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-            $(".offer-verify button").click(function(){
-                var offer = $(".offer-verify input").val().tolocaleLowerCase();
-
-                $.post("../user/offer_verify",{offer:offer},function(data,status){
-
-                });
-            });
+            var t =10;
+            $(".timeout").text(t);
+            var timer = setInterval(function(){
+                t--;
+                $(".timeout").text(t);
+                if(t<=0){
+                    location.href = "index.html";
+                }
+            },1000);
         });
     </script>
 </body>
