@@ -174,7 +174,6 @@ class UserController extends Controller {
                   "w", "x", "y", 'z',
                 );
 
-
     for ($i = 0; $i < 14; $i++) {
       $result[$i] = rand(0, 1000) % 36;
     }
