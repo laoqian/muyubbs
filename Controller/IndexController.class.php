@@ -177,9 +177,8 @@ class IndexController extends Controller {
       return;
     }
 
-
     //生成网站索引
-    $m_web['index'] = "newth?".''."category=".''.$_GET['categoryid'];
+    $m_web['index'] = "newth.html?".''."category=".''.$_GET['categoryid'];
     $m_web['name'] ="发表主题";
     $this->assign("map",web_map(2,$m_web));
 

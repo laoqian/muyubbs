@@ -112,4 +112,15 @@ class ArticleController extends Controller {
 
     $this->ajaxReturn($tpl);
   }
+
+  //发表新文章
+  public function publish(){
+    $user = session('user');
+    if(!user){
+      $this->error("没有权限发表文章");
+      return;
+    }
+
+
+  }
 }
