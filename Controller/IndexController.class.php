@@ -1,6 +1,9 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
+
+require "webMap.php";
+
 class IndexController extends Controller {
 
   function __construct() {
@@ -34,6 +37,8 @@ class IndexController extends Controller {
 
     $this->assign('menu',$menu);
     $this->assign('sub_menu',$sub_menu);
+
+    $this->assign("map",get_map());
 
     $this->show();
   }
@@ -120,6 +125,13 @@ class IndexController extends Controller {
 
     $this->assign("paged",$th);
     $this->assign("theme",$ret);
+
+    //生成网站索引
+    $m_web['index'] = "theme?".''."category=".''.$map['categoryid']."&page=".$th['cur_page'];
+    $query = [];
+    $query['id']
+
+    $this->assign("map",web_map(1,$m_web));
 
     $this->show();
   }
