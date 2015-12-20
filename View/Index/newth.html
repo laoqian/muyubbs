@@ -30,7 +30,10 @@
                 <button class="menu">
                     <select name="" id="">
                         <option value="">选择板块</option>
-                        <option value=""></option>
+                        <foreach name="new_blk" item="it" key="i">
+                            <option value={$i}>{$it['name']}</option>
+                        </foreach>
+
                         <option value=""></option>
                         <option value=""></option>
                     </select>

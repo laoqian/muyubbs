@@ -129,9 +129,15 @@ class IndexController extends Controller {
     //生成网站索引
     $m_web['index'] = "theme?".''."category=".''.$map['categoryid']."&page=".$th['cur_page'];
     $query = [];
-    $query['id']
-
+    $query['id'] = $map['categoryid'];
+    $cate = M("category");
+    $c = $cate->where($query)->select();
+    $m_web['name'] = $c[0]['name'];
     $this->assign("map",web_map(1,$m_web));
+
+    //生成发表主题索引
+    $the = 'newth.html?categoryid='.''.$map['categoryid'];
+    $this->assign('newth',$the);
 
     $this->show();
   }
@@ -163,5 +169,42 @@ class IndexController extends Controller {
         $this->display("register-step-2");
       }
     }
+  }
+
+  public function newth(){
+    if(!session('user')){
+      $this->error("没有登录");
+      return;
+    }
+
+
+    //生成网站索引
+    $m_web['index'] = "newth?".''."category=".''.$_GET['categoryid'];
+    $m_web['name'] ="发表主题";
+    $this->assign("map",web_map(2,$m_web));
+
+    $query = [];
+    $query['id'] = $_GET['categoryid'];
+    $cate = M("category");
+    $c = $cate->where($query)->select();
+
+    if(!$c){
+      $this->error("该板块不能发表主题");
+      return;
+    }
+
+    $query = [];
+    $query['pid'] = $c[0]['pid'];
+
+    $th = $cate->where($query)->select();
+
+    if(!$th){
+      $this->error("错误，等待返回");
+      return;
+    }
+
+    $this->assign("new_blk",$th);
+
+    $this->show();
   }
 }

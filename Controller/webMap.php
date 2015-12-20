@@ -17,13 +17,14 @@ $GLOBALS['web'] = $web;
 
 function web_map($lv,$index){
  $web = $GLOBALS['web'];
- $web[$lv] = $index;
 
  for($i=0;$i<$lv;$i++){
-   $index[$i] = $web[$i];
+   $tmp[$i] = $web[$i];
  }
 
- $GLOBALS['web'] = $index;
+ $tmp[$i] = $index;
+
+ $GLOBALS['web'] = $tmp;
  return $GLOBALS['web'];
 }
 
