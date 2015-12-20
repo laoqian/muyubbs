@@ -465,7 +465,11 @@ class UserController extends Controller {
       $this->error("访问错误");
     }
   }
+  
+  public  function reply(){
 
+
+  }
 }
 
 

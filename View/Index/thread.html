@@ -32,22 +32,22 @@
             <div class="th-content">
                 <div class="wr-l">
                     <div class="user-img">
-                        <h5>我不是悟空</h5>
+                        <h5>{$author['name']}</h5>
                         <img src="__ROOT__/Application/Home/View/resource/img/user-photo.jpg" alt="">
                     </div>
                     <div class="user-info">
                         <div class="th-total">
                             <div class="th-num">
-                                <p>8</p>
+                                <p>{$author['thnum']}</p>
                                 <p>主题</p>
                             </div>
                             <div class="reply-num">
-                                <p>8</p>
+                                <p>{$author['replynum']}</p>
                                 <p>帖子</p>
                             </div>
                         </div>
                         <div class="vip-level">
-                           <img src="__ROOT__/Application/Home/View/resource/img/5zuan.gif" alt="">
+                           <img src={$author['lvimg']} alt="">
                             <p>五钻会员</p>
                         </div>
                     </div>

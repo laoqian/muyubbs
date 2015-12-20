@@ -162,14 +162,11 @@
                         if(data.status==0){
                             $(".submit-error").text(data.error);
                         }else{
-                            alert("1");
                             location.href = data.next;
                         }
                     },
                     timeout: 3000
                 };
-
-                $(".submit-error").text("提交淘宝小号中，请等待....");
 
                 $(".rg-form-group").ajaxSubmit(options);
                 return false;

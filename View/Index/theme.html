@@ -86,6 +86,26 @@
                     </table>
                 </div>
             </div>
+            <div>
+                <div class="art-page">
+                    <button class="pre-page">
+                        <a href=<?php echo "theme.html?page="."".($paged['pre_page']);?> >上一页</a></button>
+                    <ul>
+                        <for start="$paged['menu_start']" end="$paged['menu_end']" >
+                            <if condition="$i eq $paged['cur_page']">
+                                <li><a style="background: #2681D5;color:white" href=<?php echo "theme.html?page="."".$i ?> >{$i}</a></li>
+                                <else />
+                                <li><a href=<?php echo "theme.html?page="."".$i ?> >{$i}</a></li>
+                            </if>
+
+                        </for>
+                        <if condition="$paged['last-page-show'] eq 1">
+                            <li><a class="page-total" href=<?php echo "theme.html?page="."".($paged['page_total']);?>>...{$paged['page_total']}</a></li>
+                        </if>
+                    </ul>
+                    <button class="next-page"><a href=<?php echo "theme.html?page="."".($paged['next_page']);?> >下一页</a></button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -93,9 +113,9 @@
     <include file="./Application/Home/View/Index/footer.html" />
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="__ROOT__/Application/Home/View//jquery/jquery.min.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/lesscss/less.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function(){

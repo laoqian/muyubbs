@@ -63,7 +63,7 @@ class IndexController extends Controller {
     }
 
     //每页数量
-    $per_page_num = 20;
+    $per_page_num = 25;
 
     $art_sum = $art->where($map)->count();
     $page = intval($art_sum)/$per_page_num;
@@ -72,54 +72,12 @@ class IndexController extends Controller {
       $page++;
     }
 
-    //
-    if($th['cur_page']>$page || $th['cur_page']<1){
-      $th["cur_page"]=1;
-    }
+    $th['page_total'] = $page; //总页数
+    $th["per_page_num"] = $per_page_num; //
+    $th["menu_num"] = 6;
+    $th = paged($th);
 
-    $th['page_total'] = $page;
-    $th["per_page_num"] = $per_page_num;
-
-    $menu_num = 10; //定义显示多少页按钮,定义为偶数
-    if($th['page_total']<= $menu_num){
-      $th["menu_start"] = 1;
-      $th["menu_end"] = $th["page_total"]+1;
-    }else{
-      if($th['cur_page']>$menu_num/2){
-        $th["menu_start"] = $th['cur_page']-$menu_num/2;
-
-        if($th['menu_start']+$menu_num>$th['page_total']){
-          $th["menu_end"] = $th["page_total"]+1;
-          $th["menu_start"] =$th["menu_end"] -$menu_num;
-        }else{
-          $th["menu_end"] = $th["menu_start"]+$menu_num;
-        }
-      }else{
-        $th["menu_start"] = 1;
-        $th["menu_end"] = $th["menu_start"]+$menu_num;
-      }
-    }
-
-    //计算列表
-    if($th["menu_start"]+$menu_num>=$th['page_total']+1){
-      $th["last-page-show"]=0;
-    }else{
-      $th["last-page-show"]=1;
-    }
-
-    //计算上一页
-    if($th['cur_page']>1){
-      $th['pre_page'] =$th['cur_page']-1;
-    }else{
-      $th['pre_page'] = 1;
-    }
-    //和下一页
-    if($th['cur_page']<$th['page_total']){
-      $th['next_page'] =$th['cur_page']+1;
-    }else{
-      $th['next_page'] = $th['page_total'];
-    }
-
+    //读取当前页数据
     $query  =$th["cur_page"].",".$per_page_num;
     $ret = $art->where($map)->page($query)->select();
 
@@ -127,15 +85,15 @@ class IndexController extends Controller {
     $this->assign("theme",$ret);
 
     //生成网站索引
-    $m_web['index'] = "theme?".''."category=".''.$map['categoryid']."&page=".$th['cur_page'];
-    $query = [];
-    $query['id'] = $map['categoryid'];
-    $cate = M("category");
-    $c = $cate->where($query)->select();
-    $m_web['name'] = $c[0]['name'];
-    $this->assign("map",web_map(1,$m_web));
+//    $m_web['index'] = "theme?".''."category=".''.$map['categoryid']."&page=".$th['cur_page'];
+//    $query = [];
+//    $query['id'] = $map['categoryid'];
+//    $cate = M("category");
+//    $c = $cate->where($query)->select();
+//    $m_web['name'] = $c[0]['name'];
+//    $this->assign("map",web_map(1,$m_web));
 
-    //生成发表主题索引
+    //生成发表主题链接
     $the = 'newth.html?categoryid='.''.$map['categoryid'];
     $this->assign('newth',$the);
 
@@ -148,20 +106,61 @@ class IndexController extends Controller {
       $map['id'] = $_GET['articleid'];
     }else{
       $this->error("页面错误");
+      return;
     }
 
+    //读取文章数据
     $model = M('article');
-
     $article = $model->where($map)->select();
+    if(!$article){
+      $this->error("服务器错误");
+      return;
+    }
+    $article = $article[0];
+    $this->assign("article",$article);
 
-    $this->assign("article",$article[0]);
+    //读书用户数据
+    $vip = M('vip');
+    $query['id'] = $article['authorid'];
+    $user = $vip->where($query)->select();
+    if(!$user){
+      $this->error("服务器错误");
+      return;
+    }
+
+    $user = $user[0];
+    //读取作者的主题数据
+    $query =[];
+    $query['authorid'] = $article['authorid'];
+    $user['thnum'] = $model->where($query)->count();
+
+    //读取作者的帖子数据
+    $review = M('review');
+    $query =[];
+    $query['reviewerid'] = $article['authorid'];
+    $reply = $review->where($query)->select();
+    $user['replynum'] =count($reply);
+    //生成vip地址
+    if($user["viplevel"]<1) $user["viplevel"]=1;
+    if($user["viplevel"]>5) $user["viplevel"]=5;
+    $user['lvimg']=__ROOT__.''.'/Application/Home/View/resource/img/'.''.$user['viplevel'].''.'zuan.gif';
+    $user['desc'] = $user['viplevel'].''.'钻会员';
+
+//读取评论数据
+//    $query =[];
+//    $query['articleid'] = $article[0]['id'];
+//    $reply = $review->where($query)->select();
+//    $user[0]['replynum'] = count($reply);
+
+    $this->assign('author',$user);
+
     $this->show();
   }
 
   public function register(){
 
     $step = (int)($_GET['step']);
-    if($step<=1 || $step>4 || !$step){
+    if($step<=1 || $step>5 || !$step){
       $this->display("register-step-1");
     }else if($step == 2){
       $offer = session('offer');
@@ -206,4 +205,5 @@ class IndexController extends Controller {
 
     $this->show();
   }
+
 }

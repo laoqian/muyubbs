@@ -25,23 +25,25 @@
             <div>
                 <h4>发表新主题</h4>
             </div>
-            <form action="../article/publish">
+            <form class="form-group" method="post"  >
                 <div class="am">
-                    <input type="text" id="" name="title"  placeholder="主题" data-required="required" autocomplete="off" >
-                    <select name="categoryid" id="">
-                        <option value="">选择板块</option>
+                    <input class="title" type="text" id="" name="title"  placeholder="主题" value="我的测试文章。">
+                    <select class="categoryid" name="categoryid" id="">
+                        <option value="0">选择板块</option>
                         <foreach  name="new_blk" item="it" key="i">
                             <option value={$it['id']} >{$it['name']}</option>
                         </foreach>
                     </select>
                 </div>
+                <div >
+                    <script id="container" name="content" maxlength="20000" type="text/plain" style="width:100%;height:400px;">我觉得我可以发表了</script>
+                </div>
                 <div>
-                    <script id="container" name="content" type="text/plain" style="width:100%;height:400px;">我觉得我可以发表了</script>
+                    <input type="submit" class="art-submit" value="发表帖子">
+                    <span class="newth-error"></span>
                 </div>
             </form>
-            <div>
-                <button class="am-btn" >发表帖子</button>
-            </div>
+
         </div>
     </div>
 
@@ -49,18 +51,80 @@
     <script src="__ROOT__/Application/Home/View/styles/umeditor/umeditor.config.js"></script>
     <script src="__ROOT__/Application/Home/View/styles/umeditor/umeditor.js"></script>
     <script src="__ROOT__/Application/Home/View/styles/lesscss/less.min.js"></script>
-
+    <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
 
 
     <script type="text/javascript">
         var ue;
+        var error= 0;
 
         $(document).ready(function(){
+
+            $(".title").change(function(){
+                if(error!=1) return;
+                if($(this).val()){
+                    $(".newth-error").text("");
+                    error =0;
+                }
+            });
+
+            $(".categoryid").change(function(){
+                if(error!=2) return;
+                if($(this).val()){
+                    $(".newth-error").text("");
+                    error =0;
+                }
+            });
+
+            $("#container").change(function(){
+                if(error!=3) return;
+                if($(this).val()){
+                    $(".newth-error").text("");
+                    error =0;
+                }
+            });
+
             //初始化输入区域
             ue = UM.getEditor('container');
 
-            $(".am-btn").click(function(){
-                var name = 1;
+            $(".art-submit").click(function(){
+
+                if(!$(".title").val()){
+                    $(".newth-error").text("主题名过短.");
+                    error =1;
+                    return false;
+                }
+
+                if($(".categoryid").val()<=0){
+                    $(".newth-error").text("没有选择板块.");
+                    error =2;
+                    return false;
+                }
+
+                if(!ue.getContent()){
+                    $(".newth-error").text("没有输入文章内容.");
+                    error =3;
+                    return false;
+                }
+
+                var options = {
+                    url :"__APP__/home/article/publish",
+                    type: 'post',
+                    dataType: 'json',
+                    data: $(".form-group").serialize(),
+                    success: function(data,status){
+                        if(data.status==0){
+                            error = 1;
+                            $(".newth-error").text(data.error);
+                        }else{
+                            location.href = data.next;
+                        }
+                    },
+                    timeout: 3000
+                };
+
+                $.ajax(options);
+                return false;
             });
         });
 
