@@ -14,7 +14,6 @@ class IndexController extends Controller {
   }
 
   public function index(){
-
     //读取栏目表
     $Model = M('category');
     $category = $Model->select();
@@ -178,7 +177,6 @@ class IndexController extends Controller {
       session('user',$user);
     }
 
-
     //读取文章数据
     $model = M('article');
 
@@ -234,8 +232,6 @@ class IndexController extends Controller {
       $th['cur_page'] = 1;
     }
 
-
-
     $th["per_page_num"] = 5; //每页评论数量
     $th["menu_num"] = 6; //每页页码数量
 
@@ -251,7 +247,7 @@ class IndexController extends Controller {
 
     $th = paged($th);
 
-    $limit['id'] = $article['id'];
+    $limit['articleid'] = $article['id'];
     $query = $th["cur_page"].",".$th["per_page_num"];
     $replyer = $review->where($limit)->page($query)->select();
 
