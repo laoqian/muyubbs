@@ -46,17 +46,17 @@
                                                 <div>
                                                     <a href={$sub['index']} class="fl-title">{$sub['name']}</a>
                                                 <span class="fl-news">
-                                                    (24小时新帖：44)
+                                                    (24小时新帖：{$sub['last_day_ths']})
                                                 </span>
                                                 </div>
                                                 <div class="fl-total">
-                                                    主题：111,贴数：111；
+                                                    主题：{$sub['th_num']},贴数：{$sub['reply_num']}；
                                                 </div>
                                                 <div class="fl-tips">
                                                     {$sub['comm']}
                                                 </div>
                                                 <div class="fl-hot">
-                                                    小号被盗有什么办法解决啊.30多 ...
+                                                    <a href={$sub['hot_path']}>{$sub['hot_name']}</a>
                                                 </div>
                                             </div>
                                         </div>

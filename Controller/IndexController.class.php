@@ -19,8 +19,42 @@ class IndexController extends Controller {
     $Model = M('category');
     $category = $Model->select();
 
-    $i=$j=0;
+    $article = M('article');
+    $review  =  M('review');
 
+    //提取每个版块主题数据，帖子数据
+    foreach($category as $key=>$cate){
+      $query =[];
+      $query['categoryid'] = $cate['id'];
+      $cate['th_num'] = $article->where($query)->count();
+
+      //首页版块信息下显示的文章提取
+      $hotest = $article->where($query)->order('reviewnum')->limit(1)->select();
+      $cate['hot_name'] = $hotest[0]['title'];
+      $cate['hot_path'] = 'thread.html?articleid='.''.$hotest[0]['id'];
+
+      //统计最近24小时发帖数
+      //根据时区走 不然时间判断不准时
+      date_default_timezone_set("Asia/Shanghai");
+      $time=date("Y-m-d 00:00:00");
+      $news=strtotime($time);
+      $cate['last_day_ths']=$article->where($query)->where("publishtime > $news")->count();
+
+      $art = $article->where($query)->select();
+      $cate['reply_num'] = 0;
+      foreach($art as $i => $value){
+        $query =[];
+        $query['articleid']= $value['id'];
+        $cate['reply_num']+=$review->where($query)->count();
+      }
+
+      $cate['comm'] ='└─'.''.$cate['comm'];
+
+      $category[$key] = $cate;
+    }
+
+
+    $i=$j=0;
     //解析目录结构,只能支持2级目录
     foreach($category as $value){
       if($value['pid']==0){
