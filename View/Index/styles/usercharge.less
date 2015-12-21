@@ -1,0 +1,49 @@
+
+
+@import "public.less";
+
+
+
+.container{
+  min-height:400px;
+  background: white;
+  border: solid 1px #f0f0f0;
+  margin-top: 10px;
+
+  .title{
+    display: flex;
+    justify-content: center;
+  }
+
+  .form-item{
+    width: 300px;
+    height: 30px;
+    margin: 30px auto;
+
+    span{
+      margin-right: 10px;
+      color:#777;
+    }
+    input{
+      width: 200px;
+      height: 30px;
+      padding: 3px;
+      &::-webkit-inner-spin-button{
+        -webkit-appearance: none !important;
+        margin: 0;
+      }
+    }
+  }
+
+  .charge{
+    width: 300px;
+    margin: 30px auto;
+
+    button{
+      width: 300px;
+      height: 30px;
+      background: @wb-main-color;
+      color: white;
+    }
+  }
+}

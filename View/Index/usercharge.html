@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN" ng-app="articleApp" ng-controller="articleCtrl">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{$bbs_title}</title>
+    <!-- Bootstrap -->
+    <link href="__ROOT__/Application/Home/View/Index/styles/usercharge.less" rel="stylesheet/less" >
+    <link href="__ROOT__/Application/Home/View/styles/Font-Awesome-3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!--导航栏 -->
+    <include file="./Application/Home/View/Index/header.html" />
+
+    <div class="wrapper">
+        <div class="container">
+            <div class="title">
+                <h3>充值中心</h3>
+            </div>
+            <div class="form-item">
+                <span>充值金额:</span>
+                <input type="number" placeholder="充值金额">
+            </div>
+            <div class="form-item">
+                <span>当前价格:</span>
+                <label for="">110</label>
+            </div>
+            <div class="form-item">
+                <span>充值类型:</span>
+                <select name="" id="">
+                    <option value="0">支付宝</option>
+                    <option value="1">财付通</option>
+                </select>
+            </div>
+            <div class="charge">
+                <button>马上充值</button>
+            </div>
+        </div>
+    </div>
+
+    <include file="./Application/Home/View/Index/footer.html" />
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="__ROOT__/Application/Home/View/styles/lesscss/less.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            //初始化输入区域
+        });
+
+    </script>
+
+</body>
+</html>
