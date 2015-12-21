@@ -133,10 +133,10 @@ class UserController extends Controller {
   public function login(){
     $vip = M('vip');
 
-    $vip->account = $_POST['account'];
-    $vip->pwd = $_POST['pwd'];
+    $query['account'] = $_POST['account'];
+    $query['pwd']= $_POST['pwd'];
 
-    $user = $vip->select();
+    $user = $vip->where($query)->select();
     if(!$user){
       $data['status'] =0;
       $this->ajaxReturn($data);
@@ -161,7 +161,7 @@ class UserController extends Controller {
       $this->ajaxReturn( "failed");
     }
   }
-    //通过算法生成14位邀请码
+    //通过算法生成15位邀请码
     private function active_code_rand($num){
      $arr = array("0", "1", "2", '3',
                   "4", "5", "6", '7',
@@ -465,11 +465,8 @@ class UserController extends Controller {
       $this->error("访问错误");
     }
   }
-  
-  public  function reply(){
 
 
-  }
 }
 
 

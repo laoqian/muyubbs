@@ -109,6 +109,13 @@ class IndexController extends Controller {
       return;
     }
 
+    //如果用户已经登录，将当前的文章id保存到session中
+    $user = session('user');
+    if($user){
+      $user['articleid'] = $_GET['articleid'];
+      session('user',$user);
+    }
+
     //读取文章数据
     $model = M('article');
     $article = $model->where($map)->select();
@@ -119,7 +126,20 @@ class IndexController extends Controller {
     $article = $article[0];
     $this->assign("article",$article);
 
-    //读书用户数据
+    //更新查看数量
+    $qq =[];
+    $qq['reviewnum'] = $article['reviewnum'] +1;
+    $str ='id='.''.$map['id'] ;
+    $ret = $model->where($str)->save($qq);
+    if(!$ret){
+      $this->error("服务器异常,请稍后重试！");
+      return;
+    }
+
+    $th['reply_num'] =$article['replynum'];
+    $th['review_num'] =$article['reviewnum'];
+
+    //读取作者用户数据
     $vip = M('vip');
     $query['id'] = $article['authorid'];
     $user = $vip->where($query)->select();
@@ -127,8 +147,8 @@ class IndexController extends Controller {
       $this->error("服务器错误");
       return;
     }
-
     $user = $user[0];
+
     //读取作者的主题数据
     $query =[];
     $query['authorid'] = $article['authorid'];
@@ -138,21 +158,76 @@ class IndexController extends Controller {
     $review = M('review');
     $query =[];
     $query['reviewerid'] = $article['authorid'];
-    $reply = $review->where($query)->select();
-    $user['replynum'] =count($reply);
+    $user['replynum'] = $review->where($query)->count();
+
     //生成vip地址
     if($user["viplevel"]<1) $user["viplevel"]=1;
     if($user["viplevel"]>5) $user["viplevel"]=5;
     $user['lvimg']=__ROOT__.''.'/Application/Home/View/resource/img/'.''.$user['viplevel'].''.'zuan.gif';
     $user['desc'] = $user['viplevel'].''.'钻会员';
 
-//读取评论数据
-//    $query =[];
-//    $query['articleid'] = $article[0]['id'];
-//    $reply = $review->where($query)->select();
-//    $user[0]['replynum'] = count($reply);
+/////////////////////////////////////////////////////////////////////////////
+    //读取评论数据
+    $th['articleid'] = $article['id'];
+    if($_GET['page']){
+      $th['cur_page'] = (int)($_GET['page']);
+    }else{
+      $th['cur_page'] = 1;
+    }
 
+
+
+    $th["per_page_num"] = 5; //每页评论数量
+    $th["menu_num"] = 6; //每页页码数量
+
+    $query =[];
+    $query['articleid'] = $article['id'];
+
+    $th['reply_num'] = $review->where($query)->count();
+    $th['page_total'] = intval($th['reply_num'])/$th["per_page_num"];
+    if(floor($th['page_total'])<$th['page_total']){
+      $th['page_total']=(int)(floor($th['page_total']));
+      $th['page_total']++;
+    }
+
+    $th = paged($th);
+
+    $query = $th["cur_page"].",".$th["per_page_num"];
+    $replyer = $review->page($query)->select();
+
+    //拉取评论者的统计数据
+    $vip  = M("vip");
+    foreach($replyer as $key=>$value ){
+      //读取评论者的vip用户数据
+      $query =[];
+      $query['id'] = $value['reviewerid'];
+      $u = $vip->where($query)->select();
+      $value['user'] = $u[0];
+
+      //读取评论者的主题数据
+      $query =[];
+      $query['authorid'] = $value['reviewerid'];
+      $value['user']['thnum'] = $model->where($query)->count();
+
+      //读取评论者的帖子数据
+      $query =[];
+      $query['reviewerid'] = $value['reviewerid'];
+      $value['user']['replynum'] = $review->where($query)->count();
+
+      //生成评论者生成vip地址
+      if($user["viplevel"]<1) $user["viplevel"]=1;
+      if($user["viplevel"]>5) $user["viplevel"]=5;
+      $value['user']['lvimg']=__ROOT__.''.'/Application/Home/View/resource/img/'.''.$user['viplevel'].''.'zuan.gif';
+      $value['user']['desc'] = $user['viplevel'].''.'钻会员';
+
+
+      $replyer[$key] = $value;
+    }
+
+    $this->assign('paged',$th);
+    $this->assign('replyer',$replyer);
     $this->assign('author',$user);
+    $this->assign('user',session('user'));
 
     $this->show();
   }

@@ -36,7 +36,10 @@ function paged($th){
 
   $menu_num = $th['menu_num'];
 
-  if($th['cur_page']>$th["page_total"] || $th['cur_page']<1){
+  //如果是-1就是返回最后一页
+  if($th['cur_page']==-1){
+    $th['cur_page'] = $th["page_total"];
+  }else if($th['cur_page']>$th["page_total"] || $th['cur_page']<1){
     $th["cur_page"]=1;
   }
 

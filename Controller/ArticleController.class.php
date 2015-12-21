@@ -60,4 +60,71 @@ class ArticleController extends Controller {
     }
 
   }
+
+
+//评论功能
+  public  function reply(){
+
+    //先判断登录状态
+    $user = session('user');
+    if(!$user){
+      $data['status'] = 0;
+      $data['error'] = '没有登录不能发表评论！';
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $review = M("review");
+
+    $reply['articleid']  = $user['articleid'];
+    $reply['reviewerid'] = $user['id'];
+    $reply['content'] = $_POST['content'];
+
+    if(!$reply['articleid'] || !$reply['content']){
+      $data['status'] = 0;
+      $data['error'] = '服务器错误,请稍后重试！';
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $ret = $review->data($reply)->add();
+
+    if(!$ret){
+      $data['status'] = 0;
+      $data['error'] = '发表评论失败,请稍后重试！';
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    //作者评论数据保存统计
+    $article = M("article");
+    $query['id'] = $user['articleid'];
+
+    $ret = $article->where($query)->select();
+    if(!$ret){
+      $data['status'] = 0;
+      $data['error'] = '服务器异常,请稍后重试！';
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $art = $ret[0];
+
+    $q['replynum'] = $art['replynum']++;
+    $q['lastreplyer'] = $user['name'];
+
+    $ret = $article->where($query)->data($q)->save();
+    if(!$ret){
+      $data['status'] = 0;
+      $data['error'] = '服务器异常,请稍后重试！';
+      $this->ajaxReturn($data);
+      return;
+    }
+
+
+
+    $data['status'] = 1;
+    $data['next'] ='thread.html?articleid='.''.$user['articleid'].'&page=-1';
+    $this->ajaxReturn($data);
+  }
 }

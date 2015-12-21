@@ -15,9 +15,11 @@
 
 /*创建数据库*/
 
-DROP database IF EXISTS eb;			/*删除数据库*/
-CREATE database IF NOT EXISTS eb;	/*创建数据库*/
+DROP DATABASE IF EXISTS eb;			/*删除数据库*/
+CREATE DATABASE IF NOT EXISTS eb;	/*创建数据库*/
+ALTER DATABASE eb CHARSET=utf8;
 USE eb;								/*使用数据库*/
+set character_set_client = gbk;		/* 避免中文乱码 */
 
 /*创建表*/
 
@@ -77,8 +79,8 @@ CREATE TABLE IF NOT EXISTS `eb_vip` (
   `name` VARCHAR(10) NOT NULL COMMENT '姓名',
   `sex` INT NOT NULL DEFAULT 0 COMMENT '性别，0-男，1-女',
   `photopath` VARCHAR(200) NOT NULL DEFAULT "" COMMENT '用户头像照片路径',
-  `handidpath` VARCHAR(200) NOT NULL DEFAULT "" COMMENT '用户手持身份证照片路径';
-  `useridpath` VARCHAR(200) NOT NULL DEFAULT "" COMMENT '用户身份证正面照片路径';
+  `handidpath` VARCHAR(200) NOT NULL DEFAULT "" COMMENT '用户手持身份证照片路径',
+  `useridpath` VARCHAR(200) NOT NULL DEFAULT "" COMMENT '用户身份证正面照片路径',
   `area` VARCHAR(16) NOT NULL COMMENT '地区，四川省、重庆市。。。',
   `address` VARCHAR(100) NOT NULL COMMENT '地址，四川省成都市武侯区。。。',
   `qq` VARCHAR(20) NOT NULL UNIQUE COMMENT 'QQ号',
@@ -217,9 +219,10 @@ CREATE TABLE IF NOT EXISTS `eb_sd` (
   `shop` VARCHAR(60) NOT NULL COMMENT '店铺名',
   `orderid` VARCHAR(60) NOT NULL COMMENT '订单号',
   `money` decimal(11,2) NOT NULL DEFAULT 0.00 COMMENT '金额',
+  `linknum` INT NOT NULL DEFAULT 0 COMMENT '拍下的链接数',
   `begintime` DATETIME NOT NULL COMMENT '开始时间',
   `endtime` DATETIME NOT NULL COMMENT '结束时间',
-  `orderstatus` INT NOT NULL COMMENT '订单状态，0-已收藏，1-已下单，2-已付款，3-已收货，4-已完成',
+  `orderstatus` INT NOT NULL COMMENT '订单状态，0-已收藏，1-已下单，2-已付款，3-已收货',
   `evaluatetime` DATETIME NOT NULL COMMENT '评价时间',
   `evaluate` VARCHAR(600) NOT NULL COMMENT '评价',
   `status` INT NOT NULL DEFAULT 0 COMMENT '刷单状态，0-失败，1-成功',
@@ -333,11 +336,11 @@ CREATE TABLE IF NOT EXISTS `eb_article` (
   `categoryid` INT NOT NULL COMMENT '栏目id，category表外键',
   `authorid` INT NOT NULL COMMENT '作者id，vip表外键',
   `title` VARCHAR(100) NOT NULL COMMENT '文章标题',
-  `content` VARCHAR(40000) NOT NULL COMMENT '文章内容',
+  `content` VARCHAR(20000) NOT NULL COMMENT '文章内容',
   `publishtime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '文章发布时间',
-  `replynum` INT NOT NULL COMMENT '评论数',
+  `replynum` INT NOT NULL DEFAULT 0 COMMENT '评论数',
   `lastreplyer` VARCHAR(100) NOT NULL COMMENT '最后评论人',
-  `reviewnum` INT NOT NULL COMMENT '查看数量',
+  `reviewnum` INT NOT NULL DEFAULT 0 COMMENT '查看数量',
   PRIMARY KEY (`id`),
   KEY `fk_categoryid_article` (`categoryid`),
   KEY `fk_authorid_article` (`authorid`),
@@ -353,7 +356,7 @@ CREATE TABLE IF NOT EXISTS `eb_review` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `articleid` INT NOT NULL COMMENT '文章id，article表外键',
   `reviewerid` INT NOT NULL COMMENT '评论者id，vip表外键',
-  `content` LONGBLOB NOT NULL COMMENT '评论内容',
+  `content` VARCHAR(2000) NOT NULL COMMENT '评论内容',
   `commenttime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '评论时间',
   PRIMARY KEY (`id`),
   KEY `fk_articleid_review` (`articleid`),

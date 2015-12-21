@@ -24,8 +24,8 @@
                         <span>密&nbsp;&nbsp;码</span>
                     </div>
                     <div class="pin2">
-                        <input class="name" type="text" placeholder="用户名" value="jiaran">
-                        <input class="pwd" type="password" placeholder="密码" value="123456">
+                        <input class="name" type="text" placeholder="用户名" value="account001">
+                        <input class="pwd" type="password" placeholder="密码" value="88888888">
                         <span class="login-error"></span>
                     </div>
                     <div class="pin3">
@@ -116,7 +116,7 @@
 
                         function(data,status){
                             if(data.status!=1){
-                                $("login-error").text("用户名/密码错误");
+                                $(".login-error").text("用户名/密码错误");
                             }else{
                                 location.href = location.href;
                             }

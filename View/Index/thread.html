@@ -21,14 +21,33 @@
     <include file="./Application/Home/View/Index/header.html" />
 
     <div class="wrapper">
+        <div class="art-page">
+            <button class="pre-page">
+                <a href=<?php echo "thread.html?page="."".($paged['pre_page']).'&articleid='.$paged['articleid'];?> >上一页</a></button>
+            <ul>
+                <for start="$paged['menu_start']" end="$paged['menu_end']" >
+                    <if condition="$i eq $paged['cur_page']">
+                        <li><a style="background: #2681D5;color:white" href=<?php echo "thread.html?page="."".$i.'&articleid='.$paged['articleid']; ?> >{$i}</a></li>
+                        <else />
+                        <li><a href=<?php echo "thread.html?page="."".$i.'&articleid='.$paged['articleid']; ?> >{$i}</a></li>
+                    </if>
+
+                </for>
+                <if condition="$paged['last-page-show'] eq 1">
+                    <li><a class="page-total" href=<?php echo "thread.html?page="."".($paged['page_total']).'&articleid='.$paged['articleid'];?>>...{$paged['page_total']}</a></li>
+                </if>
+            </ul>
+            <button class="next-page"><a href=<?php echo "thread.html?page="."".($paged['next_page']).'&articleid='.$paged['articleid'];?> >下一页</a></button>
+        </div>
         <div class="thread">
             <div class="th-title">
                 <div class="reply-total">
-                    <div>查看:<span>1002</span></div>
-                    <div> 回复: <span>4322</span></div>
+                    <div>查看:<span>{$paged['review_num']}</span></div>
+                    <div> 回复: <span>{$paged['reply_num']}</span></div>
                 </div>
                 <h4>{$article['title']}</h4>
             </div>
+     <if condition="$paged['cur_page'] eq 1">
             <div class="th-content">
                 <div class="wr-l">
                     <div class="user-img">
@@ -48,7 +67,7 @@
                         </div>
                         <div class="vip-level">
                            <img src={$author['lvimg']} alt="">
-                            <p>五钻会员</p>
+                            <p>{$author['desc']} </p>
                         </div>
                     </div>
                 </div>
@@ -63,58 +82,81 @@
                     </div>
                 </div>
             </div>
-
+        </if>
             <div class="th-reply">
-                <div class="wr-l">
-                    <div class="user-img">
-                        <h5>我不是悟空</h5>
-                        <img src="__ROOT__/Application/Home/View/resource/img/user-photo.jpg" alt="">
-                    </div>
-                    <div class="user-info">
-                        <div class="th-total">
-                            <div class="th-num">
-                                <p>8</p>
-                                <p>主题</p>
+                <foreach name="replyer" item="review">
+                    <div class="wr-l">
+                        <div class="user-img">
+                            <h5>{$review['user']['name']}</h5>
+                            <img src="__ROOT__/Application/Home/View/resource/img/user-photo.jpg" alt="">
+                        </div>
+                        <div class="user-info">
+                            <div class="th-total">
+                                <div class="th-num">
+                                    <p>{$review['user']['thnum']}</p>
+                                    <p>主题</p>
+                                </div>
+                                <div class="reply-num">
+                                    <p>{$review['user']['replynum']}</p>
+                                    <p>帖子</p>
+                                </div>
                             </div>
-                            <div class="reply-num">
-                                <p>8</p>
-                                <p>帖子</p>
+                            <div class="vip-level">
+                                <img src={$review['user']['lvimg']} alt="">
+                                <p>{$review['user']['desc']}</p>
                             </div>
                         </div>
-                        <div class="vip-level">
-                            <img src="__ROOT__/Application/Home/View/resource/img/5zuan.gif" alt="">
-                            <p>五钻会员</p>
+                    </div>
+                    <div class="th-r">
+                        <div class="th-art">
+                            <div class="art-post-time">
+                                <span><i class="icon-user"></i>发表于{$review['commenttime']}</span>
+                            </div>
+                            <div class="art-content">
+                                {$review['content']}
+                            </div>
                         </div>
                     </div>
+                </foreach>
+            </div>
+        </div>
+
+        <div class="art-page">
+            <button class="pre-page">
+                <a href=<?php echo "thread.html?page="."".($paged['pre_page']).'&articleid='.$paged['articleid'];?> >上一页</a></button>
+            <ul>
+                <for start="$paged['menu_start']" end="$paged['menu_end']" >
+                    <if condition="$i eq $paged['cur_page']">
+                        <li><a style="background: #2681D5;color:white" href=<?php echo "thread.html?page="."".$i.'&articleid='.$paged['articleid']; ?> >{$i}</a></li>
+                        <else />
+                        <li><a href=<?php echo "thread.html?page="."".$i.'&articleid='.$paged['articleid']; ?> >{$i}</a></li>
+                    </if>
+
+                </for>
+                <if condition="$paged['last-page-show'] eq 1">
+                    <li><a class="page-total" href=<?php echo "thread.html?page="."".($paged['page_total']).'&articleid='.$paged['articleid'];?>>...{$paged['page_total']}</a></li>
+                </if>
+            </ul>
+            <button class="next-page"><a href=<?php echo "thread.html?page="."".($paged['next_page']).'&articleid='.$paged['articleid'];?> >下一页</a></button>
+        </div>
+    </div>
+
+    <if condition="$user">
+        <div class="wrapper">
+            <div class="reply-post">
+                <div class="post-left">
+
                 </div>
-                <div class="th-r">
-                    <div class="th-art">
-                        <div class="art-post-time">
-                            <span><i class="icon-user"></i>发表于2015年12月17日15:26:09</span>
-                        </div>
-                        <div class="art-content">
-                            {$article['content']}
-                        </div>
+                <div class="post-area">
+                    <script id="post-container" name="content" type="text/plain" class="ue-st">我觉得我可以发表了</script>
+                    <div class="reply-a">
+                        <button class="reply-btn">发表回复</button>
+                        <span class="reply-error" style="color: red"></span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="wrapper">
-        <div class="reply-post">
-            <div class="post-left">
-
-            </div>
-            <div class="post-area">
-                <script id="post-container" name="content" type="text/plain" class="ue-st">我觉得我可以发表了</script>
-                <div class="reply-a">
-                    <button>发表回复</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    </if>
 
     <include file="./Application/Home/View/Index/footer.html" />
 
@@ -133,9 +175,23 @@
             //初始化输入区域
             ue = UM.getEditor('post-container');
 
-            if($(".wr-l").height()!=$(".wr-l").next().height()){
-                $(".wr-l").css("height",$(".wr-l").next().height());
-            }
+            $('.reply-btn').click(function(){
+                var content = ue.getContent();
+
+                $.post(
+                    '../article/reply',
+                    {
+                        content:content
+                    },
+                    function(data,status){
+                        if(data.status==0){
+                            $(".reply-error").text(data.error);
+                        }else{
+                            location.href = data.next;
+                        }
+                    }
+                );
+            });
         });
 
     </script>
