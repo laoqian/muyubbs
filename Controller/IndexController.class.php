@@ -38,7 +38,35 @@ class IndexController extends Controller {
     $this->assign('menu',$menu);
     $this->assign('sub_menu',$sub_menu);
 
-    $this->assign("map",get_map());
+    //定义首页展示链接条数
+    $link_num = 15;
+
+    //生成最新文章链接
+    $article = M("article");
+    $news = $article->order('id')->limit($link_num)->select();
+    foreach($news as $key=>$value){
+      $value['path'] = "thread.html?articleid=".''.$value['id'];
+      $news[$key] = $value;
+    }
+
+    //生成热门文章链接
+    $article = M("article");
+    $hots = $article->order('reviewnum')->limit($link_num)->select();
+    foreach($hots as $key=>$value){
+      $value['path'] = "thread.html?articleid=".''.$value['id'];
+      $hots[$key] = $value;
+    }
+    //生成随机文章链接
+    $article = M("article");
+    $rands = $article->order('rand()')->limit($link_num)->select();
+    foreach($rands as $key=>$value){
+      $value['path'] = "thread.html?articleid=".''.$value['id'];
+      $rands[$key] = $value;
+    }
+
+    $this->assign('news',$news);
+    $this->assign('hots',$hots);
+    $this->assign('rands',$rands);
 
     $this->show();
   }
@@ -116,8 +144,13 @@ class IndexController extends Controller {
       session('user',$user);
     }
 
+
     //读取文章数据
     $model = M('article');
+
+    //更新查看数量
+    $model->where($map)->setInc('reviewnum');
+
     $article = $model->where($map)->select();
     if(!$article){
       $this->error("服务器错误");
@@ -126,15 +159,7 @@ class IndexController extends Controller {
     $article = $article[0];
     $this->assign("article",$article);
 
-    //更新查看数量
-    $qq =[];
-    $qq['reviewnum'] = $article['reviewnum'] +1;
-    $str ='id='.''.$map['id'] ;
-    $ret = $model->where($str)->save($qq);
-    if(!$ret){
-      $this->error("服务器异常,请稍后重试！");
-      return;
-    }
+
 
     $th['reply_num'] =$article['replynum'];
     $th['review_num'] =$article['reviewnum'];
@@ -192,8 +217,9 @@ class IndexController extends Controller {
 
     $th = paged($th);
 
+    $limit['id'] = $article['id'];
     $query = $th["cur_page"].",".$th["per_page_num"];
-    $replyer = $review->page($query)->select();
+    $replyer = $review->where($limit)->page($query)->select();
 
     //拉取评论者的统计数据
     $vip  = M("vip");
@@ -223,6 +249,9 @@ class IndexController extends Controller {
 
       $replyer[$key] = $value;
     }
+
+    $the = 'newth.html?categoryid='.''.$article['categoryid'];
+    $this->assign('newth',$the);
 
     $this->assign('paged',$th);
     $this->assign('replyer',$replyer);

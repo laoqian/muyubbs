@@ -87,21 +87,9 @@
                 </div>
                 <div class="tips-list ">
                     <ul class="last-study">
-                        <li><a href="">教程1</a></li>
-                        <li><a href="">教程1</a></li>
-                        <li><a href="">教程1</a></li>
-                        <li><a href="">教程1</a></li>
-                        <li><a href="">教程1</a></li>
-                        <li><a href="">教程1</a></li>
-                        <li><a href="">教程1</a></li>
-                        <li><a href="">教程1</a></li>
-                        <li><a href="">教程1</a></li>
-                        <li><a href="">教程1</a></li>
-                        <li><a href="">教程1</a></li>
-                        <li><a href="">教程1</a></li>
-                        <li><a href="">教程1</a></li>
-                        <li><a href="">教程1</a></li>
-                        <li><a href="">教程1</a></li>
+                        <foreach name="news" item="article">
+                            <li><a href={$article['path']}>{$article['title']}</a></li>
+                        </foreach>
                     </ul>
                 </div>
             </div>
@@ -112,21 +100,9 @@
                 </div>
                 <div class="tips-list">
                     <ul class="hot-study">
-                        <li>教程1</li>
-                        <li>教程2</li>
-                        <li>教程3</li>
-                        <li>教程3</li>
-                        <li>教程3</li>
-                        <li>教程3</li>
-                        <li>教程3</li>
-                        <li>教程3</li>
-                        <li>教程3</li>
-                        <li>教程3</li>
-                        <li>教程4</li>
-                        <li>教程1</li>
-                        <li>教程2</li>
-                        <li>教程3</li>
-                        <li>教程4</li>
+                        <foreach name="hots" item="article">
+                            <li><a href={$article['path']}>{$article['title']}</a></li>
+                        </foreach>
                     </ul>
                 </div>
             </div>
@@ -137,21 +113,9 @@
                 </div>
                 <div class="tips-list">
                     <ul class="rand-recommend">
-                        <li>教程1</li>
-                        <li>教程2</li>
-                        <li>教程2</li>
-                        <li>教程2</li>
-                        <li>教程2</li>
-                        <li>教程3</li>
-                        <li>教程4</li>
-                        <li>教程1</li>
-                        <li>教程1</li>
-                        <li>教程1</li>
-                        <li>教程1</li>
-                        <li>教程1</li>
-                        <li>教程2</li>
-                        <li>教程3</li>
-                        <li>教程4</li>
+                        <foreach name="rands" item="article">
+                            <li><a href={$article['path']}>{$article['title']}</a></li>
+                        </foreach>
                     </ul>
                 </div>
             </div>

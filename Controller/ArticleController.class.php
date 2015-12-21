@@ -109,19 +109,9 @@ class ArticleController extends Controller {
     }
 
     $art = $ret[0];
-
-    $q['replynum'] = $art['replynum']++;
+    $article->where($query)->setInc('replynum');
     $q['lastreplyer'] = $user['name'];
-
-    $ret = $article->where($query)->data($q)->save();
-    if(!$ret){
-      $data['status'] = 0;
-      $data['error'] = '服务器异常,请稍后重试！';
-      $this->ajaxReturn($data);
-      return;
-    }
-
-
+    $article->where($query)->data($q)->save();
 
     $data['status'] = 1;
     $data['next'] ='thread.html?articleid='.''.$user['articleid'].'&page=-1';
