@@ -11,6 +11,38 @@ class ArticleController extends Controller {
 
   }
 
+  public function search(){
+    $model = M("article");
+    if($_POST["title"])
+      $query['title'] = $_POST["title"];
+    if($_POST["phone"])
+      $query['phone'] = $_POST["phone"];
+    $res = $model->where($query)->select();
+    if($res){
+      $ret["article"] = $res;
+      $ret["status"] =1;
+    }else{
+      $ret["status"] = 0;
+    }
+    $this->ajaxReturn($ret);
+  }
+  public function delete(){
+    $model = M("article");
+    $article = $_POST["article"];
+    if($article){
+      $query["phone"] = $article["phone"];
+      $query["title"] = $article["title"];
+      $query["posttime"] = $article["posttime"];
+      $ret = $model->where($query)->delete();
+    }
+    if($ret==true){
+      $tpl["status"] = 1;
+    }else{
+      $tpl["status"] = 0;
+    }
+    $this->ajaxReturn($tpl);
+  }
+
   //发表新文章
   public function publish(){
     $user = session('user');
