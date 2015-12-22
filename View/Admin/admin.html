@@ -23,6 +23,8 @@
         <li><a href="reply.html">回复管理</a></li>
         <li><a href="ad.html">广告管理</a></li>
         <li><a href="config.html">配置管理</a></li>
+        <li><a href="config.html">订单管理</a></li>
+        <li><a href="config.html">充值记录</a></li>
     </ul>
 </div>
 
@@ -42,14 +44,14 @@
 <script type="text/javascript">
     $(document).ready(function(){
 
-        $(".ad-content").load("bbs.html",function(data,status,xhr){
+        $(".ad-content").load("user.html",function(data,status,xhr){
             var ret=JSON.parse(data);
             if(ret.status==0){
                 window.location.href="../Index/login.html"
             }
         });
 
-        $(".ad-head").text("用户信息");
+        $(".ad-head").text("用户管理");
 
         $(".sub-nav li a").click(function(){
 

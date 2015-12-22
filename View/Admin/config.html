@@ -21,6 +21,7 @@
         <button class="page-down">上一页</button>
         <button class="page-up">下一页</button>
         <button class="config-save">保存配置</button>
+        <span class="save-info"></span>
     </div>
 </div>
 
@@ -108,14 +109,16 @@
                config = data_paged(data.config,20);
                config.page_turn(1);
                config_to_html();
+               $(".config-bot").css("display","block");
            }else{
-               alert("配置加载失败");
+               $(".conf_container").text("加载配置失败.");
+               $(".config-bot").css("display","none");
            }
         })
     }
 
     $(document).ready(function(){
-
+        $(".config-bot").css("display","none");
         config_load();
 
 //        $(".config-add").click(function(){
@@ -161,9 +164,9 @@
                 config:config.source
             },function(data,status){
                 if(data.status==1){
-                    alert("添加配置成功");
+                    $(".save-info").text("保存配置成功");
                 }else{
-                    alert("添加配置失败")
+                    $(".save-info").text("保存配置失败");
                 }
             });
         });

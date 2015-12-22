@@ -34,6 +34,12 @@ function get_map(){
 
 function paged($th){
 
+  $th['page_total'] = intval($th['data_count'])/$th["per_page_num"];
+  if(floor($th['page_total'])<$th['page_total']){
+    $th['page_total']=(int)(floor($th['page_total']));
+    $th['page_total']++;
+  }
+
   $menu_num = $th['menu_num'];
 
   //如果是-1就是返回最后一页
@@ -82,6 +88,13 @@ function paged($th){
     $th['next_page'] = $th['page_total'];
   }
 
+  $th['index_start'] = ($th['cur_page']-1)*$th['per_page_num'];
+
+  //为js模块实现按钮方法
+  $j=0;
+  for($i=$th['menu_start'];$i<$th['menu_end'];$i++){
+    $th['menus'][$j++] = $i;
+  }
 
   return $th;
 }

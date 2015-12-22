@@ -1,61 +1,18 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
+
+
+require "webMap.php";
+
 class AdminController extends Controller {
 
   function __construct() {
     parent::__construct();
     //构造函数
-    $state = session('state');
-    if($state){
-      session('state', "1");
-      $user = session('user');
-      session('user', $user);
-    }
+
   }
 
-  public  function  actcode(){
-
-    $this->show();
-  }
-
-
-  public  function  charge(){
-
-    $tpl["bit"] = 100;
-
-    $this->assign($tpl);
-
-    $this->show();
-  }
-
-  public  function  userinfo(){
-
-    $Model = M('user');
-
-    $map["phone"] = session("phone");
-
-    $User = $Model->where($map)->select();
-    if($User){
-      $this->assign("user",$User[0]);
-    }else{
-      $this->error('没有登录', 'Index/login');
-    }
-
-    $this->show();
-  }
-
-
-  public  function  config(){
-
-//    $config = M("config");
-//
-//    $data = $config->select();
-//
-//    $this->assign("config",$data);
-
-    $this->show();
-  }
 
   public  function  config_load(){
     $config = M("config");
@@ -126,5 +83,192 @@ class AdminController extends Controller {
     $dd["status"]=1;
 
     $this->ajaxReturn($dd);
+  }
+
+
+  public function art_search(){
+    $model = M("article");
+
+    $key = $_POST["key"];
+
+    $vip = M("vip");
+    if($key["write"]){
+      $query['name'] = $key["write"];
+
+      $ret = $vip->where($query)->select();
+      if($ret){
+        $query=[];
+        $query['authorid'] = $ret[0]['id'];
+      }
+    }
+
+    if($key["article"])
+      $query['title'] = $key["article"];
+
+
+    //计算分页数据
+    $th["per_page_num"] = $key['per_page_num']; //每页条数
+    $th["menu_num"] =  $key['menu_num']; //每页页码数量
+    $th["cur_page"] =  $key['cur_page']; //每页页码数量
+
+    $th['data_count'] = $model->where($query)->count();
+
+    $th = paged($th);
+
+    $str =$key['cur_page'].','.$key['per_page_num'];
+
+    $res = $model->where($query)->page($str)->select();
+    if($res){
+      //查询到数据后。读取文章作者信息
+      foreach($res as $key=>$value){
+        $query =[];
+        $query['id'] = $value['authorid'];
+
+        $auth = $vip->where($query)->select();
+        if($auth){
+          $value['author'] = $auth[0]['name'];
+        }
+
+        $res[$key] = $value;
+      }
+
+      $ret["article"] = $res;
+      $ret['paged'] =$th;
+      $ret["status"] =1;
+    }else{
+      $ret["status"] = 0;
+    }
+    $this->ajaxReturn($ret);
+  }
+
+
+  public  function user_search(){
+
+    $key = $_POST['key'];
+
+    if(!$key){
+      $data["status"] =0;
+      $data["error"] ="数据错误。";
+      $this->ajaxReturn($data);
+    }
+    if($key['name'])
+      $query['name'] = $key['name'];
+    if($key['audit']<2)
+      $query['isaudit'] = $key['audit'];
+    if($key['status']<2)
+      $query['status'] = $key['status'];
+    if($key['op_status']<3)
+      $query['statuscz'] = $key['op_status'];
+    if($key['share_status']<3)
+      $query['statusgx'] = $key['share_status'];
+
+    $vip = M("vip");
+
+    $th['data_count'] = $vip->where( $query)->count();
+    $th['cur_page'] = $key['cur_page'];
+    $th['per_page_num'] = $key['per_page_num'];
+    $th['menu_num'] = $key['menu_num'];
+
+    $th = paged($th);
+
+    $str = $th['cur_page'].','.$th['per_page_num'];
+    $user = $vip->where($query)->page($str)->select();
+    if(!$user){
+      $ret["status"] = 0;
+      $data["error"] ="没有查询到用户数据。";
+      $this->ajaxReturn($ret);
+      return;
+    }
+
+    $ret["user"] = $user;
+    $ret['paged'] =$th;
+    $ret["status"] =1;
+
+    $this->ajaxReturn($ret);
+  }
+
+  public  function audit()
+  {
+    if ($_GET['id']) {
+      $query['id'] = $_GET['id'];
+    }else {
+      $this->ajaxReturn("get error");
+      return;
+    }
+
+    //读取用户表
+    $vip = M("vip");
+    $user = $vip->where($query)->select();
+    if(!$user){
+      $this->ajaxReturn("no this error");
+      return;
+    }
+
+    $this->assign('user',$user[0]);
+
+    //读取小号数据
+    $tb = M("account");
+    $tb_accout = $tb->where($query)->select();
+    if($tb_accout){
+      $this->assign('tb',$tb_accout);
+    }
+
+    //读取店铺数据
+    $shop = M("shop");
+    $sh = $shop->where($query)->select();
+    if($sh){
+      $this->assign('sh',$sh[0]);
+    }
+
+    //读取电脑配置数据
+    $hardware = M("hardware");
+    $hd = $hardware->where($query)->select();
+    if($hd){
+      $this->assign('hd',$hd[0]);
+    }
+
+    $this->show();
+  }
+
+  public  function  audit_pass(){
+
+    if ($_POST['id']) {
+      $query['id'] = $_POST['id'];
+    }else {
+      $data['status'] = 0;
+      $data['error'] = "通过审核发生错误。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $vip = M("vip");
+    $ret = $vip->where($query)->select();
+    if(!$ret){
+      $data['status'] = 0;
+      $data['error'] = "没有这个用户。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    if($ret[0]['isaudit']==1){
+      $data['status'] = 0;
+      $data['error'] = "该用户已经通过审核。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $user['isaudit'] =1;
+
+    $ret = $vip->where($query)->data($user)->save();
+    if(!$ret){
+      $data['status'] = 0;
+      $data['error'] = "服务器异常。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $data['status'] =1;
+    $this->ajaxReturn($data);
+    return;
   }
 }

@@ -247,6 +247,7 @@ class IndexController extends Controller {
 
     $th = paged($th);
 
+
     $limit['articleid'] = $article['id'];
     $query = $th["cur_page"].",".$th["per_page_num"];
     $replyer = $review->where($limit)->page($query)->select();

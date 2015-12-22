@@ -1,48 +1,46 @@
 <!DOCTYPE html>
 <html>
 
-<style type="text/css">
-    <link href="__ROOT__/Application/Home/View/Index/styles/admin.less" rel="stylesheet/less">
-    <link href="__ROOT__/Application/Home/View/Index/styles/charge.less" rel="stylesheet/less">
-    <link href="__ROOT__/Application/Home/View/Index/styles/actcode.less" rel="stylesheet/less">
-</style>
+
+<link href="__ROOT__/Application/Home/View/Index/styles/admin.less" rel="stylesheet/less">
+
+
 <body>
 
 <script id="act-code" type="text/html">
     <table>
-        <tr >
-            <th>序号</th>
-            <th>主题</th>
+        <tr  class="tr-title">
+            <td>序号</td>
+            <td>主题</td>
             <td>作者</td>
             <td>发表时间</td>
             <td class="op">操作</td>
         </tr>
         {{each list as value i}}
         <tr>
-            <th class="index">{{i+1+index}}</th>
-            <td>{{value.title}}</td>
-            <td>{{value.phone}}</td>
-            <td>{{value.posttime}}</td>
-            {{if value.op}}
+            <td class="index">{{i+1+paged.index_start}}</td>
+            <td >{{value.title}}</td>
+            <td>{{value.author}}</td>
+            <td>{{value.publishtime}}</td>
             <td class="op">
                 <button class="edit">编辑</button>
                 <button class="del">删除</button>
             </td>
-            {{else}}
-            <td class="op">
-                <button class="deled">已删除</button>
-            </td>
-            {{/if}}
         </tr>
         {{/each}}
     </table>
     <div>
-        <span>总共{{total_page}}页,</span>
-        <span>当前第{{cur_page}}页。</span>
-        {{if cur_page>1}}
+        <span>总共{{paged.page_total}}页,</span>
+        <span>当前第{{paged.cur_page}}页。</span>
+        {{if paged.cur_page>1}}
             <button class="pre-page">上一页</button>
         {{/if}}
-        {{if total_page>cur_page}}
+        <ul class="th-menu">
+            {{each paged.menus as value i}}
+            <li><button class="loc-page">{{value}}</button></li>
+            {{/each}}
+        </ul>
+        {{if paged.page_total>paged.cur_page}}
             <button class="next-page">下一页</button>
         {{/if}}
     </div>
@@ -59,7 +57,9 @@
             <button>查询</button>
         </div>
     </div>
-
+    <div class="info">
+        <span class="query"></span>
+    </div>
     <div class="at-li">
     </div>
 </div>
@@ -67,49 +67,41 @@
 <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
 <script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
 <script src="__ROOT__/Application/Home/View//styles/arttemplate/template.js"></script>
-<script src="__ROOT__/Application/Home/View//admin/js/paged.js"></script>
+
 
 <script type="text/javascript">
-    var search = {};
-    var page =0;
-    var cur_page = 0;
-    var show_start=0;
-    var show_end=0;
 
-    function art_turn_page(up){
-        if(up){
-            if(++cur_page>page) cur_page=page;
-        }else{
-            if(--cur_page<=0)  cur_page=1;
-        }
+    //请求文章的关键词
+    var key ={
+        per_page_num :20,
+        menu_num :10,
+        cur_page:1,
+        article :'',
+        name :''
+    };
 
-        show_start=(cur_page-1)*10;
-        if(cur_page*10<search.length){
-            show_end=(cur_page)*10;
-        } else{
-            show_end = search.length;
-        }
+    function template_dom_init(data){
 
-        var cur_art = search.slice(show_start,show_end);
-
-        var list ={list:cur_art,total_page:page,cur_page:cur_page,index:(cur_page-1)*10};
+        //生成模板
+        var list ={list:data.article,paged:data.paged};
         var html = template('act-code', list);
         $(".at-li").html(html);
 
-        //重新生成html要重新绑定事件。不然会失效
-        template_dom_init();
-    }
-
-
-    function template_dom_init(){
-
         $(".next-page").click(function(){
-            art_turn_page(true);
+            key.cur_page++;
+            art_search();
         });
 
         $(".pre-page").click(function(){
-            art_turn_page(false);
+            key.cur_page--;
+            art_search();
         });
+
+        $(".loc-page").click(function(){
+            key.cur_page = $(this).text();
+            art_search();
+        });
+
 
         //删除一篇文章操作，先请求服务器删除，服务器删除成功后，再在页面去掉该文章
         $(".del").click(function(){
@@ -119,36 +111,36 @@
 
             $.post("../Article/delete",{article:art},function(data,status){
                 if(data.status==1){
-                    search[index-1].op=0;
-                    cur_page--;
-                    art_turn_page(true);
-
-                    $(this).unbind("click");
-                    $(this).text("已删除")
+                    art_search();
                 }
             })
         });
     }
 
-    function art_search(article,write){
-        $.post("../Article/search",
-            {title:article, phone:write},
+    function art_search(){
+        $query = "当前检索条件为：";
+        if(key.name.length>0){
+            $query+="名字："+key.name;
+        }
+        if(key.article.length>0){
+            $query+=" 主题："+key.name;
+        }
+
+        if(key.article.length==0 && key.name.length==0){
+            $query+="全部主题";
+        }
+
+        $query+=".";
+
+        $(".query").text($query);
+
+        $.post("../admin/art_search",
+            {key:key},
             function(data,status){
                 if(data.status==1){
-                    page = parseInt(data.article.length/10);
-                    if(page*10<parseInt(data.article.length)){
-                        page=page+1;
-                    }
-
-                    search = data.article;
-                    cur_page = 0;
-                    for(var item in search){
-                        search[item].op=1;
-                    }
-
-                    art_turn_page(true);
+                    template_dom_init(data);
                 }else{
-                    alert("failed");
+                    $(".at-li").text("没有查询到相应主题");
                 }
             });
     }
@@ -156,7 +148,10 @@
     $(document).ready(function(){
         art_search('','');
         $(".at button").click(function(){
-            art_search($(".title").val(),$(".write").val());
+            key.article = $(".title").val();
+            key.name =$(".write").val();
+            key.cur_page =1;
+            art_search();
         });
     });
 

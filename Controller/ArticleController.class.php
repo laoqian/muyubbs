@@ -1,6 +1,9 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
+
+require "webMap.php";
+
 class ArticleController extends Controller {
 
 
@@ -11,21 +14,6 @@ class ArticleController extends Controller {
 
   }
 
-  public function search(){
-    $model = M("article");
-    if($_POST["title"])
-      $query['title'] = $_POST["title"];
-    if($_POST["phone"])
-      $query['phone'] = $_POST["phone"];
-    $res = $model->where($query)->select();
-    if($res){
-      $ret["article"] = $res;
-      $ret["status"] =1;
-    }else{
-      $ret["status"] = 0;
-    }
-    $this->ajaxReturn($ret);
-  }
   public function delete(){
     $model = M("article");
     $article = $_POST["article"];

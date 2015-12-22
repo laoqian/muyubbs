@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<link href="__ROOT__/Application/Home/View/Index/styles/admin.less" rel="stylesheet/less">
+
+<body>
+
+
+<div class="audit">
+    <div class="vip-info">
+        <h3 class="title">个人信息</h3>
+        <table>
+            <tr>
+                <td>个人信息</td>
+                <td>手持身份证照片</td>
+                <td>身份证照片正面照</td>
+            </tr>
+            <tr>
+                <td class="info-text">
+                    <ul>
+                        <li class="vip-id" id={$user['id']}>姓名:{$user['name']}</li>
+                        <li>性别:{$user['sex']}</li>
+                        <li>电话号码:{$user['tel']}</li>
+                        <li>详细地址:{$user['area']} &nbsp; &nbsp;{$user['adress']}</li>
+                        <li>QQ:{$user['qq']}</li>
+                        <li>推荐人QQ:{$user['referreqq']}</li>
+                        <li>审核:{$user['isaudit']}</li>
+                        <li>状态:{$user['status']}</li>
+                        <li>操作端状态:{$user['statuscz']}</li>
+                        <li>共享端状态:{$user['statusgx']}</li>
+                        <li>彩虹糖:{$user['cht']}</li>
+                        <li>彩虹豆:{$user['chd']}</li>
+                        <li>会员等级:{$user['viplevel']}</li>
+                    </ul>
+                   </td>
+                <td><img src={$user['handidpath']}  alt=""></td>
+                <td><img src={$user['useridpath']}  alt=""></td>
+            </tr>
+        </table>
+    </div>
+    <if condition="$tb">
+        <foreach name="tb" item="xh" key="index">
+            <div class="tb-info">
+                 <h3 class="title">小号{$index+1}</h3>
+                <table>
+                    <tr>
+                        <td>小号信息</td>
+                        <td>身份证照片正面照</td>
+                    </tr>
+                    <tr>
+                        <td class="info-text">
+                            <ul>
+                                <li>姓名:{$xh['name']}</li>
+                                <li>性别:{$xh['sex']}</li>
+                                <li>年龄段:{$xh['age']}</li>
+                                <li>消费范围:{$xh['consume']}</li>
+                                <li>类目标签:{$xh['category']}</li>
+                                <li>账号类型:{$xh['accounttype']}</li>
+                            </ul>
+                        </td>
+                        <td><img  src={$xh['img']} alt=""></td>
+                    </tr>
+                </table>
+            </div>
+        </foreach>
+    </if>
+    <if condition="$sh">
+        <div class="shop-info">
+             <h3 class="title">店铺信息</h3>
+            <table>
+                <tr>
+                    <td>店铺信息</td>
+                    <td>店铺照片</td>
+                </tr>
+                <tr>
+                    <td class="info-text">
+                        <ul>
+                            <li>店铺名称:{$sh['name']}</li>
+                            <li>等级:{$sh['shoplevel']}</li>
+                        </ul>
+                    </td>
+                    <td><img src={$sh['img']} alt=""></td>
+                </tr>
+            </table>
+        </div>
+    </if>
+    <if condition="$hd">
+        <div class="pc-info">
+             <h3 class="title">硬件配置</h3>
+            <table>
+                <tr>
+                    <td>电脑1配置照片</td>
+                    <td>电脑2配置照片</td>
+                    <td>两台电脑放一起照片</td>
+                    <td>两个光猫放一起照片</td>
+                </tr>
+                <tr>
+                    <td><img src={$hd['img1config']} alt=""></td>
+                    <td><img src={$hd['img2config']} alt=""></td>
+                    <td><img src={$hd['imgpc']} alt=""></td>
+                    <td><img src={$hd['imgmodem']} alt=""></td>
+                </tr>
+            </table>
+        </div>
+    </if>
+    <span class="audit-error"></span>
+    <button class="audit-pass">通过审核</button>
+
+</div>
+
+<script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+<script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
+
+
+
+<script type="text/javascript">
+
+
+
+    $(document).ready(function(){
+        $(".audit-pass").click(function(){
+            id = $(".vip-id").attr('id');
+
+            $.post('audit_pass',{id:id},function(data,status){
+                if(data.status==1){
+                    $(".audit-error").text("已通过审核");
+                }else{
+                    $(".audit-error").text(data.error);
+                }
+            });
+        });
+    });
+
+</script>
+</body>
+</html>
