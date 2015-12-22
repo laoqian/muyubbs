@@ -207,6 +207,9 @@ class AdminController extends Controller {
     $this->assign('user',$user[0]);
 
     //读取小号数据
+    $query=[];
+    $query['ownerid'] = $_GET['id'];
+
     $tb = M("account");
     $tb_accout = $tb->where($query)->select();
     if($tb_accout){

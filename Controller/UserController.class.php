@@ -45,7 +45,7 @@ class UserController extends Controller {
 
     $vip['adminid'] =$ret[0]['adminid'];
     $vip['account'] =$_POST['account'];
-    $vip['pwd'] =$_POST['password'];
+    $vip['pwd'] = md5($_POST['password']);
 
     $vip['name'] =$_POST['name'];
 
@@ -64,8 +64,8 @@ class UserController extends Controller {
     $vip['isaudit'] =  0;
     $vip['status'] =1;
 
-    $vip['handidpath'] = "Application/Home/View/image/"."".$info["user-hand-id"]['savepath']."".$info["user-hand-id"]['savename'];
-    $vip['useridpath'] = "Application/Home/View/image/"."".$info["user-id"]['savepath']."".$info["user-id"]['savename'];
+    $vip['handidpath'] = __ROOT__.'/'. "Application/Home/View/image/"."".$info["user-hand-id"]['savepath']."".$info["user-hand-id"]['savename'];
+    $vip['useridpath'] = __ROOT__.'/'."Application/Home/View/image/"."".$info["user-id"]['savepath']."".$info["user-id"]['savename'];
 
     //先检查重复
     $query=[];
@@ -93,7 +93,7 @@ class UserController extends Controller {
 
     //手机号码检查重复
     $query=[];
-    $query['tel'] = $vip['tel'];
+    $query['tel'] = $vip['phone'];
 
     $acc = $user->where($query)->select();
     if($acc){
@@ -104,8 +104,12 @@ class UserController extends Controller {
     }
 
     //编号生成
-    $acc = $user->select();
-    $vip['sn'] = count($acc)+10000;
+    $acc = $user->order('sn DESC')->limit(1)->select();
+    if($acc){
+      $vip['sn'] = $acc[0]['sn']+1;
+    }else{
+      $vip['sn'] = 77556688;
+    }
 
     //用户数据存进数据库
     $ret = $user->data($vip)->add();
@@ -115,7 +119,7 @@ class UserController extends Controller {
       $query=[];
       $query["tel"] = $vip['tel'];
       $vip = $user->where($query)->select();
-      session("user",$vip);
+      session("user",$vip[0]);
 
       //返回注册成功信息
       $data['status'] = 1;
@@ -134,7 +138,7 @@ class UserController extends Controller {
     $vip = M('vip');
 
     $query['account'] = $_POST['account'];
-    $query['pwd']= $_POST['pwd'];
+    $query['pwd']= md5($_POST['pwd']);
 
     $user = $vip->where($query)->select();
     if(!$user){
@@ -143,10 +147,22 @@ class UserController extends Controller {
       return;
     }
 
-    session('user',$user[0]);
+
     $data['status'] =1;
+    $user[0]['login'] = 1;
+    $data['user'] = $user[0];
+    session('user',$user[0]);
+
     $this->ajaxReturn($data);
   }
+
+  //返回登录状态
+  public function state(){
+   $data['status']=1;
+   $data['user']= session('user');
+   $this->ajaxReturn($data);
+  }
+
 
   public function logout(){
     session("user",null);
@@ -242,8 +258,7 @@ class UserController extends Controller {
     $invite = M('invitecode');
 
     $query['code'] = $_POST["offer"];
-
-    //$query['status'] = 0; //测试用先关闭。可以重复使用这个激活码
+    $query['status'] = 0; //测试用先关闭。可以重复使用这个激活码
     $ret = $invite->where($query)->select();
 
     //理论上查询成功的话，就只有一条数据
@@ -271,7 +286,6 @@ class UserController extends Controller {
     $data['status'] =1;
     $this->ajaxReturn($data);
   }
-
 
   public function  submit_tb()
   {
@@ -304,7 +318,7 @@ class UserController extends Controller {
     $acc['ownerid'] = $user['id'];
     $acc['name'] = $_POST['tb-name'];
     $acc['accountlevel'] = $_POST['level'];
-    $acc['img'] = "Application/Home/View/image/"."".$info["tb-img"]['savepath']."".$info["tb-img"]['savename'];
+    $acc['img'] = __ROOT__.'/'."Application/Home/View/image/"."".$info["tb-img"]['savepath']."".$info["tb-img"]['savename'];
     $acc['sex'] = $_POST['sex'];
     $acc['age'] = $_POST['age'];
     $acc['consume'] = $_POST['consume'];
@@ -369,7 +383,7 @@ class UserController extends Controller {
     $acc['ownerid'] = $user['id'];
     $acc['name'] = $_POST['name'];
     $acc['shoplevel'] = $_POST['level'];
-    $acc['img'] = "Application/Home/View/image/"."".$info["img"]['savepath']."".$info["img"]['savename'];
+    $acc['img'] = __ROOT__.'/'."Application/Home/View/image/"."".$info["img"]['savepath']."".$info["img"]['savename'];
 
     $query['ownerid'] = $acc["ownerid"];
     $ret = $shop->where($query)->select();
@@ -393,8 +407,6 @@ class UserController extends Controller {
       return;
     }
   }
-
-
 
   public function  submit_com()
   {
@@ -427,10 +439,10 @@ class UserController extends Controller {
     $hd = M("hardware");
 
     $acc['ownerid'] = $user['id'];
-    $acc['img1config'] = "Application/Home/View/image/"."".$info["com1-img"]['savepath']."".$info["com1-img"]['savename'];
-    $acc['img2config'] = "Application/Home/View/image/"."".$info["com2-img"]['savepath']."".$info["com2-img"]['savename'];
-    $acc['imgpc'] = "Application/Home/View/image/"."".$info["com-to-img"]['savepath']."".$info["com-to-img"]['savename'];
-    $acc['imgmodem'] = "Application/Home/View/image/"."".$info["cat-to-img"]['savepath']."".$info["cat-to-img"]['savename'];
+    $acc['img1config'] = __ROOT__.'/'."Application/Home/View/image/"."".$info["com1-img"]['savepath']."".$info["com1-img"]['savename'];
+    $acc['img2config'] = __ROOT__.'/'."Application/Home/View/image/"."".$info["com2-img"]['savepath']."".$info["com2-img"]['savename'];
+    $acc['imgpc'] = __ROOT__.'/'."Application/Home/View/image/"."".$info["com-to-img"]['savepath']."".$info["com-to-img"]['savename'];
+    $acc['imgmodem'] = __ROOT__.'/'."Application/Home/View/image/"."".$info["cat-to-img"]['savepath']."".$info["cat-to-img"]['savename'];
 
     //检查是否有重复
     $query['ownerid'] = $acc["ownerid"];
@@ -446,6 +458,9 @@ class UserController extends Controller {
     $ret = $hd->data($acc)->add();
     if($ret){
       $data['status'] = 1;
+      $register = session('register');
+      $register['reg_result'] = 1;
+      session('register',$register);
       $data['next'] = "../user/register_result.html";
       $this->ajaxReturn($data);
     }else{

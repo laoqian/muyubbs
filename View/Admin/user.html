@@ -33,7 +33,7 @@
             <td>{{value.cht}}</td>
             <td>{{value.chd}}</td>
             <td class="op">
-                <button class="edit">编辑</button>
+                <button class="edit">冻结</button>
                 <button class="del">删除</button>
             </td>
         </tr>
@@ -112,10 +112,10 @@
         menu_num :10,
         cur_page:1,
         name :'',
-        audit:'0',
-        status:'0',
-        op_status:'0',
-        share_status:'0'
+        audit:'2',
+        status:'2',
+        op_status:'3',
+        share_status:'3'
     };
 
     function template_dom_init(data){
@@ -173,30 +173,39 @@
 
         if(key.audit==0){
             query+="审核状态：未审核,";
-        }else{
+        }else if(key.audit==1){
             query+="审核状态：已审核,";
+        }else{
+            query+="审核状态：全部,";
         }
 
         if(key.status==0){
             query+="状态：正常,";
-        }else{
+        }else if(key.status==1){
             query+="状态：冻结,";
+        }else {
+            query+="状态：全部,";
         }
+
 
         if(key.op_status==0){
             query+="操作端状态：离线,";
         }else  if(key.op_status==1){
             query+="操作端状态：空闲,";
-        }else{
+        }else if(key.op_status==2){
             query+="操作端状态：忙碌,";
+        }else {
+            query+="操作端状态：全部,";
         }
 
         if(key.share_status==0){
             query+="共享端状态：离线.";
         }else  if(key.share_status==1){
             query+="共享端状态：空闲.";
-        }else{
+        }else if(key.share_status==2){
             query+="共享端状态：忙碌.";
+        }else{
+            query+="共享端状态：全部.";
         }
 
 

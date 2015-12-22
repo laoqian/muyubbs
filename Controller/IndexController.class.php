@@ -28,7 +28,7 @@ class IndexController extends Controller {
       $cate['th_num'] = $article->where($query)->count();
 
       //首页版块信息下显示的文章提取
-      $hotest = $article->where($query)->order('reviewnum')->limit(1)->select();
+      $hotest = $article->where($query)->order('reviewnum DESC')->limit(1)->select();
       $cate['hot_name'] = $hotest[0]['title'];
       $cate['hot_path'] = 'thread.html?articleid='.''.$hotest[0]['id'];
 
@@ -76,7 +76,7 @@ class IndexController extends Controller {
 
     //生成最新文章链接
     $article = M("article");
-    $news = $article->order('id')->limit($link_num)->select();
+    $news = $article->order('id DESC')->limit($link_num)->select();
     foreach($news as $key=>$value){
       $value['path'] = "thread.html?articleid=".''.$value['id'];
       $news[$key] = $value;
@@ -84,7 +84,7 @@ class IndexController extends Controller {
 
     //生成热门文章链接
     $article = M("article");
-    $hots = $article->order('reviewnum')->limit($link_num)->select();
+    $hots = $article->order('reviewnum DESC')->limit($link_num)->select();
     foreach($hots as $key=>$value){
       $value['path'] = "thread.html?articleid=".''.$value['id'];
       $hots[$key] = $value;

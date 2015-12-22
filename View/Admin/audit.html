@@ -33,12 +33,13 @@
                         <li>会员等级:{$user['viplevel']}</li>
                     </ul>
                    </td>
-                <td><img src={$user['handidpath']}  alt=""></td>
-                <td><img src={$user['useridpath']}  alt=""></td>
+                <td><img src=<?php echo $user['handidpath'];  ?>  alt=""></td>
+                <td><img src=<?php echo $user['useridpath'];  ?> alt=""></td>
             </tr>
         </table>
     </div>
     <if condition="$tb">
+
         <foreach name="tb" item="xh" key="index">
             <div class="tb-info">
                  <h3 class="title">小号{$index+1}</h3>
@@ -58,32 +59,37 @@
                                 <li>账号类型:{$xh['accounttype']}</li>
                             </ul>
                         </td>
-                        <td><img  src={$xh['img']} alt=""></td>
+                        <td><img  src=<?php echo $xh['img'];  ?> alt=""></td>
                     </tr>
                 </table>
             </div>
         </foreach>
     </if>
-    <if condition="$sh">
+
         <div class="shop-info">
-             <h3 class="title">店铺信息</h3>
-            <table>
-                <tr>
-                    <td>店铺信息</td>
-                    <td>店铺照片</td>
-                </tr>
-                <tr>
-                    <td class="info-text">
-                        <ul>
-                            <li>店铺名称:{$sh['name']}</li>
-                            <li>等级:{$sh['shoplevel']}</li>
-                        </ul>
-                    </td>
-                    <td><img src={$sh['img']} alt=""></td>
-                </tr>
-            </table>
+            <h3 class="title">店铺信息</h3>
+            <if condition="$sh">
+                <table>
+                    <tr>
+                        <td>店铺信息</td>
+                        <td>店铺照片</td>
+                    </tr>
+                    <tr>
+                        <td class="info-text">
+                            <ul>
+                                <li>店铺名称:{$sh['name']}</li>
+                                <li>等级:{$sh['shoplevel']}</li>
+                            </ul>
+                        </td>
+                        <td><img src=<?php echo $sh['img'];  ?> alt=""></td>
+                    </tr>
+                </table>
+            <else/>
+                没有店铺信息.
+                <?php echo $sh; ?>
+            </if>
         </div>
-    </if>
+
     <if condition="$hd">
         <div class="pc-info">
              <h3 class="title">硬件配置</h3>
@@ -95,15 +101,15 @@
                     <td>两个光猫放一起照片</td>
                 </tr>
                 <tr>
-                    <td><img src={$hd['img1config']} alt=""></td>
-                    <td><img src={$hd['img2config']} alt=""></td>
-                    <td><img src={$hd['imgpc']} alt=""></td>
-                    <td><img src={$hd['imgmodem']} alt=""></td>
+                    <td><img src=<?php echo $hd['img1config'];  ?>  alt=""></td>
+                    <td><img src=<?php echo $hd['img2config'];  ?>  alt=""></td>
+                    <td><img src=<?php echo $hd['imgpc'];  ?>  alt=""></td>
+                    <td><img src=<?php echo $hd['imgmodem'];  ?> alt=""></td>
                 </tr>
             </table>
         </div>
     </if>
-    <span class="audit-error"></span>
+    <span class="audit-error">&nbsp;</span>
     <button class="audit-pass">通过审核</button>
 
 </div>
