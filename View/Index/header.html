@@ -73,9 +73,9 @@
         <ul>
             <li><a href="">{{user.account}}</a><span>|</span></li>
             <li><a href="">设置</a><span>|</span></li>
-            <li><a href="">用户组</a><span>|</span></li>
-            <li><a href="usercharge">充值中心</a><span>|</span></li>
-            <li><a href="../user/logout">退出</a></li>
+            <li><a href="" style="color: #CC3366">购买服务</a><span>|</span></li>
+            <li><a href="usercharge" style="color: #CC3366">充值中心</a><span>|</span></li>
+            <li><a href="../user/logout" class="logout-get">退出</a></li>
         </ul>
     </div>
 {{else}}
@@ -111,6 +111,57 @@
 <script src="__ROOT__/Application/Home/View//styles/arttemplate/template.js"></script>
 
     <script type="text/javascript">
+
+        function user_init(user){
+            var list ={user:user};
+            var html = template('login-tpl', list);
+            $(".login-bar").html(html);
+
+            $(".login-btn").click(function(){
+                var account = $(".name").val();
+                var pwd = $(".pwd").val();
+
+                $.post("../user/login",
+                        {   account:account,
+                            pwd:pwd,
+                        },
+
+                        function(data,status){
+                            if(data.status!=1){
+                                $(".login-error").text("用户名/密码错误");
+                            }else{
+                                var list ={user:data.user};
+                                var html = template('login-tpl', list);
+                                $(".login-bar").html(html);
+
+                                $('.logout-get').click(function(){
+                                    var url = $(this).attr('href');
+                                    $.get(url,function(data,status){
+                                        if(data.status==1){
+                                            user_init(user);
+                                        }
+                                    });
+
+                                    return false;
+                                });
+                            }
+                        });
+            });
+
+
+            if(user.login==1){
+                $('.logout-get').click(function(){
+                    var url = $(this).attr('href');
+                    $.get(url,function(data,status){
+                        if(data.status==1){
+                            user_init(user);
+                        }
+                    });
+
+                    return false;
+                });
+            }
+        }
         $(document).ready(function(){
             $.get("../user/state",function(data,status){
                 var user =new Object();
@@ -119,30 +170,9 @@
                     user = data.user;
                 }
 
-                var list ={user:user};
-                var html = template('login-tpl', list);
-                $(".login-bar").html(html);
+                    user_init(user);
 
-                $(".login-btn").click(function(){
-                    var account = $(".name").val();
-                    var pwd = $(".pwd").val();
-
-                    $.post("../user/login",
-                            {   account:account,
-                                pwd:pwd,
-                            },
-
-                            function(data,status){
-                                if(data.status!=1){
-                                    $(".login-error").text("用户名/密码错误");
-                                }else{
-                                    var list ={user:data.user};
-                                    var html = template('login-tpl', list);
-                                    $(".login-bar").html(html);
-                                }
-                            });
                 });
-            });
         });
     </script>
 </body>

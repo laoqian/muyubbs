@@ -40,6 +40,8 @@ function paged($th){
     $th['page_total']++;
   }
 
+  if($th['page_total']==0) $th['page_total']++;
+
   $menu_num = $th['menu_num'];
 
   //如果是-1就是返回最后一页
@@ -97,4 +99,49 @@ function paged($th){
   }
 
   return $th;
+}
+
+
+//curl get方法
+function m_get($url, $post_data = '', $timeout = 5){//curl
+  $ch = curl_init();
+
+  $this_header = array(
+    "content-type: application/x-www-form-urlencoded;charset=GB2312"
+  );
+
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$this_header);
+
+  curl_setopt ($ch, CURLOPT_URL, $url);
+  if($post_data != ''){
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+  }
+  curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+  curl_setopt($ch, CURLOPT_HEADER, false);
+  $file_contents = curl_exec($ch);
+  curl_close($ch);
+  return $file_contents;
+}
+
+
+function post_code($tel){
+
+  if(strlen($tel)!= 11) {
+    return -1;
+  }
+
+  $corpid = 'LKSDK0005501';
+  $pwd = 'nnjmy8814@';
+
+  $code  = rand(100000,999999);
+
+//  $varify = '尊敬的彩虹桥新用户，您的验证码：'.''.$code.''.'，此验证码只能用于注册账号使用，请勿泄露。[彩虹桥云端]';
+//  $str = 'http://125.69.81.40:83/wsn/BatchSend.aspx?CorpID='.''.$corpid.''.'&Pwd='.''.$pwd.''.'&Mobile='.''.$tel.''.'&Content=' .''.$varify;
+//
+//  $ret = m_get($str);
+//
+//  if($ret<0) return -1;
+
+  return $code;
 }

@@ -34,7 +34,7 @@
             <div class="rg-content">
                 <div class="offer-verify">
                     <span>邀请码:</span>
-                    <input type="text" placeholder="输入16位邀请码" value="cjw2bic822ghozz">
+                    <input type="text" placeholder="输入15位邀请码" maxlength="15" value="cjw2bic822ghozz">
                     <span class="error"></span>
                     <button class="next-step">下一步</button>
                 </div>
@@ -53,6 +53,24 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
+
+            //输入长度校验
+            $(".offer-verify input").bind('input propertychange',function(){
+                max = $(this).attr('maxlength');
+                if(!max) return;
+
+                value = $(this).val().toString();
+
+                if(value.length>max){
+                    value = value.substr(0,max);
+                    if($(this).attr('type')=='number'){
+                        $(this).val(parseInt(value));
+                    }else{
+                        $(this).val(value);
+                    }
+                }
+            });
+
             $(".offer-verify button").click(function(){
                 var offer = $(".offer-verify input").val();
 

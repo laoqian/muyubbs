@@ -1,6 +1,9 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
+
+require "webMap.php";
+
 class UserController extends Controller {
 
   function __construct() {
@@ -166,8 +169,9 @@ class UserController extends Controller {
 
   public function logout(){
     session("user",null);
+    $data['status'] = 1;
 
-    $this->success('新增成功');
+    $this->ajaxReturn($data);
   }
 
   public function login_verify(){
@@ -481,7 +485,70 @@ class UserController extends Controller {
     }
   }
 
+  public function reg_tel_verify_step_1 (){
+    $tel = $_POST['phone'];
 
+    if(strlen($tel)!=11){
+      $data['status']=0;
+      $data['error'] ='手机号码长度错误';
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    //发送验证码要手机
+    $ret = post_code($tel);
+    if($ret<0){
+      $data['status']=0;
+      $data['error'] = "发送验证码失败.";
+      $data['error_code'] = $ret;
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    //保存发送验证码，用于收到用户的反馈后进行校验
+    $code['verify_count'] = 0;
+    $code['verify_num'] = $ret;
+
+    session('reg_tel_verify_code',$code);
+
+    $data['status']=1;
+    $data['error'] = "发送验证码成功.";
+    $data['code'] = $ret;
+    $this->ajaxReturn($data);
+  }
+
+  //校验用户收到的验证码
+  public function reg_tel_verify_step_2 (){
+
+    $code = $_POST['code'];
+    if(strlen($code)!= 6){
+      $data['status'] = 0;
+      $data['error']= "验证码长度不正确".''.strlen($code);
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $verify = session('reg_tel_verify_code');
+
+    if(!$verify){
+      $data['status'] = 0;
+      $data['error']= "验证错误1";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    if(strcmp($code,$verify['verify_num'])!=0){
+      $data['status'] = 0;
+      $data['error']= "验证错误2";
+      $this->ajaxReturn($data);
+      return;
+    }
+    //校验成功销毁验证码
+    session('reg_tel_verify_code',null);
+    $data['status'] = 1;
+    $data['error']= "验证通过";
+    $this->ajaxReturn($data);
+  }
 }
 
 

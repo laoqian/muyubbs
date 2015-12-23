@@ -38,12 +38,12 @@
                 <form method="post" action="../user/submit_tb" class="rg-form-group" enctype="multipart/form-data">
                     <div class="form-item">
                         <span>淘宝小号*：</span>
-                        <input class="tb-name" type="text"  maxlength="24"  name="tb-name" placeholder="密码确认" value="123456">
+                        <input class="tb-name" type="text"  maxlength="12"  name="tb-name" placeholder="密码确认" value="123456">
                         <label class="account-error"></label>
                     </div>
                     <div class="form-item">
                         <span>账号等级：</span>
-                        <input class="pwd2" type="number"  maxlength="24"  name="level" placeholder="密码确认" value="123456">
+                        <input class="pwd2" type="number"  maxlength="2"  name="level" placeholder="密码确认" value="123456">
                         <label class="pwd2-error"></label>
                     </div>
                     <div class="form-item">
@@ -140,6 +140,24 @@
         }
 
         $(document).ready(function(){
+
+            //输入长度校验
+            $(".form-item input").bind('input propertychange',function(){
+                max = $(this).attr('maxlength');
+                if(!max) return;
+
+                value = $(this).val().toString();
+
+                if(value.length>max){
+                    value = value.substr(0,max);
+                    if($(this).attr('type')=='number'){
+                        $(this).val(parseInt(value));
+                    }else{
+                        $(this).val(value);
+                    }
+                }
+            });
+
             $(".tb-name").blur(function(){
                 account_verify();
             });

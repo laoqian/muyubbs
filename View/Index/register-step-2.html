@@ -35,7 +35,7 @@
                 <form method="post" action="../user/register" class="rg-form-group" enctype="multipart/form-data">
                     <div class="form-item">
                         <span>用户名*：</span>
-                        <input class="account" type="text" maxlength="24"  name="account" placeholder="6-24位用户名" value="jiaran">
+                        <input class="account" type="text" maxlength="15"  name="account" placeholder="6-24位用户名" value="jiaran">
                         <label class="account-error"></label>
                     </div>
                     <div class="form-item">
@@ -59,7 +59,7 @@
                     </div>
                     <div class="form-item">
                         <span>真实姓名*：</span>
-                        <input class="name" type="text" name="name" maxlength="24"  placeholder="真实姓名" value="贾然">
+                        <input class="name" type="text" name="name" maxlength="5"  placeholder="真实姓名" value="贾然">
                         <label class="name-error"></label>
                     </div>
                     <div class="form-item">
@@ -121,16 +121,16 @@
                     </div>
                     <div class="form-item">
                         <span>QQ：</span>
-                        <input type="number" name="qq" placeholder="QQ" maxlength="12"  value="858385135">
+                        <input type="number" name="qq" placeholder="QQ" maxlength="10"  value="858385135">
                     </div>
                     <div class="form-item">
                         <span>推荐人QQ：</span>
-                        <input type="number" name="refer-qq" placeholder="推荐人QQ" maxlength="12"  value="858385135">
+                        <input type="number" name="refer-qq" placeholder="推荐人QQ" maxlength="10"  value="858385135">
                     </div>
                     <div class="form-item">
                         <span>手机号码*：</span>
                         <span class="get-verify">获取验证码</span>
-                        <input id="phone" class="phone" type="number" name="phone" placeholder="手机号码" maxlength="12"  value="18200326535">
+                        <input id="phone" class="phone" type="number" name="phone" placeholder="手机号码" maxlength="11"  value="18200326535">
                         <label class="phone-error"></label>
                     </div>
                     <div class="form-item">
@@ -158,7 +158,8 @@
 
 
     <script type="text/javascript">
-
+        var step = 0;
+        var timer = 0;
         function  get_verify(){
             var phone = $(".phone").val();
             if(phone.length != 11){
@@ -168,10 +169,10 @@
                 $(".phone-error").text("");
             }
 
+            //无论发送是否成功，一分钟只能发送一次
             $(".get-verify").unbind("click");
-
-            var timeout=3;
-            var timer = setInterval(function(){
+            var timeout=60;
+            timer = setInterval(function(){
                 var str = "已发送等待"+timeout+"秒";
                 $(".get-verify").text(str);
                 timeout--;
@@ -185,13 +186,12 @@
                 }
             },1000);
 
+            step = 0;
             //这个地方就是获取短信验证码
-            $.post("../user/register_phone_verify",{phone:phone},function(data,status){
-                if(data.status != 1){
-                    return false;
+            $.post("../user/reg_tel_verify_step_1",{phone:phone},function(data,status){
+                if(data.status == 1){
+                  step = 1;
                 }
-
-
             });
         }
 
@@ -277,19 +277,31 @@
         }
 
         function code_varify(){
-            var verify = $(".verify").val();
-
-            if(verify.length != 6){
-                $(".verify-error").text("验证码错误！");
+            if(step != 3){
                 return false;
-            }else{
-                $(".verify-error").text("");
             }
 
             return true;
         }
 
         $(document).ready(function(){
+
+            //输入长度校验
+            $(".form-item input").bind('input propertychange',function(){
+                max = $(this).attr('maxlength');
+                if(!max) return;
+
+                value = $(this).val().toString();
+
+                if(value.length>max){
+                    value = value.substr(0,max);
+                    if($(this).attr('type')=='number'){
+                        $(this).val(parseInt(value));
+                    }else{
+                        $(this).val(value);
+                    }
+                }
+            });
 
             $(".account").blur(function(){
                 account_verify();
@@ -320,10 +332,28 @@
                 phone_verify();
             });
 
-            //验证码验证
-            $(".verify").blur(function(){
-                code_varify();
+
+            //验证码校验
+            $(".verify").bind('input propertychange',function(){
+                var verify = $(".verify").val();
+
+                if(verify.length != 6){
+                    return false;
+                }
+
+                if(step>0)
+                    $.post('../user/reg_tel_verify_step_2',{code:$(".verify").val()},function(data,status){
+                        if(data.status==1){
+                            step = 3;
+                            clearInterval(timer);
+                            $(".verify-error").text("校验成功!");
+                            $(".verify-error").unbind("click");
+                        }else{
+                            $(".verify-error").text(data.error);
+                        }
+                    });
             });
+
 
             $(".get-verify").click(function(){
                 get_verify();

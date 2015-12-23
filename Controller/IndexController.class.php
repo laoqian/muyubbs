@@ -191,8 +191,6 @@ class IndexController extends Controller {
     $article = $article[0];
     $this->assign("article",$article);
 
-
-
     $th['reply_num'] =$article['replynum'];
     $th['review_num'] =$article['reviewnum'];
 
@@ -232,6 +230,7 @@ class IndexController extends Controller {
       $th['cur_page'] = 1;
     }
 
+
     $th["per_page_num"] = 5; //每页评论数量
     $th["menu_num"] = 6; //每页页码数量
 
@@ -246,7 +245,6 @@ class IndexController extends Controller {
     }
 
     $th = paged($th);
-
 
     $limit['articleid'] = $article['id'];
     $query = $th["cur_page"].",".$th["per_page_num"];
