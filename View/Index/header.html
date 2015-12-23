@@ -72,9 +72,9 @@
     <div class="user-pin">
         <ul>
             <li><a href="">{{user.account}}</a><span>|</span></li>
-            <li><a href="">设置</a><span>|</span></li>
-            <li><a href="" style="color: #CC3366">购买服务</a><span>|</span></li>
-            <li><a href="usercharge" style="color: #CC3366">充值中心</a><span>|</span></li>
+            <li><a href="userset.html">设置</a><span>|</span></li>
+            <li><a href="userbuy.html" style="color: #CC3366">购买服务</a><span>|</span></li>
+            <li><a href="usercharge.html" style="color: #CC3366">充值中心</a><span>|</span></li>
             <li><a href="../user/logout" class="logout-get">退出</a></li>
         </ul>
     </div>
@@ -111,6 +111,7 @@
 <script src="__ROOT__/Application/Home/View//styles/arttemplate/template.js"></script>
 
     <script type="text/javascript">
+        var login =0;
 
         function user_init(user){
             var list ={user:user};
@@ -138,6 +139,10 @@
                                     var url = $(this).attr('href');
                                     $.get(url,function(data,status){
                                         if(data.status==1){
+                                            if(data.next==1){
+                                                location.href = 'index.html';
+                                                return;
+                                            }
                                             user_init(user);
                                         }
                                     });
@@ -154,6 +159,10 @@
                     var url = $(this).attr('href');
                     $.get(url,function(data,status){
                         if(data.status==1){
+                            if(data.next==1){
+                                location.href = 'index.html';
+                                return;
+                            }
                             user_init(user);
                         }
                     });

@@ -339,4 +339,44 @@ class IndexController extends Controller {
     $this->show();
   }
 
+
+  public function userbuy(){
+    if(!session('user')){
+      $this->error("没有登录");
+      return;
+    }
+
+    session('logout_next',1);
+
+    $user = session('user');
+
+    $this->assign('time_to_die',$user['serverdate']);
+    $this->assign('cht',$user['cht']);
+    $this->assign('chd',$user['chd']);
+
+
+    $config = M('config');
+    $query['ebkey'] = 'service_month';
+
+    $ret = $config->where($query)->select();
+    $this->assign('month',$ret[0]['ebvalue']);
+    $query['ebkey'] = 'service_season';
+    $ret = $config->where($query)->select();
+    $this->assign('season',$ret[0]['ebvalue']);
+    $query['ebkey'] = 'service_year';
+    $ret = $config->where($query)->select();
+    $this->assign('year',$ret[0]['ebvalue']);
+
+    $this->show();
+  }
+
+  public function usercharge(){
+
+    $this->show();
+  }
+
+  public function userset(){
+
+    $this->show();
+  }
 }

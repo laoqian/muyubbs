@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>{$bbs_title}</title>
     <!-- Bootstrap -->
-    <link href="__ROOT__/Application/Home/View/Index/styles/usercharge.less" rel="stylesheet/less" >
+    <link href="__ROOT__/Application/Home/View/Index/styles/userbuy.less" rel="stylesheet/less" >
     <link href="__ROOT__/Application/Home/View/styles/Font-Awesome-3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -22,25 +22,24 @@
     <div class="wrapper">
         <div class="container">
             <div class="title">
-                <h3>充值中心</h3>
+                <h3>购买服务</h3>
             </div>
             <div class="form-item">
-                <span>充值金额:</span>
-                <input type="number" maxlength="5" placeholder="充值金额">
+                <span>您的账户当前余额:</span>
+                <label for="">彩虹糖： <span class="cht">{$cht}</span></label>
+                <label for="">彩虹豆： <span class="chb">{$chd}</span></label>
             </div>
             <div class="form-item">
-                <span>当前价格:</span>
-                <label for="">110</label>
+                <label for="">您当前拥有的服务到期时间:{$time_to_die}</label>
             </div>
             <div class="form-item">
-                <span>充值类型:</span>
-                <select name="" id="">
-                    <option value="0">支付宝</option>
-                    <option value="1">财付通</option>
-                </select>
+                <button class="service" value="2">包月(<span>{$month}</span>彩虹币)</button>
+                <button class="service" value="3">包季度(<span>{$season}</span>彩虹币)</button>
+                <button class="service" value="4">包年(<span>{$year}</span>彩虹币)</button>
             </div>
             <div class="charge">
-                <button>马上充值</button>
+                <span class="error">&nbsp;</span>
+                <button>确定购买</button>
             </div>
         </div>
     </div>
@@ -53,24 +52,36 @@
     <script src="__ROOT__/Application/Home/View/styles/lesscss/less.min.js"></script>
 
     <script type="text/javascript">
+        var service = -1;
         $(document).ready(function(){
             //初始化输入区域
+            $(".service").click(function(){
+                $('.service').css('border','0');
+                $('.service').css('padding','0');
 
-            //输入长度校验
-            $(".form-item input").bind('input propertychange',function(){
-                max = $(this).attr('maxlength');
-                if(!max) return;
+                $(this).css('border','solid 1px red');
+                $(this).css('padding','5px');
 
-                value = $(this).val().toString();
+                service = $(this).attr('value');
 
-                if(value.length>max){
-                    value = value.substr(0,max);
-                    if($(this).attr('type')=='number'){
-                        $(this).val(parseInt(value));
-                    }else{
-                        $(this).val(value);
-                    }
+            });
+
+            $('.charge button').click(function(){
+                if(service<0){
+                    $('.error').text("请先选择需要购买的服务。");
+                    return;
                 }
+
+                $.post('../user/service_buy',{
+                    service:service
+                },function(data,status){
+
+                    if(data.status==1){
+                        location.href = location.href;
+                    }else{
+                        $('.error').text(data.error);
+                    }
+                });
             });
         });
 

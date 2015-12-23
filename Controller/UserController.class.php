@@ -171,6 +171,14 @@ class UserController extends Controller {
     session("user",null);
     $data['status'] = 1;
 
+
+    //用于退出登录后，是否要进行页面跳转
+    if(session('logout_next')){
+      $data['next'] = 1;
+    }else{
+      $data['next'] = 0;
+    }
+
     $this->ajaxReturn($data);
   }
 
@@ -542,6 +550,97 @@ class UserController extends Controller {
     session('reg_tel_verify_code',null);
     $data['status'] = 1;
     $data['error']= "验证通过";
+    $this->ajaxReturn($data);
+  }
+
+
+  public  function service_buy(){
+    if(!session('user')){
+      $this->error("没有登录",'index/index');
+      return;
+    }
+
+    $service = (int)($_POST['service']);
+
+    if($service<2 ||$service>4){
+      $data['status'] =0;
+      $data['error'] ="不能购买该服务";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $user = session('user');
+
+    if($service<$user['viplevel']){
+      $data['status'] =0;
+      $data['error'] ="您不能购买该服务";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+
+    if($service==2){
+      $month =1;
+      $query['ebkey'] ='service_month';
+    }elseif($service==3){
+      $month=3;
+      $query['ebkey'] ='service_season';
+    }else{
+      $month = 12;
+      $query['ebkey'] ='service_year';
+    }
+
+    $config = M('config');
+    //先查询是否有足够的彩虹糖付费
+    $ret = $config->where($query)->select();
+    if(!$ret){
+      $data['status'] =0;
+      $data['error'] ="服务器错误";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    if($user['cht']<$ret[0]['ebvalue']){
+      $data['status'] =0;
+      $data['error'] ="您没有足够的彩虹糖来付费.";
+      $this->ajaxReturn($data);
+      return;
+    }
+    //有足够的资费，就先扣费
+    $up['cht'] = $user['cht']- $ret[0]['ebvalue'];
+    $query =[];
+    $query['id'] = $user['id'];
+
+    $vip = M('vip');
+    $ret= $vip->where($query)->data($up)->save();
+    if(!$ret){
+      $data['status'] =0;
+      $data['error'] ="扣费失败.";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    //更改vip记录
+    $cur_time = date('y-m-d');
+    if($user['serverdate']<$cur_time)
+      $str = 'update eb_vip set serverdate = (date_add(curdate(), interval  '.''.$month.' month)) where id='.''.$user['id'];
+    else
+      $str = 'update eb_vip set serverdate = (date_add(serverdate, interval  '.''.$month.' month)) where id='.''.$user['id'];
+
+    //更新服务到期时间
+    $vip->execute($str);
+
+    //更新vip等级
+    $str = "update eb_vip set viplevel=".''.$service.' where id='.''.$user['id'];
+    $vip->execute($str);
+
+    //更新session用户数据
+    $ret = $vip->where($query)->select();
+    $ret[0]['login'] = 1;
+    session('user',$ret[0]);
+
+    $data['status'] =1;
+    $data['error'] ="购买服务成功";
     $this->ajaxReturn($data);
   }
 }
