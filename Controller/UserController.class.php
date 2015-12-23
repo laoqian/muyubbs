@@ -262,12 +262,13 @@ class UserController extends Controller {
     $invite = M('invitecode');
 
     $query['code'] = $_POST["offer"];
-    $query['status'] = 0; //测试用先关闭。可以重复使用这个激活码
+    $query['status'] = 0;
     $ret = $invite->where($query)->select();
 
     //理论上查询成功的话，就只有一条数据
     if(count($ret)!=1){
-      $this->$data['status'] = 0;
+      $data['status'] = 0;
+      $data['error'] = "邀请码无效.";
     }else{
         //校验成功保存数据库
         $invite->id = $ret[0]['id'];
@@ -284,12 +285,6 @@ class UserController extends Controller {
     $this->ajaxReturn($data);
   }
 
-  function register_phone_verify(){
-    //申请验证码
-
-    $data['status'] =1;
-    $this->ajaxReturn($data);
-  }
 
   public function  submit_tb()
   {
