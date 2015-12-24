@@ -655,6 +655,20 @@ class UserController extends Controller {
     $data['error'] ="购买服务成功";
     $this->ajaxReturn($data);
   }
+
+
+  public function user_info_get(){
+    if(!session('user')){
+      $this->error("没有登录",'index/index');
+      return;
+    }
+
+    $data['status'] = 1 ;
+    $data['user'] = session('user');
+    $data['user'] = user_info_format($data['user']);
+
+    $this->ajaxReturn($data);
+  }
 }
 
 

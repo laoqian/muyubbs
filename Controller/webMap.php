@@ -147,3 +147,63 @@ function post_code($tel){
   return $code;
 }
 
+
+
+function user_info_format($user){
+  $sex = array(
+    0=>'男',
+    1=>'女',
+  );
+
+  $audit = array(
+    0=>'未审核',
+    1=>'通过审核',
+  );
+
+  $status = array(
+    0=>'正常',
+    1=>'冻结',
+  );
+
+  $statusgx = $statuscz = array(
+    '0'=>'离线',
+    '1'=>'空闲',
+    '2'=>'忙碌',
+  );
+
+  $user['sex'] = $sex[$user['sex']];
+  $user['status'] = $status[$user['status']];
+  $user['statuscz'] = $statuscz[$user['statuscz']];
+  $user['statusgx'] = $statusgx[$user['statusgx']];
+
+  return $user;
+}
+
+
+function acc_info_format($acc){
+  $sex = array(
+    0=>'男',
+    1=>'女',
+  );
+
+  $age = array(
+    0=>'70后',
+    1=>'80后',
+    2=>'90后',
+    3=>'00后',
+  );
+
+
+  $statuscz = array(
+    '0'=>'0-100',
+    '1'=>'101-200',
+    '2'=>'201-400',
+    '3'=>'401以上',
+  );
+
+  $acc['sex'] = $sex[$acc['sex']];
+  $acc['age'] = $age[$acc['age']];
+  $acc['consume'] = $statuscz[$acc['consume']];
+
+  return $acc;
+}

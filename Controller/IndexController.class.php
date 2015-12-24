@@ -379,4 +379,80 @@ class IndexController extends Controller {
 
     $this->show();
   }
+
+
+  public function shopinfo(){
+
+    if(!session('user')){
+      $this->error("没有登录");
+      return;
+    }
+
+    $user = session('user');
+
+    $query['ownerid'] =$user['id'];
+
+    $shop = M('shop');
+
+    $ret = $shop->where($query)->select();
+    if(!$ret){
+      $this->error("没有登录");
+      return;
+    }
+
+    $this->assign('shop',$ret[0]);
+    $this->show();
+  }
+
+  public function tbchange(){
+
+    if(!session('user')){
+      $this->error("没有登录");
+      return;
+    }
+
+    $user = session('user');
+
+    $query['ownerid'] =$user['id'];
+
+    $shop = M('account');
+
+    $ret = $shop->where($query)->select();
+    if(!$ret){
+      $this->error("没有登录");
+      return;
+    }
+
+    foreach($ret as $key=>$value){
+      $value = acc_info_format($value);
+      $ret[$key] = $value;
+    }
+
+    $this->assign('account',$ret);
+    $this->show();
+  }
+
+  public function pcinfo(){
+
+    if(!session('user')){
+      $this->error("没有登录");
+      return;
+    }
+
+    $user = session('user');
+
+    $query['ownerid'] =$user['id'];
+
+    $shop = M('hardware');
+
+    $ret = $shop->where($query)->select();
+    if(!$ret){
+      $this->error("没有登录");
+      return;
+    }
+
+    $this->assign('hd',$ret[0]);
+    $this->show();
+  }
+
 }

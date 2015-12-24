@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN" ng-app="rgApp" ng-controller="rgCtrl">
+<head>
+    <meta charset="UTF-8">
+    <title>{$bbs_title}</title>
+    <!-- Bootstrap -->
+    <link href="__ROOT__/Application/Home/View/Index/styles/shopinfo.less" rel="stylesheet/less">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+
+    <h4>店铺资料</h4>
+
+    <form method="post" action="../user/submit_tb" class="rg-form-group" enctype="multipart/form-data">
+        <table>
+            <tr>
+                <td>
+                    <span>名称:</span>
+                </td>
+                <td>
+                    <span>{$shop['name']}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>等级：</span>
+                </td>
+                <td>
+                    <span>{$shop['shoplevel']}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>图片：</span>
+                </td>
+                <td>
+                    <img src={$shop['img']} alt="">
+                </td>
+            </tr>
+        </table>
+
+    <!--<div class="form-submit">-->
+        <!--<div>-->
+            <!--<label class="submit-error"></label>-->
+        <!--</div>-->
+        <!--<input type="submit" class="rg-submit" value="确定添加">-->
+    <!--</div>-->
+    </form>
+
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+<script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+
+    });
+</script>
+</body>
+</html>

@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>{$bbs_title}</title>
     <!-- Bootstrap -->
-    <link href="__ROOT__/Application/Home/View/Index/styles/userset.less" rel="stylesheet/less" >
+    <link href="__ROOT__/Application/Home/View/Index/styles/userinfo.less" rel="stylesheet/less" >
     <link href="__ROOT__/Application/Home/View/styles/Font-Awesome-3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -15,42 +15,43 @@
 </head>
 
 <body>
+<h4>用户资料</h4>
+<form action="" class="user-info">
 
-    <!--导航栏 -->
-    <include file="./Application/Home/View/Index/header.html" />
+</form>
 
-    <div class="wrapper">
-        <div class="container">
-            <div class="col">
-                <ul class="">
-                    <li><a href="userinfo.html">用户资料</a></li>
-                    <li><a href="tbchange.html">修改小号</a></li>
-                    <li><a href="tbadd.html">上传小号</a></li>
-                    <li><a href="shopinfo.html">店铺资料</a></li>
-                    <li><a href="pcinfo.html">电脑配置</a></li>
-                </ul>
-            </div>
-            <div class="content">
-            </div>
-        </div>
-    </div>
 
-    <include file="./Application/Home/View/Index/footer.html" />
+
+<script id="user-tpl" type="text/html">
+       <table >
+        <tr><td>姓名:</td><td>{{user.name}}</td></tr>
+        <tr><td>性别:</td><td>{{user.sex}}</td></tr>
+        <tr><td>电话号码:</td><td>{{user.tel}}</td></tr>
+        <tr><td>详细地址:</td><td>{{user.area}} &nbsp;&nbsp;{{user.address}}</td></tr>
+        <tr><td>QQ:</td><td>{{user.qq}}</td></tr>
+        <tr><td>彩虹糖:</td><td>{{user.cht}}</td></tr>
+        <tr><td>彩虹豆:</td><td>{{user.chd}}</td></tr>
+        <tr><td>会员等级:</td><td>{{user.viplevel}}</td></tr>
+        <tr><td>Teamviewer账号:</td><td>{{user.tvid}}</td></tr>
+        <tr><td>Teamviewer密码:</td><td>{{user.tvpwd}}</td></tr>
+        <tr><td>服务到期时间:</td><td>{{user.serverdate}}</td></tr>
+        <tr><td>共享端最后登录时间:</td><td>{{user.lastlogintime}}</td></tr>
+        <tr><td>审核:</td><td>{{user.isaudit}}</td></tr>
+        <tr><td>状态:</td><td>{{user.status}}</td></tr>
+        <tr><td>操作端状态:</td><td>{{user.statuscz}}</td></tr>
+        <tr><td>共享端状态:</td><td>{{user.statusgx}}</td></tr>
+    </table>
+</script>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="__ROOT__/Application/Home/View/styles/lesscss/less.min.js"></script>
+    <script src="__ROOT__/Application/Home/View//styles/arttemplate/template.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function(){
             //初始化输入区域
-            $(".content").load('userinfo.html',function(data,status,xhr){
-                var ret=JSON.parse(data);
-                if(ret.status==0){
-                    location.href="../Index/login.html"
-                }
-            });
 
             //输入长度校验
             $(".form-item input").bind('input propertychange',function(){
@@ -69,17 +70,16 @@
                 }
             });
 
-
-            $('.col a').click(function(){
-                $(".content").load($(this).attr("href"),function(data,status,xhr){
-                    var ret=JSON.parse(data);
-                    if(ret.status==0){
-                        location.href="../Index/login.html"
+            $.get('../user/user_info_get',
+                function(data,status){
+                    if(data.status==1){
+                        var list ={user:data.user};
+                        var html = template('user-tpl', list);
+                        $(".user-info").html(html);
                     }
-                });
 
-                return false;
             });
+
         });
 
     </script>

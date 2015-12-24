@@ -44,6 +44,12 @@ input{
   }
 }
 
+//数字类型内部按钮不显示
+input[type='number']::-webkit-inner-spin-button{
+  -webkit-appearance: none;
+}
+
+
 .wrapper{
   width: 1200px;
   margin-left: auto;

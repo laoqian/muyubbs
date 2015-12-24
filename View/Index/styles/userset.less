@@ -10,43 +10,39 @@
   border: solid 1px #f0f0f0;
   margin-top: 10px;
 
-  .title{
-    display: flex;
-    justify-content: center;
-  }
 
-  .form-item{
-    width: 400px;
-    height: 30px;
-    margin: 45px auto;
+  .col{
+    width: 10%;
+    min-height: 800px;
+    bottom: 0;
+    border-right: dashed 1px #f0f0f0;
+    float: left;
 
-    span{
-      margin-right: 10px;
-      color:#777;
-      font-size: 13px;
+    ul{
+      margin-top: 50px;
+      margin-left: 20px;
     }
-    input{
-      width: 200px;
-      height: 30px;
-      padding: 2px;
-      padding-left: 5px;
-      &::-webkit-inner-spin-button{
-        -webkit-appearance: none !important;
-        margin: 0;
+
+    li{
+      padding-left: 11px;
+      padding-bottom: 20px;
+
+      a{
+        font-size: 13px;
+        color:#111;
       }
     }
   }
 
-  .charge{
-    width: 400px;
-    margin: 40px auto;
+  .content{
+    width: 88%;
+    float: right;
+    padding-top: 10px;
+    padding-left: 10px;
 
-    button{
-      width: 400px;
-      height: 40px;
-      background: @wb-main-color;
-      margin-top: 50px;
-      color: white;
+    td{
+      font-size: 13px;
+      height: 30px;
     }
   }
 }
