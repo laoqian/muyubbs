@@ -169,28 +169,31 @@
                 $(".phone-error").text("");
             }
 
-            //无论发送是否成功，一分钟只能发送一次
-            $(".get-verify").unbind("click");
-            var timeout=60;
-            timer = setInterval(function(){
-                var str = "已发送等待"+timeout+"秒";
-                $(".get-verify").text(str);
-                timeout--;
-                if(timeout<0){
-                    clearInterval(timer);
-                    str = "重新获取验证";
-                    $(".get-verify").text(str);
-                    $(".get-verify").click(function(){
-                        get_verify();
-                    });
-                }
-            },1000);
+
 
             step = 0;
             //这个地方就是获取短信验证码
             $.post("../user/reg_tel_verify_step_1",{phone:phone},function(data,status){
                 if(data.status == 1){
-                  step = 1;
+                    step = 1;
+                    //无论发送是否成功，一分钟只能发送一次
+                    $(".get-verify").unbind("click");
+                    var timeout=60;
+                    timer = setInterval(function(){
+                        var str = "已发送等待"+timeout+"秒";
+                        $(".get-verify").text(str);
+                        timeout--;
+                        if(timeout<0){
+                            clearInterval(timer);
+                            str = "重新获取验证";
+                            $(".get-verify").text(str);
+                            $(".get-verify").click(function(){
+                                get_verify();
+                            });
+                        }
+                    },1000);
+                }else{
+                    $(".phone-error").text(data.error);
                 }
             });
         }

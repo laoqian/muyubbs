@@ -136,12 +136,13 @@ function post_code($tel){
 
   $code  = rand(100000,999999);
 
-//  $varify = '尊敬的彩虹桥新用户，您的验证码：'.''.$code.''.'，此验证码只能用于注册账号使用，请勿泄露。[彩虹桥云端]';
-//  $str = 'http://125.69.81.40:83/wsn/BatchSend.aspx?CorpID='.''.$corpid.''.'&Pwd='.''.$pwd.''.'&Mobile='.''.$tel.''.'&Content=' .''.$varify;
-//
-//  $ret = m_get($str);
-//
-//  if($ret<0) return -1;
+  $varify = '尊敬的彩虹桥新用户，您的验证码：'.''.$code.''.'，此验证码只能用于注册账号使用，请勿泄露。[彩虹桥云端]';
+  $varify = mb_convert_encoding($varify,'GB2312','UTF-8');
+  $str = 'http://125.69.81.40:83/wsn/BatchSend.aspx?CorpID='.''.$corpid.''.'&Pwd='.''.$pwd.''.'&Mobile='.''.$tel.''.'&Content=' .''.$varify;
+
+  $ret = m_get($str);
+
+  if($ret<0) return -1;
 
   return $code;
 }

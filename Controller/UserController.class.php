@@ -498,6 +498,18 @@ class UserController extends Controller {
       return;
     }
 
+    //检查手机号码是否已经使用。
+    $query['tel'] = $tel;
+    $vip = M('vip');
+
+    $ret = $vip->where($query)->select();
+    if($ret){
+      $data['status']=0;
+      $data['error'] = "手机号码已经使用.";
+      $this->ajaxReturn($data);
+      return;
+    }
+
     //发送验证码要手机
     $ret = post_code($tel);
     if($ret<0){
