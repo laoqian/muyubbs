@@ -2,7 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 
-require "webMap.php";
+require "public.php";
 
 class ArticleController extends Controller {
 

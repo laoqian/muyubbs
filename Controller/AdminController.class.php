@@ -3,7 +3,7 @@ namespace Home\Controller;
 use Think\Controller;
 
 
-require "webMap.php";
+require "public.php";
 
 class AdminController extends Controller {
 

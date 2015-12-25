@@ -97,6 +97,9 @@
         $('.reply-content').each(function(){
             var text = $(this).text();
             $(this).html(text);
+            var text = $(this).text();
+            text = text.substr(0,30);
+            $(this).text(text);
         });
         $(".next-page").click(function(){
             key.cur_page++;
