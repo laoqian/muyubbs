@@ -552,4 +552,63 @@ class AdminController extends Controller {
     $this->ajaxReturn($data);
   }
 
+
+  public function charged_search(){
+    $key = $_POST["key"];
+
+    $vip = M("vip");
+    //没有查询关键词就查询全部回复
+    if($key['last_days'] ==0){
+      $query = 'DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= rechargetime';
+    }elseif ($key['last_days'] ==1){
+      $query = 'DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= rechargetime';
+    }else{
+      $query = 'DATE_SUB(CURDATE(), INTERVAL 90 DAY) <= rechargetime';
+    }
+
+    //计算分页数据
+    $th["per_page_num"] = $key['per_page_num']; //每页条数
+    $th["menu_num"] =  $key['menu_num']; //每页页码数量
+    $th["cur_page"] =  $key['cur_page']; //每页页码数量
+
+    $model = M("recharge");
+
+
+    $th['data_count'] = $model->where($query)->count();
+
+    $th = paged($th);
+    $str =$key['cur_page'].','.$key['per_page_num'];
+
+    $res = $model->where($query)->page($str)->select();
+
+    if($res){
+      //查询到数据后。读取充值人信息
+      foreach($res as $key=>$value){
+        $query =[];
+        $query['id'] = $value['vipid'];
+
+        $auth = $vip->where($query)->select();
+        if($auth){
+          $value['author'] = $auth[0]['name'];
+        }
+
+        if($value['status']==0){
+          $value['status']='失败';
+        }else{
+          $value['status']='成功';
+        }
+
+        $res[$key] = $value;
+      }
+
+      $ret["charge"] = $res;
+      $ret['paged'] =$th;
+      $ret["status"] =1;
+    }else{
+      $ret["status"] = 0;
+      $ret['error'] ='没有查询到充值记录';
+    }
+
+    $this->ajaxReturn($ret);
+  }
 }

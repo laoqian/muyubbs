@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+
+<link href="__ROOT__/Application/Home/View/Index/styles/admin.less" rel="stylesheet/less">
+
+
+<body>
+
+<script id="act-code" type="text/html">
+    <table>
+        <tr  class="tr-title">
+            <td>订单号</td>
+            <td>充值金额</td>
+            <td>充值人</td>
+            <td>充值时间</td>
+            <td>充值状态</td>
+        </tr>
+        {{each list as value i}}
+        <tr>
+            <td>{{value.sn}}</td>
+            <td>{{value.money}}</td>
+            <td>{{value.author}}</td>
+            <td>{{value.rechargetime}}</td>
+            <td>{{value.status}}</td>
+        </tr>
+        {{/each}}
+    </table>
+    <div>
+        <span>总共{{paged.page_total}}页,</span>
+        <span>当前第{{paged.cur_page}}页。</span>
+        {{if paged.cur_page>1}}
+        <button class="pre-page">上一页</button>
+        {{/if}}
+        <ul class="th-menu">
+            {{each paged.menus as value i}}
+            <li><button class="loc-page">{{value}}</button></li>
+            {{/each}}
+        </ul>
+        {{if paged.page_total>paged.cur_page}}
+        <button class="next-page">下一页</button>
+        {{/if}}
+    </div>
+</script>
+
+<div class="art-tt">
+    <div class="at">
+        <div class="se">
+            <span>检索条件----</span>
+            <select class="last-days" name="" id="">
+                <option value="0">最近一周</option>
+                <option value="1">最近一个月</option>
+                <option value="2">最近三个月</option>
+            </select>
+            <button>查询</button>
+        </div>
+    </div>
+    <div class="info">
+        <span class="query"></span>
+    </div>
+    <div class="at-li">
+    </div>
+</div>
+
+<script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+<script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
+<script src="__ROOT__/Application/Home/View//styles/arttemplate/template.js"></script>
+
+
+<script type="text/javascript">
+
+    //请求文章的关键词
+    var key ={
+        per_page_num :20,
+        menu_num :10,
+        cur_page:1,
+        last_days :'0'
+    };
+
+
+    function template_dom_init(data){
+        //生成模板
+        var list ={list:data.charge,paged:data.paged};
+        var html = template('act-code', list);
+        $(".at-li").html(html);
+
+        $(".next-page").click(function(){
+            key.cur_page++;
+            charged_search();
+        });
+
+        $(".pre-page").click(function(){
+            key.cur_page--;
+            charged_search();
+        });
+
+        $(".loc-page").click(function(){
+            key.cur_page = $(this).text();
+            charged_search();
+        });
+    }
+
+    function charged_search(){
+        $query = "当前检索条件为：";
+        if(key.last_days==0){
+            $query+='最近一周';
+        }else if(key.last_days==1){
+            $query+='最近一个月';
+        }else{
+            $query+='最近三个月';
+        }
+
+        $query+=".";
+
+        $(".query").text($query);
+
+        $.post("./charged_search",
+                {key:key},
+                function(data,status){
+                    if(data.status==1){
+                        template_dom_init(data);
+                    }else{
+                        $(".at-li").text("没有查询到相应主题");
+                    }
+                });
+    }
+
+    $(document).ready(function(){
+        charged_search();
+        $(".at button").click(function(){
+            key.last_days = $(".last-days").val();
+            key.cur_page =1;
+            charged_search();
+        });
+    });
+
+</script>
+</body>
+</html>
