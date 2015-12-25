@@ -172,6 +172,7 @@ function user_info_format($user){
   );
 
   $user['sex'] = $sex[$user['sex']];
+  $user['isaudit'] = $audit[$user['isaudit']];
   $user['status'] = $status[$user['status']];
   $user['statuscz'] = $statuscz[$user['statuscz']];
   $user['statusgx'] = $statusgx[$user['statusgx']];

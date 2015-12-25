@@ -180,6 +180,10 @@ class AdminController extends Controller {
       return;
     }
 
+    foreach($user as $k=>$value){
+      $user[$k] = user_info_format($value);
+    }
+
     $ret["user"] = $user;
     $ret['paged'] =$th;
     $ret["status"] =1;
@@ -280,8 +284,6 @@ class AdminController extends Controller {
 
     $ad = M('ad');
     $ret = $ad->select();
-
-
 
     foreach($ret as $key=>$value){
 
@@ -386,6 +388,37 @@ class AdminController extends Controller {
 
     $data['status'] =1;
     $data['error'] ="保存成功。";
+    $this->ajaxReturn($data);
+  }
+
+
+  public function user_op(){
+
+    $user_id = $_POST['userid'];
+    $user_op = $_POST['opcode'];
+
+
+    if(!$user_id || !$user_op ){
+      $data['status'] =0;
+      $data['error'] ='没有数据';
+      $this->ajaxReturn($data);
+    }
+
+    $vip =M('vip');
+
+    $query['id'] =$user_id;
+    if($user_op=='delete'){
+      $vip->where($query)->delete();
+    }elseif($user_op=='freeze'){
+      $merge['status'] = 1;
+      $vip->where($query)->data($merge)->save();
+    }else{
+      $merge['status'] = 0;
+      $vip->where($query)->data($merge)->save();
+    }
+
+    $data['status'] =1;
+    $data['error'] ="操作成功。";
     $this->ajaxReturn($data);
   }
 }

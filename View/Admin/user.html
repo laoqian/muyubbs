@@ -19,6 +19,8 @@
             <td>服务到期时间</td>
             <td>彩虹糖</td>
             <td>彩虹豆</td>
+            <td>审核</td>
+            <td>状态</td>
             <td class="op">操作</td>
         </tr>
         {{each list as value i}}
@@ -32,8 +34,11 @@
             <td>{{value.serverdate}}</td>
             <td>{{value.cht}}</td>
             <td>{{value.chd}}</td>
-            <td class="op">
-                <button class="edit">冻结</button>
+            <td>{{value.isaudit}}</td>
+            <td>{{value.status}}</td>
+            <td userid={{value.id}} class="op">
+                <button class="freeze">冻结</button>
+                <button class="nofreeze">解除</button>
                 <button class="del">删除</button>
             </td>
         </tr>
@@ -118,6 +123,15 @@
         share_status:'3'
     };
 
+    function user_op(user,op){
+        var id =$(user).parent().attr('userid');
+        $.post("./user_op",{userid:id,opcode:op},function(data,status){
+            if(data.status==1){
+                user_search();
+            }
+        })
+    }
+
     function template_dom_init(data){
 
         //生成模板
@@ -153,15 +167,15 @@
 
         //删除一篇文章操作，先请求服务器删除，服务器删除成功后，再在页面去掉该文章
         $(".del").click(function(){
-            var index =$(this).parent().parent().find(".index").text();
+            user_op(this,'delete');
+        });
 
-            var art = search[index-1];
+        $(".freeze").click(function(){
+            user_op(this,'freeze');
+        });
 
-            $.post("../Article/delete",{article:art},function(data,status){
-                if(data.status==1){
-                    user_search();
-                }
-            })
+        $(".nofreeze").click(function(){
+            user_op(this,'nofreeze');
         });
     }
 
@@ -211,7 +225,7 @@
 
         $(".query").text(query);
 
-        $.post("../admin/user_search",
+        $.post("./user_search",
                 {key:key},
                 function(data,status){
                     if(data.status==1){
