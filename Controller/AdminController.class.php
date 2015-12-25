@@ -274,4 +274,118 @@ class AdminController extends Controller {
     $this->ajaxReturn($data);
     return;
   }
+
+
+  public  function adshow(){
+
+    $ad = M('ad');
+    $ret = $ad->select();
+
+
+
+    foreach($ret as $key=>$value){
+
+      $str = $value['publishtime'].' +'.''.$value['displaydays'].' month';
+      $time = strtotime($str,$value['publishtime']);
+
+      $value['publishtime'] = date('Y-m-d G:i:s',$time);
+      $value = ad_info_format($value);
+      $ret[$key] = $value;
+    }
+
+    $this->assign('ads',$ret);
+
+    $this->show();
+  }
+
+  public  function ad_add(){
+
+
+    // 上传文件
+    $upload = new \Think\Upload();// 实例化上传类
+    $upload->maxSize   =     2*1024*1024 ;// 设置附件上传大小
+    $upload->exts      =     array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
+    $upload->rootPath  =     './Application/Home/View/image/'; // 设置附件上传根目录
+    $upload->savePath  =     ''; // 设置附件上传（子）目录
+    $info   =   $upload->upload();
+
+    if(!$info){
+      $data['status'] = 0;
+      $data['error'] = '提交资料失败';
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $ad = M('ad');
+
+    $query['pos'] = $_POST['pos'];
+
+    $ret = $ad->where($query)->select();
+
+    $new['img'] = __ROOT__.'/'."Application/Home/View/image/"."".$info["img"]['savepath']."".$info["img"]['savename'];;
+    $new['url'] = $_POST['url'];
+    $new['pos'] = $_POST['pos'];
+    $new['displaydays'] = $_POST['displaydays'];
+
+    if($ret){
+      $new['publishtime'] = date('Y-m-d G:i:s');
+      $ret = $ad->where($query)->save($new);
+    }else{
+      $ret = $ad->add($new);
+    }
+
+    if(!$ret){
+      $data['status'] = 0;
+      $data['error'] = '服务器错误';
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $data['status'] = 1;
+    $data['error'] = '提交成功';
+    $data['ad'] = $ret;
+    $this->ajaxReturn($data);
+  }
+
+  public function rights_load(){
+
+    $rights = M('vip_interest');
+
+    $ret = $rights->select();
+    if(!$ret){
+      $data['status'] =0;
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $right = rights_format($ret);
+
+    $data['status'] =1;
+    $data['rights'] =$right;
+    $this->ajaxReturn($data);
+  }
+
+  public function rights_post(){
+
+    $rights = M('vip_interest');
+
+    $rgh= $_POST['rights'];
+    if(!$rgh){
+      $data['status'] =0;
+      $data['error'] ='没有数据';
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    foreach($rgh as $key=>$value){
+      $query['id'] = $value['id'];
+      $merge['value'] = $value['value'];
+
+      $rights->where($query)->data($merge)->save();
+    }
+
+    $data['status'] =1;
+    $data['error'] ="保存成功。";
+    $this->ajaxReturn($data);
+  }
 }

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+
+<link href="__ROOT__/Application/Home/View/Index/styles/admin.less" rel="stylesheet/less">
+
+<body>
+
+<form action="./ad_add.html" enctype="multipart/form-data" method="post" class="ad-form-group">
+    <table>
+        <tr>
+            <td>广告图片</td>
+            <td><input name="img" type="file" class="img"> <span class="img-error"></span></td>
+        </tr>
+        <tr>
+            <td>广告链接</td>
+            <td><input name="url" type="url" maxlength="200"  value="http://"></td>
+        </tr>
+        <tr>
+            <td>展示位置</td>
+            <td>
+                <select name="pos" id="">
+                    <option value="0">中上大图</option>
+                    <option value="1">中上小图1</option>
+                    <option value="2">中上小图2</option>
+                    <option value="3">中上小图3</option>
+                    <option value="4">中上小图4</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>展示时间:</td>
+            <td>
+                <select name="displaydays" id="">
+                    <option value="1">1个月</option>
+                    <option value="3">3个月</option>
+                    <option value="6">半年</option>
+                    <option value="12">1年</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <button class="ad-submit">确&nbsp;&nbsp;定</button>
+    <span class="error">&nbsp;</span>
+</form>
+
+<script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+<script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
+<script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
+
+
+<script type="text/javascript">
+
+    function img_verify(img,error){
+        if(!$(img).val()){
+            $(error).text("没有选择照片");
+            return false;
+        }else{
+            $(error).text("");
+        }
+        return true;
+    }
+
+
+    $(document).ready(function(){
+        $(".img").change(function(){
+            img_verify(this,$(".img-error"));
+        });
+
+        $(".ad-submit").click(function(){
+            if(!img_verify($('.img'),$(".img-error"))){
+                $('.error').text("资料不全");
+                return false;
+            }
+
+            $('.error').text("提交中...");
+
+            var options = {
+                success: function(data,status){
+                    $(".error").text(data.error);
+                },
+
+                timeout: 3000
+            };
+
+            $(".ad-form-group").ajaxSubmit(options);
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

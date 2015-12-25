@@ -207,3 +207,53 @@ function acc_info_format($acc){
 
   return $acc;
 }
+
+
+function ad_info_format($ad){
+  $pos = array(
+    '0'=>'中上大图',
+    '1'=>'中上小图1',
+    '2'=>'中上小图2',
+    '3'=>'中上小图3',
+    '4'=>'中上小图4',
+  );
+
+  $ad['pos'] = $pos[$ad['pos']];
+
+  return $ad;
+}
+
+function rights_format($rights){
+
+  $name =array(
+    'oncegxsd'=>'共享端刷单一次获得20*x',
+    'oncegxscorjg'=>'共享端收藏/加购一次获得5*x',
+    'oncegxllorztc'=>'共享端流量/直通车一次获得5*x',
+    'oncegxshorpj'=>'共享端收货/评价一次获得2*x',
+    'onhookonehouraward'=>'共享端挂机一小时获得10*x',
+    'monthaward'=>'共享端当月在线600小时获得x',
+    'shopnum'=>'可绑定的店铺数x',
+    'imgquality'=>'远程画质x 1/2',
+    'lastonlinetime'=>'昨日在线时间x hour',
+    'connecttimes'=>'每日可连接次数',
+    'chargediscount'=>'充值折扣',
+    'onceczsd'=>'操作端刷单一次消耗30',
+    'onceczscorjg'=>'操作端收藏/加购一次获得5',
+    'onceczllorztc'=>'操作端流量/直通车一次获得5',
+    'onceczshorpj'=>'操作端收货/评价一次获得2'
+  );
+
+
+  foreach($rights as $key=>$value){
+    $mate[$value['type']]['name'] = $name[$value['type']];
+    $mate[$value['type']]['item'][$value['level']]['value'] = $value['value'];
+    $mate[$value['type']]['item'][$value['level']]['id'] = $value['id'];
+  }
+
+  $i=0;
+  foreach($mate as $key=>$value){
+    $ret[$i++] = $value;
+  }
+
+  return $ret;
+}

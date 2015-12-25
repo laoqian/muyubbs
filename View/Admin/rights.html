@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <title>{$bbs_title}</title>
+    <!-- Bootstrap -->
+    <link href="__ROOT__/Application/Home/View/Index/styles/admin.less" rel="stylesheet/less">
+</head>
+<body>
+
+
+
+<div class="rights">
+    <div class="conf_container">
+    </div>
+    <div class="conf-page-turn">
+
+    </div>
+    <div class="rights-bot">
+        <button class="rights-save">保存配置</button>
+        <span class="save-info"></span>
+    </div>
+</div>
+
+<!--//配置加载模板-->
+<script id="conf-load-tpl" type="text/html">
+    {{each rights as value k}}
+        {{if k==0}}
+            <div>
+            <table class="conf_page">
+                <tbody>
+                <tr class="nav-tr">
+                    <td >权益项</td>
+                    <td >vip1(双击修改)</td>
+                    <td >vip2(双击修改)</td>
+                    <td >vip3(双击修改)</td>
+                    <td >vip4(双击修改)</td>
+                    <td >vip5(双击修改)</td>
+                    <td >vip6(双击修改)</td>
+                </tr>
+        {{/if}}
+                <tr class="tr-key">
+                    <td >{{value.name}}</td>
+                    {{each value.item as rg k}}
+                    <td class="value td-chg" sqlid={{rg.id}}>{{rg.value}}</td>
+                    {{/each}}
+                </tr>
+        {{if rights.length==(k+1) }}
+
+                </tbody>
+            </table>
+            </div>
+        {{/if}}
+    {{/each}}
+</script>
+
+
+<script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+<script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
+<script src="__ROOT__/Application/Home/View//styles/arttemplate/template.js"></script>
+
+<script type="text/javascript">
+    var rights= new Object();
+
+    function rights_chg(col){
+        var text = $(col).text();
+
+        $(col).text("");
+        var e =document.createElement("input");
+        e.type  = "number";
+        e.value = text;
+
+        $(e).addClass("key-in");
+        $(col).append(e);
+
+        $(e).focus();
+
+        $(col).unbind("dblclick");
+
+        $(e).attr('maxlength','5');
+
+        $(e).bind('input propertychange',function(){
+            max = $(this).attr('maxlength');
+            if(!max) return;
+
+            value = $(this).val().toString();
+
+            if(value.length>max){
+                value = value.substr(0,max);
+                if($(this).attr('type')=='number'){
+                    $(this).val(parseInt(value));
+                }else{
+                    $(this).val(value);
+                }
+            }
+        });
+
+        $(e).blur(function(){
+            var t = $(this).val();
+            var td = $(this).parent();
+
+            $(td).addClass('val-chg');
+            $(td).text(t);
+            $(td).dblclick(function(){
+                rights_chg(td);
+            });
+        });
+    }
+
+    function rights_to_html(){
+        var list ={rights:rights,num:10};
+        var html = template('conf-load-tpl', list);
+        $(".conf_container").html(html);
+
+        var t = "总共："+rights.total+"页,当前第"+rights.cur+"页。";
+        $(".page-info").text(t);
+
+        $(".td-chg").dblclick(function(){
+            rights_chg(this);
+        });
+    }
+
+
+
+    //加载配置列表
+    function rights_load(){
+        $.get("rights_load",function(data,status){
+           if(data.status==1){
+               rights = data.rights;
+               rights_to_html();
+               $(".rights-bot").css("display","block");
+           }else{
+               $(".conf_container").text("加载配置失败.");
+               $(".rights-bot").css("display","none");
+           }
+        })
+    }
+
+    $(document).ready(function(){
+        $(".rights-bot").css("display","none");
+        rights_load();
+
+        $(".rights-save").click(function(){
+
+            var chg=[];
+            var tmp ={};
+            $('.val-chg').each(function(i){
+                tmp.id = $(this).attr('sqlid');
+                tmp.value = $(this).text();
+
+                chg[i] = tmp;
+            });
+
+            $.post("./rights_post",{
+                rights:chg
+            },function(data,status){
+                if(data.status==1){
+                    $(".save-info").text("保存配置成功");
+                }else{
+                    $(".save-info").text(data.error);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

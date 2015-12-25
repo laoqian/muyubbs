@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+
+<link href="__ROOT__/Application/Home/View/Index/styles/admin.less" rel="stylesheet/less">
+
+<body>
+
+<table>
+    <tr>
+        <td>序号</td>
+        <td>图片</td>
+        <td>链接</td>
+        <td>位置</td>
+        <td>到期时间</td>
+    </tr>
+    <foreach name="ads" key="index" item="ad">
+        <tr>
+            <td>{$index+1}</td>
+            <td style="width: 230px; height: 40px"><img src={$ad['img']} alt="" style="width: 200px; height: 40px"></td>
+            <td>{$ad['url']}</td>
+            <td>{$ad['pos']}</td>
+            <td>{$ad['publishtime']}</td>
+        </tr>
+    </foreach>
+</table>
+
+
+<script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+<script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
+<script src="__ROOT__/Application/Home/View//styles/arttemplate/template.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+    });
+</script>
+</body>
+</html>

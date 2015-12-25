@@ -1,65 +1,43 @@
 <!DOCTYPE html>
 <html>
 
-<style type="text/css">
-    <link href="__ROOT__/Application/Home/View/Index/styles/admin.less" rel="stylesheet/less">
-    <link href="__ROOT__/Application/Home/View/Index/styles/charge.less" rel="stylesheet/less">
-    <link href="__ROOT__/Application/Home/View/Index/styles/actcode.less" rel="stylesheet/less">
-</style>
+
+<link href="__ROOT__/Application/Home/View/Index/styles/admin.less" rel="stylesheet/less">
+
 <body>
 
 <script id="act-code" type="text/html">
     <table>
         <tr >
             <td>序号</td>
-            <td>主题</td>
-            <td>作者</td>
-            <td>发表时间</td>
+            <td>图片</td>
+            <td>链接地址</td>
+            <td>展示位置</td>
+            <td>到期时间</td>
             <td class="op">操作</td>
         </tr>
         {{each list as value i}}
         <tr>
             <td class="index">{{i+1+paged.index_start}}</td>
-            <td >{{value.title}}</td>
-            <td>{{value.author}}</td>
+            <td ><img src={{value.img}} alt=""></td>
+            <td>{{value.pos}}</td>
+            <td>{{value.displaydays}}</td>
             <td>{{value.publishtime}}</td>
             <td class="op">
                 <button class="edit">编辑</button>
-                <button class="del">删除</button>
+                <button class="del"> 删除</button>
             </td>
         </tr>
         {{/each}}
     </table>
-    <div>
-        <span>总共{{paged.page_total}}页,</span>
-        <span>当前第{{paged.cur_page}}页。</span>
-        {{if paged.cur_page>1}}
-        <button class="pre-page">上一页</button>
-        {{/if}}
-        <ul class="th-menu">
-            {{each paged.menus as value i}}
-            <li><button class="loc-page">{{value}}</button></li>
-            {{/each}}
-        </ul>
-        {{if paged.page_total>paged.cur_page}}
-        <button class="next-page">下一页</button>
-        {{/if}}
-    </div>
 </script>
 
 <div class="art-tt">
-    <div class="at">
-        <div class="se">
-            <span>检索条件----</span>
-            <span>主题:</span>
-            <input class="title" type="text" placeholder="主题"/>
-            <span>作者:</span>
-            <input class="write" type="text" placeholder="作者"/>
-            <button>查询</button>
-        </div>
-    </div>
-    <div class="info">
-        <span class="query"></span>
+    <div class="ad-menu">
+        <ul>
+            <li><a class="ad-next" href="adshow.html">当前广告</a></li>
+            <li><a class="ad-next" href="adadd.html">广告添加</a></li>
+        </ul>
     </div>
     <div class="at-li">
     </div>
@@ -68,95 +46,33 @@
 
 <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
 <script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
-<script src="__ROOT__/Application/Home/View//styles/arttemplate/template.js"></script>
+
 
 
 <script type="text/javascript">
-
-    //请求文章的关键词
-    var key ={
-        per_page_num :20,
-        menu_num :10,
-        cur_page:1,
-        article :'',
-        name :''
-    };
-
-    function template_dom_init(data){
-
-        //生成模板
-        var list ={list:data.article,paged:data.paged};
-        var html = template('act-code', list);
-        $(".at-li").html(html);
-
-        $(".next-page").click(function(){
-            key.cur_page++;
-            art_search();
-        });
-
-        $(".pre-page").click(function(){
-            key.cur_page--;
-            art_search();
-        });
-
-        $(".loc-page").click(function(){
-            key.cur_page = $(this).text();
-            art_search();
-        });
-
-
-        //删除一篇文章操作，先请求服务器删除，服务器删除成功后，再在页面去掉该文章
-        $(".del").click(function(){
-            var index =$(this).parent().parent().find(".index").text();
-
-            var art = search[index-1];
-
-            $.post("../Article/delete",{article:art},function(data,status){
-                if(data.status==1){
-                    art_search();
-                }
-            })
-        });
-    }
-
-    function art_search(){
-        $query = "当前检索条件为：";
-        if(key.name.length>0){
-            $query+="名字："+key.name;
-        }
-        if(key.article.length>0){
-            $query+=" 主题："+key.name;
-        }
-
-        if(key.article.length==0 && key.name.length==0){
-            $query+="全部主题";
-        }
-
-        $query+=".";
-
-        $(".query").text($query);
-
-        $.post("../Article/search",
-                {key:key},
-                function(data,status){
-                    if(data.status==1){
-                        template_dom_init(data);
-                    }else{
-                        $(".at-li").text("没有查询到相应主题");
-                    }
-                });
-    }
-
     $(document).ready(function(){
-        art_search('','');
-        $(".at button").click(function(){
-            key.article = $(".title").val();
-            key.name =$(".write").val();
-            key.cur_page =1;
-            art_search();
-        });
-    });
 
+        $(".at-li").load('adshow',function(data,status,xhr){
+            var ret=JSON.parse(data);
+            if(ret.status==0){
+                window.location.href="../Index/login.html"
+            }
+        });
+
+
+        $('.ad-next').click(function(){
+
+            $(".at-li").load($(this).attr("href"),function(data,status,xhr){
+                var ret=JSON.parse(data);
+                if(ret.status==0){
+                    window.location.href="../Index/login.html"
+                }
+            });
+
+            return false;
+        });
+
+    });
 </script>
 </body>
 </html>

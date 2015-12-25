@@ -23,7 +23,7 @@
 
     <div class="config">
         <div class="offer-in">
-            <input type="text" placeholder="邀请码个数(不超过10)"/>
+            <input type="number" placeholder="邀请码个数(不超过10)" maxlength="2"/>
             <button>生成邀请码</button>
         </div>
 
@@ -39,6 +39,23 @@
     <script type="text/javascript">
 
      $(document).ready(function(){
+
+         $('.offer-in input').bind('input propertychange',function(){
+             max = $(this).attr('maxlength');
+             if(!max) return;
+
+             value = $(this).val().toString();
+
+             if(value.length>max){
+                 value = value.substr(0,max);
+                 if($(this).attr('type')=='number'){
+                     $(this).val(parseInt(value));
+                 }else{
+                     $(this).val(value);
+                 }
+             }
+         });
+
          $(".offer-in button").click(function(){
              var code_num =parseInt($(".offer-in input").val());
 
