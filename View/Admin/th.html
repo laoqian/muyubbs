@@ -22,8 +22,7 @@
             <td >{{value.title}}</td>
             <td>{{value.author}}</td>
             <td>{{value.publishtime}}</td>
-            <td class="op">
-                <button class="edit">编辑</button>
+            <td class="op" artid={{value.id}}>
                 <button class="del">删除</button>
             </td>
         </tr>
@@ -80,6 +79,15 @@
         name :''
     };
 
+    function art_op(user,op){
+        var id =$(user).parent().attr('artid');
+        $.post("./article_op",{artid:id,opcode:op},function(data,status){
+            if(data.status==1){
+                art_search();
+            }
+        })
+    }
+
     function template_dom_init(data){
 
         //生成模板
@@ -105,15 +113,7 @@
 
         //删除一篇文章操作，先请求服务器删除，服务器删除成功后，再在页面去掉该文章
         $(".del").click(function(){
-            var index =$(this).parent().parent().find(".index").text();
-
-            var art = search[index-1];
-
-            $.post("../Article/delete",{article:art},function(data,status){
-                if(data.status==1){
-                    art_search();
-                }
-            })
+            art_op(this,'delete');
         });
     }
 

@@ -96,8 +96,8 @@ class AdminController extends Controller {
       $query['name'] = $key["write"];
 
       $ret = $vip->where($query)->select();
+      $query=[];
       if($ret){
-        $query=[];
         $query['authorid'] = $ret[0]['id'];
       }
     }
@@ -301,8 +301,6 @@ class AdminController extends Controller {
   }
 
   public  function ad_add(){
-
-
     // 上传文件
     $upload = new \Think\Upload();// 实例化上传类
     $upload->maxSize   =     2*1024*1024 ;// 设置附件上传大小
@@ -421,4 +419,137 @@ class AdminController extends Controller {
     $data['error'] ="操作成功。";
     $this->ajaxReturn($data);
   }
+
+  public function article_op(){
+
+    $art_id = $_POST['artid'];
+    $art_op = $_POST['opcode'];
+
+
+    if(!$art_id || !$art_op ){
+      $data['status'] =0;
+      $data['error'] ='没有数据';
+      $this->ajaxReturn($data);
+    }
+
+    $article =M('article');
+
+    $query['id'] =$art_id;
+    if($art_op=='delete'){
+      $article->where($query)->delete();
+    }
+
+    $data['status'] =1;
+    $data['error'] ="操作成功。";
+    $this->ajaxReturn($data);
+  }
+
+  public function reply_search(){
+
+    $key = $_POST["key"];
+
+    $vip = M("vip");
+    //没有查询关键词就查询全部回复
+    if(strlen($key['name'])>0){
+      if($key['first']==0){
+        $query['name'] = $key["name"];
+
+        $ret = $vip->where($query)->select();
+        if(!$ret){
+          $data['status'] =0;
+          $data['error'] = '该用户不存在';
+          $this->ajaxReturn($data);
+          return;
+        }
+        $query=[];
+        $query['authorid'] = $ret[0]['id'];
+      }else{
+        $query['title'] = $key["name"];
+        $article= M("article");
+        $ret = $article->where($query)->select();
+        if(!$ret){
+          $data['status'] =0;
+          $data['error'] = '该主题不存在';
+          $this->ajaxReturn($data);
+          return;
+        }
+
+        $query=[];
+        $query['articleid'] = $ret[0]['id'];
+      }
+    }
+
+    //计算分页数据
+    $th["per_page_num"] = $key['per_page_num']; //每页条数
+    $th["menu_num"] =  $key['menu_num']; //每页页码数量
+    $th["cur_page"] =  $key['cur_page']; //每页页码数量
+
+    $model = M("review");
+
+    if(strlen($key['name'])>0){
+      $th['data_count'] = $model->where($query)->count();
+    }else{
+      $th['data_count'] = $model->count();
+    }
+
+
+    $th = paged($th);
+
+    $str =$key['cur_page'].','.$key['per_page_num'];
+
+    if(strlen($key['name'])>0){
+      $res = $model->where($query)->page($str)->select();
+    }else{
+      $res = $model->page($str)->select();
+    }
+
+    if($res){
+      //查询到数据后。读取文章作者信息
+      foreach($res as $key=>$value){
+        $query =[];
+        $query['id'] = $value['reviewerid'];
+
+        $auth = $vip->where($query)->select();
+        if($auth){
+          $value['author'] = $auth[0]['name'];
+        }
+
+        $res[$key] = $value;
+      }
+
+      $ret["reply"] = $res;
+      $ret['paged'] =$th;
+      $ret["status"] =1;
+    }else{
+      $ret["status"] = 0;
+      $ret['error'] ='该主题没有回复';
+    }
+
+    $this->ajaxReturn($ret);
+  }
+
+  public function reply_op(){
+
+    $art_id = $_POST['replyid'];
+    $art_op = $_POST['opcode'];
+
+
+    if(!$art_id || !$art_op ){
+      $data['status'] =0;
+      $data['error'] ='没有数据';
+      $this->ajaxReturn($data);
+    }
+
+    $article =M('review');
+
+    $query['id'] =$art_id;
+    if($art_op=='delete'){
+      $article->where($query)->delete();
+    }
+
+    $data['status'] =1;
+    $data['error'] ="操作成功。";
+    $this->ajaxReturn($data);
+  }
+
 }

@@ -157,7 +157,7 @@ function user_info_format($user){
 
   $audit = array(
     0=>'未审核',
-    1=>'通过审核',
+    1=>'已通过',
   );
 
   $status = array(
