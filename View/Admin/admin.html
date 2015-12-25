@@ -10,8 +10,12 @@
 <!--导航栏 -->
 
 <div class="nav-ad">
-    <div>
-        欢迎使用木鱼后台管理系统
+    <div class="nav-left">
+        欢迎使用后台管理系统
+    </div>
+    <div class="nav-right">
+        <span>欢迎管理员-{$admin['name']}！</span>
+        <a href="logout">退出</a>
     </div>
 </div>
 <div class="sub-nav">
@@ -39,12 +43,12 @@
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+<script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function(){
-
         $(".ad-content").load("user.html",function(data,status,xhr){
             var ret=JSON.parse(data);
             if(ret.status==0){

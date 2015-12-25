@@ -134,7 +134,7 @@
 
         $(".query").text($query);
 
-        $.post("../admin/art_search",
+        $.post("./art_search",
             {key:key},
             function(data,status){
                 if(data.status==1){

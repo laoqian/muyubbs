@@ -1,0 +1,62 @@
+
+
+@import "public.less";
+
+//admin页面less
+@admin-bg-color : #E6F2FB;
+
+
+span{
+  font-family: 'Microsoft Yahei', Simsun;
+  font-size: 13px;
+}
+
+input{
+  height: 20px;
+  background: #FFFFCC;
+}
+
+
+
+.login-main{
+  width: 480px;
+  height: 320px;
+  position: absolute;
+  top:50%;
+  left: 50%;
+  margin-left: -240px;
+  margin-top: -160px;
+  background: #f0f0f0;
+  border-radius: 5px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  span{
+    display: block;
+    height:80px;
+    text-align: center;
+  }
+  tr{
+    height: 40px;
+  }
+
+  td{
+    text-align: right;
+    font-size: 13px;
+    input{
+      background: lighten(#FFFFCC,5%);
+      border:0;
+      border-right: 0;
+      border-bottom: 0;
+      width: 140px;
+    }
+  }
+  button{
+    float: left;
+    width: 60px;
+    height: 24px;
+    background: darken(@admin-bg-color,30%);
+    color: white;
+  }
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{$bbs_title}</title>
+    <!-- Bootstrap -->
+    <link href="__ROOT__/Application/Home/View/Index/styles/admin-login.less" rel="stylesheet/less">
+</head>
+<body>
+<div class="login-main">
+    <form class="admin-form">
+        <span>
+            后台管理
+        </span>
+        <table>
+            <tr>
+                <td>管理员:</td>
+                <td><input class="account" type="text" maxlength="12" value="admin0001"></td>
+            </tr>
+            <tr>
+                <td>密码:</td>
+                <td><input class="pwd" type="password" maxlength="12" value="88888888"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="error" style="color: red; text-align: center"> </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td><button class="submit">登录</button></td>
+            </tr>
+        </table>
+
+    </form>
+</div>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+<script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".admin-form input").bind('input propertychange',function(){
+            max = $(this).attr('maxlength');
+            if(!max) return;
+
+            value = $(this).val().toString();
+
+            if(value.length>max){
+                value = value.substr(0,max);
+                if($(this).attr('type')=='number'){
+                    $(this).val(parseInt(value));
+                }else{
+                    $(this).val(value);
+                }
+            }
+        });
+
+
+        $('.submit').click(function(){
+            if($('.account').val()=='' || $('.pwd').val()==''){
+                $('.error').text('用户名/密码为空');
+                return false;
+            }
+
+            $.post('admin_login',{
+                account:$('.account').val(),
+                pwd:$('.pwd').val()
+            },function(data,status){
+                if(data.status==1){
+                    location.href = 'admin.html';
+                }else{
+                    $('.error').text('用户名/密码错误');
+                }
+            });
+
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

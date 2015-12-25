@@ -11,6 +11,13 @@ class AdminController extends Controller {
     parent::__construct();
     //构造函数
 
+    if(!session('admin') && ACTION_NAME!='login' && ACTION_NAME!='admin_login'){
+       $this->redirect('login');
+    }
+
+    if(session('admin')){
+      $this->assign('admin',session('admin'));
+    }
   }
 
 
@@ -610,5 +617,31 @@ class AdminController extends Controller {
     }
 
     $this->ajaxReturn($ret);
+  }
+
+  public  function admin_login(){
+    $query['account'] = $_POST['account'];
+    $query['pwd'] = $_POST['pwd'];
+
+    $admin = M('admin');
+
+    $ret = $admin->where($query)->select();
+
+    if(!$ret){
+      $data['status'] =0;
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    session('admin',$ret[0]);
+
+    $data['status'] =1;
+    $this->ajaxReturn($data);
+    return;
+  }
+
+  public function logout(){
+    session('admin',null);
+    $this->redirect('login');
   }
 }
