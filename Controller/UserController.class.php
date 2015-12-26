@@ -63,9 +63,11 @@ class UserController extends Controller {
     $vip['qq'] =$_POST['qq'];
     $vip['referrerqq'] =$_POST['refer-qq'];
     $vip['tel'] =$_POST['phone'];
-    $vip['serverdate'] = date("Y-m-d h:i:sa");
+    $vip['serverdate'] = date("Y-m-d h:i:s");
     $vip['isaudit'] =  0;
     $vip['status'] =1;
+    $vip['tvid'] =$_POST['tvid'];
+    $vip['tvpwd'] =$_POST['tvpwd'];
 
     $vip['handidpath'] = __ROOT__.'/'. "Application/Home/View/image/"."".$info["user-hand-id"]['savepath']."".$info["user-hand-id"]['savename'];
     $vip['useridpath'] = __ROOT__.'/'."Application/Home/View/image/"."".$info["user-id"]['savepath']."".$info["user-id"]['savename'];

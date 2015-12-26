@@ -35,17 +35,17 @@
                 <form method="post" action="../user/register" class="rg-form-group" enctype="multipart/form-data">
                     <div class="form-item">
                         <span>用户名 <big>*</big>     ：</span>
-                        <input class="account" type="text" maxlength="15"  name="account" placeholder="6-24位用户名" value="jiaran">
+                        <input class="account" type="text" maxlength="15"  name="account" placeholder="6-24位用户名" value="">
                         <label class="account-error"></label>
                     </div>
                     <div class="form-item">
                         <span>密码<big>*</big> ：</span>
-                        <input class="pwd1" type="password" maxlength="24"  name="password" placeholder="6-24位密码" value="123456">
+                        <input class="pwd1" type="password" maxlength="24"  name="password" placeholder="6-24位密码" value="">
                         <label class="pwd1-error"></label>
                     </div>
                     <div class="form-item">
                         <span>再一次输入密码<big>*</big> ：</span>
-                        <input class="pwd2" type="password"  maxlength="24"  name="password1" placeholder="密码确认" value="123456">
+                        <input class="pwd2" type="password"  maxlength="24"  name="password1" placeholder="密码确认" value="">
                         <label class="pwd2-error"></label>
                     </div>
                     <div class="form-item">
@@ -59,7 +59,7 @@
                     </div>
                     <div class="form-item">
                         <span>真实姓名<big>*</big> ：</span>
-                        <input class="name" type="text" name="name" maxlength="5"  placeholder="真实姓名" value="贾然">
+                        <input class="name" type="text" name="name" maxlength="5"  placeholder="真实姓名" value="">
                         <label class="name-error"></label>
                     </div>
                     <div class="form-item">
@@ -117,25 +117,25 @@
                     </div>
                     <div class="form-item">
                         <span>完整住所地址：</span>
-                        <input type="text" name="address" placeholder="完整住所地址" maxlength="140"  value="成都市武侯区永盛南街8号">
+                        <input type="text" name="address" placeholder="完整住所地址" maxlength="140"  value="">
                     </div>
                     <div class="form-item">
                         <span>QQ：</span>
-                        <input type="number" name="qq" placeholder="QQ" maxlength="10"  value="858385135">
+                        <input type="number" name="qq" placeholder="QQ" maxlength="10"  value="">
                     </div>
                     <div class="form-item">
                         <span>推荐人QQ：</span>
-                        <input type="number" name="refer-qq" placeholder="推荐人QQ" maxlength="10"  value="858385135">
+                        <input type="number" name="refer-qq" placeholder="推荐人QQ" maxlength="10"  value="">
                     </div>
                     <div class="form-item">
                         <span>手机号码<big>*</big> ：</span>
                         <span class="get-verify">获取验证码</span>
-                        <input id="phone" class="phone" type="number" name="phone" placeholder="手机号码" maxlength="11"  value="18200326535">
+                        <input id="phone" class="phone" type="number" name="phone" placeholder="手机号码" maxlength="11"  value="">
                         <label class="phone-error"></label>
                     </div>
                     <div class="form-item">
                         <span>验证码<big>*</big> ：</span>
-                        <input class="verify" type="number" name="verify" placeholder="验证码" maxlength="6"  value="123123">
+                        <input class="verify" type="number" name="verify" placeholder="验证码" maxlength="6"  value="">
                         <label class="verify-error"></label>
                     </div>
 
@@ -281,6 +281,7 @@
 
         function code_varify(){
             if(step != 3){
+                $('.varify-error').text('验证码不正确');
                 return false;
             }
 
@@ -380,7 +381,7 @@
                             location.href = data.next;
                         }
                     },
-                    timeout: 3000
+                    timeout: 30000
                 };
 
                 $(".submit-error").text("注册中，请等待....");
