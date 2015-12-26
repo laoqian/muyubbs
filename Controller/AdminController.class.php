@@ -621,7 +621,7 @@ class AdminController extends Controller {
 
   public  function admin_login(){
     $query['account'] = $_POST['account'];
-    $query['pwd'] = $_POST['pwd'];
+    $query['pwd'] = md5($_POST['pwd']);
 
     $admin = M('admin');
 

@@ -9,7 +9,7 @@ class IndexController extends Controller {
   function __construct() {
     parent::__construct();
 
-    $this->assign('bbs_title','木鱼网络');
+    $this->assign('bbs_title','彩虹桥');
     $this->assign('user',session("user"));
   }
 

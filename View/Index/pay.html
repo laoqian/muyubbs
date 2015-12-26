@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{$bbs_title}</title>
+    <!-- Bootstrap -->
+    <link href="__ROOT__/Application/Home/View/Index/styles/newth.less" rel="stylesheet/less">
+    <link href="__ROOT__/Application/Home/View/styles/umeditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+    <link href="__ROOT__/Application/Home/View/styles/Font-Awesome-3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!--导航栏 -->
+    <include file="./Application/Home/View/Index/header.html" />
+
+    <div class="wrapper">
+        <form action="https://shenghuo.alipay.com/send/payment/fill.htm" onsubmit=" document.charset='gbk' "method="post" target="_blank">
+            <input name="optEmail" type="hidden" value="858385135@qq.com" />
+            <input name="payAmount" type="hidden" value="10" />
+            <input name="title" type="hidden" value="请你喝杯咖啡！" placeholder="付款说明" />
+            <input name="pay" type="image" value="给我付款" src="https://img.alipay.com/sys/personalprod/style/mc/btn-index.png" />
+        </form>
+    </div>
+
+    <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/umeditor/umeditor.config.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/umeditor/umeditor.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/lesscss/less.min.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
+
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function(){
+
+        });
+
+    </script>
+</body>
+</html>
