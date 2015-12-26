@@ -9,9 +9,15 @@
 -- 											修改表 eb_online_record 字段 onlinetimes 为 onlinetime, 新增字段 connecttimes; 增加组合唯一约束
 --											修改表 eb_vip_interest 字段 interesttype 增加限制唯一
 --											将投诉表合并到刷单记录表中
+--	ver-1.03	2015-12-22		wanghaowen	修改权益表
 
 -- ******************************************************--
 -- ******************************************************--
+
+/*
+CREATE USER eb_admin@localhost IDENTIFIED BY 'eb_123456'; 
+GRANT ALL ON *.* TO 'eb_admin'@'localhost'; 
+*/
 
 /*创建数据库*/
 
@@ -19,7 +25,7 @@ DROP DATABASE IF EXISTS eb;			/*删除数据库*/
 CREATE DATABASE IF NOT EXISTS eb;	/*创建数据库*/
 ALTER DATABASE eb CHARSET=utf8;
 USE eb;								/*使用数据库*/
-set character_set_client = gbk;		/* 避免中文乱码 */
+
 
 /*创建表*/
 
@@ -27,9 +33,11 @@ set character_set_client = gbk;		/* 避免中文乱码 */
 -- DROP TABLE IF EXISTS eb_config;
 CREATE TABLE IF NOT EXISTS `eb_config` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
-  `ebkey` VARCHAR(20) NOT NULL COMMENT 'key-键',
+  `ebkey` INT NOT NULL COMMENT 'key-键',  
   `ebvalue` VARCHAR(1000) NOT NULL COMMENT 'value-值',
-  PRIMARY KEY (`id`)
+  `ebdesc` VARCHAR(100) NOT NULL COMMENT '键值说明',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY (`ebkey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='配置表';
 
 /*管理员表*/
@@ -86,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `eb_vip` (
   `qq` VARCHAR(20) NOT NULL UNIQUE COMMENT 'QQ号',
   `referrerqq` VARCHAR(20) DEFAULT "" COMMENT '推荐人QQ号，可以为空',
   `tel` VARCHAR(11) NOT NULL UNIQUE COMMENT '手机号',
-  `viplevel` INT NOT NULL DEFAULT 0 COMMENT '会员等级',
+  `viplevel` INT NOT NULL DEFAULT 1 COMMENT '会员等级',
   `serverdate` DATE NOT NULL COMMENT '服务到期日期',
   `isaudit` INT NOT NULL DEFAULT 0 COMMENT '是否已审核，0-否，1-是',
   `status` INT NOT NULL DEFAULT 0 COMMENT '状态，0-正常，1-冻结',
@@ -97,6 +105,8 @@ CREATE TABLE IF NOT EXISTS `eb_vip` (
   `ipcz` VARCHAR(20) NOT NULL DEFAULT "" COMMENT 'IP-操作端',
   `ipgx` VARCHAR(20) NOT NULL DEFAULT "" COMMENT 'IP-共享端',
   `macgx` VARCHAR(24) NOT NULL DEFAULT "" COMMENT 'MAC-共享端',
+  `tvid` VARCHAR(32) NOT NULL COMMENT "teamviewer 账号",
+  `tvpwd` VARCHAR(32) NOT NULL COMMENT "teamviewer 密码",
   `cht` INT NOT NULL DEFAULT 0 COMMENT '彩虹糖',
   `chd` INT NOT NULL DEFAULT 0 COMMENT '彩虹豆',
   PRIMARY KEY (`id`),
@@ -106,18 +116,35 @@ CREATE TABLE IF NOT EXISTS `eb_vip` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='vip用户表';
 
 
+
 /*vip权益表*/
 -- DROP TABLE IF EXISTS eb_vip_interest;
 CREATE TABLE IF NOT EXISTS `eb_vip_interest` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
-  `interesttype` VARCHAR(20) NOT NULL UNIQUE COMMENT '权益类型',
-  `level1` INT NOT NULL COMMENT '1级会员权益',
-  `level2` INT NOT NULL COMMENT '2级会员权益',
-  `level3` INT NOT NULL COMMENT '3级会员权益',
-  `level4` INT NOT NULL COMMENT '4级会员权益',
-  `level5` INT NOT NULL COMMENT '5级会员权益',
-  PRIMARY KEY (`id`)
+  `type` VARCHAR(30) NOT NULL COMMENT '权益类型',
+  `level` INT NOT NULL COMMENT '会员等级',
+  `value` INT NOT NULL DEFAULT 1 COMMENT '权益值',
+  PRIMARY KEY (`id`),
+  UNIQUE (`type`, `level`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='vip权益表';
+
+/*
+oncegxsd				共享端刷单一次获得20*x
+oncegxscorjg			共享端收藏/加购一次获得5*x
+oncegxllorztc			共享端流量/直通车一次获得5*x
+oncegxshorpj			共享端收货/评价一次获得2*x
+onhookonehouraward		共享端挂机一小时获得10*x
+monthaward				共享端当月在线600小时获得x
+shopnum					可绑定的店铺数x
+imgquality				远程画质x 1/2
+lastonlinetime			昨日在线时间x hour
+connecttimes			每日可连接次数
+chargediscount			充值折扣
+onceczsd				操作端刷单一次消耗30
+onceczscorjg			操作端收藏/加购一次获得5
+onceczllorztc			操作端流量/直通车一次获得5
+onceczshorpj			操作端收货/评价一次获得2
+*/
 
 
 /*在线记录表*/
@@ -128,13 +155,32 @@ CREATE TABLE IF NOT EXISTS `eb_online_record` (
   `onlinetype` INT NOT NULL DEFAULT 0 COMMENT '在线类型，0-操作端，1-共享段',
   `onlinedate` DATE NOT NULL COMMENT '在线日期',
   `onlinetime` INT NOT NULL DEFAULT 0 COMMENT '在线时长，单位分钟',
-  `connecttimes` INT NOT NULL DEFAULT 1 COMMENT '今日(被)连接次数',
+  `connecttimes` INT NOT NULL DEFAULT 0 COMMENT '今日(被)连接次数',
+  `checkout` INT NOT NULL DEFAULT 0 COMMENT '是否已经结账 0-未结账 1-已结账',
   PRIMARY KEY (`id`),
   UNIQUE (`vipid`, `onlinetype`, `onlinedate`),
   KEY `fk_vipid_online_record` (`vipid`),
   CONSTRAINT `fk_vipid_online_record` FOREIGN KEY (`vipid`)
   REFERENCES `eb_vip` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='在线记录表';
+
+
+
+/* 触发器 在更新某个会员的在线时间之前，如果没有该条记录，就创建一条默认记录 */
+-- DROP TRIGGER IF EXISTS trg_update_online_record;
+DELIMITER $$
+CREATE
+    TRIGGER `trg_update_online_record`
+    BEFORE UPDATE
+    ON eb_online_record FOR EACH ROW
+    BEGIN
+		IF NOT EXISTS(SELECT id FROM eb_online_record WHERE vipid=new.vipid AND onlinedate=new.onlinedate AND onlinetype=new.onlinetype)
+		THEN
+			INSERT INTO eb_online_record(vipid, onlinedate, onlinetype) VALUES(new.vipid, CURDATE(), new.onlinetype);
+		END IF;
+	END $$
+DELIMITER ;
+
 
 
 /*硬件表*/
@@ -204,6 +250,9 @@ CREATE TABLE IF NOT EXISTS `eb_recharge` (
   CONSTRAINT `fk_vipid_recharge` FOREIGN KEY (`vipid`)
   REFERENCES `eb_vip` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='充值表';
+
+
+
 
 /*刷单表*/
 -- 刷单所在日期以结束时间为准
@@ -297,6 +346,8 @@ CREATE TABLE IF NOT EXISTS `eb_ad` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `img` VARCHAR(260) NOT NULL COMMENT '广告图片路径',
   `url` VARCHAR(1000) NOT NULL COMMENT '广告链接url',
+  `pos` VARCHAR(1000) NOT NULL COMMENT '广告位置',
+  `displaydays` VARCHAR(1000) NOT NULL COMMENT '展示天数',
   `publishtime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '广告发布时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='广告表';
@@ -307,7 +358,7 @@ CREATE TABLE IF NOT EXISTS `eb_notice` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `img` VARCHAR(260) NOT NULL COMMENT '公告图片路径',
   `content` VARCHAR(1000) NOT NULL COMMENT '公告内容',
-  `publishtime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '广告发布时间',
+  `publishtime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '公告发布时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='公告表';
 
@@ -338,9 +389,9 @@ CREATE TABLE IF NOT EXISTS `eb_article` (
   `title` VARCHAR(100) NOT NULL COMMENT '文章标题',
   `content` VARCHAR(20000) NOT NULL COMMENT '文章内容',
   `publishtime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '文章发布时间',
-  `replynum` INT NOT NULL DEFAULT 0 COMMENT '评论数',
+  `replynum` INT NOT NULL COMMENT '评论数',
   `lastreplyer` VARCHAR(100) NOT NULL COMMENT '最后评论人',
-  `reviewnum` INT NOT NULL DEFAULT 0 COMMENT '查看数量',
+  `reviewnum` INT NOT NULL COMMENT '查看数量',
   PRIMARY KEY (`id`),
   KEY `fk_categoryid_article` (`categoryid`),
   KEY `fk_authorid_article` (`authorid`),
@@ -372,44 +423,180 @@ CREATE TABLE IF NOT EXISTS `eb_review` (
 -- ****************************************************************************
 -- 以下为测试用的数据
 
+set character_set_client = gbk;		/* 插入数据时，避免中文乱码 */
 
 
+/*
+配置表(注：已经添加的信息 ebkey 不能修改)
+*/
+INSERT INTO eb_config(ebkey, ebdesc, ebvalue)
+VALUES
+(1, '联系我们', '<a href="http://www.baidu.com">彩虹电商</a><br>联系电话：10000000000<br>地址：彩虹村彩虹路彩虹桥888号彩虹屋'),
+(2, '公告信息', '<B>公告</B><br>1、热烈祝贺彩虹电商平台成功上线。<br>2、热烈欢迎<a href="http://www.baidu.com">海外代购</a>入驻我平台'),
+(3, '包月消费(chd)', '500'),
+(4, '包季度消费(chd)', '1500'),
+(5, '包年消费(chd)', '5000'),
+(6, '共享端离线时间超过?小时，警告', '72'),
+(7, '共享端离线时间超过?小时，冻结账号并扣除一定金币', '120'),
+(8, '共享端离线时间超过?小时，直接删除账号', '240'),
+(9, '共享端前一天在线时间不足，如需继续登录，扣除的金币数', '150'),
+(10, '冻结会员账号时扣除的金币数', '2000');
 
 /*
 管理员数据
 */
 INSERT INTO eb_admin (account,pwd,sn,name,idcard,tel,qq) VALUES
-('admin0001', '88888888', '100001', 'AA1', '123456789012345671', '13281819621', '123456781'),
-('admin0002', '88888888', '100002', 'AA2', '123456789012345672', '13281819622', '123456782'),
-('admin0003', '88888888', '100003', 'AA3', '123456789012345673', '13281819623', '123456783'),
-('admin0004', '88888888', '100004', 'AA4', '123456789012345674', '13281819624', '123456784'),
-('admin0005', '88888888', '100005', 'AA5', '123456789012345675', '13281819625', '123456788'),
-('admin0006', '88888888', '100006', 'AA6', '123456789012345676', '13281819626', '123456786');
+('admin1', MD5('88888888'), 100001, 'AA1', '123456789012345671', '13000000001', '123456781'),
+('admin2', MD5('88888888'), 100002, 'AA2', '123456789012345672', '13000000002', '123456782'),
+('admin3', MD5('88888888'), 100003, 'AA3', '123456789012345673', '13000000003', '123456783'),
+('admin4', MD5('88888888'), 100004, 'AA4', '123456789012345674', '13000000004', '123456784'),
+('admin5', MD5('88888888'), 100005, 'AA5', '123456789012345675', '13000000005', '123456788'),
+('admin6', MD5('88888888'), 100006, 'AA6', '123456789012345676', '13000000006', '123456786');
 
 /*
 VIP 数据
 */
 INSERT INTO eb_vip
-(adminid, account, pwd, sn, name, area, address, qq, tel, isaudit, serverdate) 
+(adminid, account, pwd, sn, name, area, address, qq, tel, isaudit, serverdate, tvid, tvpwd) 
 VALUES
-(1, 'account001', '88888888', 10001, 'name001', '四川省', '成都', 'qq001', '15000000001', 0, '2016-01-01'),
-(2, 'account002', '88888888', 10002, 'name002', '湖北省', '武汉', 'qq002', '15000000002', 0, '2016-01-01'),
-(3, 'account003', '88888888', 10003, 'name003', '湖南省', '长沙', 'qq003', '15000000003', 0, '2016-01-01'),
-(4, 'account004', '88888888', 10004, 'name004', '重庆', '重庆', 'qq004', '15000000004', 1, '2016-01-01'),
-(5, 'account005', '88888888', 10005, 'name005', '广东省', '广州', 'qq005', '15000000005', 1, '2016-01-01'),
-(6, 'account006', '88888888', 10006, 'name006', '山西省', '大同', 'qq006', '15000000006', 1, '2016-01-01');
+(1, 'account001', MD5('88888888'), 10001, 'name001', '四川省', '成都', 'qq001', '15000000001', 0, '2016-01-01', 'tv0001', '123456'),
+(2, 'account002', MD5('88888888'), 10002, 'name002', '湖北省', '武汉', 'qq002', '15000000002', 0, '2016-01-01', 'tv0002', '123456'),
+(3, 'account003', MD5('88888888'), 10003, 'name003', '湖南省', '长沙', 'qq003', '15000000003', 1, '2016-01-01', 'tv0003', '123456'),
+(4, 'account004', MD5('88888888'), 10004, 'name004', '重庆', '重庆', 'qq004', '15000000004', 1, '2016-01-01', 'tv0004', '123456'),
+(5, 'account005', MD5('88888888'), 10005, 'name005', '广东省', '广州', 'qq005', '15000000005', 1, '2016-01-01', 'tv0005', '123456'),
+(6, 'account006', MD5('88888888'), 10006, 'name006', '山西省', '大同', 'qq006', '15000000006', 1, '2016-01-01', 'tv0006', '123456');
 
 /*
 权益表数据
 -- 每日可连接次数
 
--- 挂机在线可获得chd的倍数
+-- gjhdchdbs 挂机1小时可获得chd为 10*value
 */
 INSERT INTO eb_vip_interest
-(interesttype, level1, level2, level3, level4, level5) 
+(type, level, value) 
 VALUES
-('mrkljcs', 5, 10, 10, 12, 15),
-('gjhdchdbs', 1, 2, 2, 2, 2);
+('oncegxsd', 1, 1),
+('oncegxsd', 2, 2),
+('oncegxsd', 3, 2),
+('oncegxsd', 4, 3),
+('oncegxsd', 5, 4),
+('oncegxsd', 6, 5),
+
+('oncegxscorjg', 1, 1),
+('oncegxscorjg', 2, 2),
+('oncegxscorjg', 3, 2),
+('oncegxscorjg', 4, 3),
+('oncegxscorjg', 5, 4),
+('oncegxscorjg', 6, 5),
+
+('oncegxllorztc', 1, 1),
+('oncegxllorztc', 2, 2),
+('oncegxllorztc', 3, 2),
+('oncegxllorztc', 4, 3),
+('oncegxllorztc', 5, 4),
+('oncegxllorztc', 6, 5),
+
+('oncegxshorpj', 1, 1),
+('oncegxshorpj', 2, 2),
+('oncegxshorpj', 3, 2),
+('oncegxshorpj', 4, 3),
+('oncegxshorpj', 5, 4),
+('oncegxshorpj', 6, 5),
+
+('onhookonehouraward', 1, 1),
+('onhookonehouraward', 2, 2),
+('onhookonehouraward', 3, 2),
+('onhookonehouraward', 4, 2),
+('onhookonehouraward', 5, 2),
+('onhookonehouraward', 6, 2),
+
+('monthaward', 1, 600),
+('monthaward', 2, 600),
+('monthaward', 3, 600),
+('monthaward', 4, 600),
+('monthaward', 5, 600),
+('monthaward', 6, 600),
+
+('shopnum', 1, 1),
+('shopnum', 2, 1),
+('shopnum', 3, 1),
+('shopnum', 4, 1),
+('shopnum', 5, 1),
+('shopnum', 6, 1),
+
+('imgquality', 1, 1),
+('imgquality', 2, 1),
+('imgquality', 3, 2),
+('imgquality', 4, 2),
+('imgquality', 5, 2),
+('imgquality', 6, 2),
+
+('lastonlinetime', 1, 12),
+('lastonlinetime', 2, 12),
+('lastonlinetime', 3, 12),
+('lastonlinetime', 4, 12),
+('lastonlinetime', 5, 12),
+('lastonlinetime', 6, 12),
+
+('connecttimes', 1, 5),
+('connecttimes', 2, 10),
+('connecttimes', 3, 10),
+('connecttimes', 4, 12),
+('connecttimes', 5, 15),
+('connecttimes', 6, 20),
+
+('chargediscount', 1, 1),
+('chargediscount', 2, 1),
+('chargediscount', 3, 1),
+('chargediscount', 4, 1),
+('chargediscount', 5, 1),
+('chargediscount', 6, 1),
+
+('onceczsd', 1, 1),
+('onceczsd', 2, 1),
+('onceczsd', 3, 1),
+('onceczsd', 4, 1),
+('onceczsd', 5, 1),
+('onceczsd', 6, 1),
+
+('onceczscorjg', 1, 1),
+('onceczscorjg', 2, 1),
+('onceczscorjg', 3, 1),
+('onceczscorjg', 4, 1),
+('onceczscorjg', 5, 1),
+('onceczscorjg', 6, 1),
+
+('onceczllorztc', 1, 1),
+('onceczllorztc', 2, 1),
+('onceczllorztc', 3, 1),
+('onceczllorztc', 4, 1),
+('onceczllorztc', 5, 1),
+('onceczllorztc', 6, 1);
+
+
+
+
+
+/*
+oncegxsd				共享端刷单一次获得20*x
+oncegxscorjg			共享端收藏/加购一次获得5*x
+oncegxllorztc			共享端流量/直通车一次获得5*x
+oncegxshorpj			共享端收货/评价一次获得2*x
+onhookonehouraward		共享端挂机一小时获得10*x
+monthaward				共享端当月在线600小时获得x
+shopnum					可绑定的店铺数x
+imgquality				远程画质x 1/2
+lastonlinetime			昨日在线时间x hour
+connecttimes			每日可连接次数
+chargediscount			充值折扣
+onceczsd				操作端刷单一次消耗30
+onceczscorjg			操作端收藏/加购一次获得5
+onceczllorztc			操作端流量/直通车一次获得5
+onceczshorpj			操作端收货/评价一次获得2
+*/
+
+
+
 
 /*
 在线记录数据
@@ -417,18 +604,18 @@ VALUES
 INSERT INTO 
 eb_online_record(vipid, onlinetype, onlinedate, onlinetime) 
 VALUES
-((SELECT id FROM eb_vip WHERE sn=10001), 0, '2015-12-16', 10*60),
-((SELECT id FROM eb_vip WHERE sn=10002), 0, '2015-12-16', 10*60),
-((SELECT id FROM eb_vip WHERE sn=10003), 0, '2015-12-16', 10*60),
-((SELECT id FROM eb_vip WHERE sn=10004), 0, '2015-12-16', 10*60),
-((SELECT id FROM eb_vip WHERE sn=10005), 0, '2015-12-16', 10*60),
-((SELECT id FROM eb_vip WHERE sn=10006), 0, '2015-12-16', 10*60),
-((SELECT id FROM eb_vip WHERE sn=10001), 1, '2015-12-16', 10*60),
-((SELECT id FROM eb_vip WHERE sn=10002), 1, '2015-12-16', 10*60),
-((SELECT id FROM eb_vip WHERE sn=10003), 1, '2015-12-16', 10*60),
-((SELECT id FROM eb_vip WHERE sn=10004), 1, '2015-12-16', 13*60),
-((SELECT id FROM eb_vip WHERE sn=10005), 1, '2015-12-16', 13*60),
-((SELECT id FROM eb_vip WHERE sn=10006), 1, '2015-12-16', 13*60);
+((SELECT id FROM eb_vip WHERE sn=10001), 0, CURDATE(), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10002), 0, CURDATE(), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10003), 0, CURDATE(), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10004), 0, CURDATE(), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10005), 0, CURDATE(), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10006), 0, CURDATE(), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10001), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10002), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10003), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10004), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 12*60),
+((SELECT id FROM eb_vip WHERE sn=10005), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 12*60),
+((SELECT id FROM eb_vip WHERE sn=10006), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 12*60);
 
 
 /*
@@ -463,7 +650,15 @@ VALUES
 /*
 充值表
 */
-
+INSERT INTO eb_recharge(oprid, vipid, sn, money, chicon, status, rechargetime) 
+VALUES
+(1, (SELECT id FROM eb_vip WHERE sn=10004), '987654321', 100, 1000, 0, '2015-12-22 20:00:00'),
+(1, (SELECT id FROM eb_vip WHERE sn=10004), '987654323', 10, 100, 0, '2015-12-23 20:00:00'),
+(1, (SELECT id FROM eb_vip WHERE sn=10004), '987654324', 20, 200, 0, '2015-12-20 20:00:00'),
+(1, (SELECT id FROM eb_vip WHERE sn=10004), '987654325', 30, 300, 0, '2015-12-15 20:00:00'),
+(1, (SELECT id FROM eb_vip WHERE sn=10004), '987654322', 40, 400, 1, '2015-12-12 20:00:00'),
+(1, (SELECT id FROM eb_vip WHERE sn=10004), '987654329', 50, 500, 1, '2015-12-10 20:00:00'),
+(1, (SELECT id FROM eb_vip WHERE sn=10004), '987654327', 60, 600, 1, '2015-12-21 20:00:00');
 
 
 
