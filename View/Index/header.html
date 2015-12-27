@@ -85,12 +85,12 @@
             <span>密&nbsp;&nbsp;码</span>
         </div>
         <div class="pin2">
-            <input class="name" type="text" placeholder="用户名" value="">
-            <input class="pwd" type="password" placeholder="密码" value="">
+            <input class="name" type="text" placeholder="用户名" >
+            <input class="pwd" type="password" placeholder="密码" >
             <span class="login-error"></span>
         </div>
         <div class="pin3">
-            <input type="checkbox">
+            <input class="rmb-pwd" type="checkbox" checked="checked">
             <span>记住</span>
             <button class="login-btn">登录</button>
         </div>
@@ -111,7 +111,85 @@
 <script src="__ROOT__/Application/Home/View//styles/arttemplate/template.js"></script>
 
     <script type="text/javascript">
-        var login =0;
+        function setCookie(name,value){
+            var Days = 7;
+            var exp = new Date();
+
+            exp.setTime(exp.getTime() + Days*24*60*60*1000);
+            document.cookie = name + "="+ value + ";expires=" + exp.toGMTString();
+        }
+
+        function getCookie(name) {
+            var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+            if(arr=document.cookie.match(reg))
+                return arr[2];
+            else
+                return null;
+        }
+
+        function delCookie(name)
+        {
+            var exp = new Date();
+            exp.setTime(exp.getTime() - 1);
+            var cval=getCookie(name);
+            if(cval!=null)
+                document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+        }
+
+        function login(account,pwd){
+            $.post("../user/login", { account:account,pwd:pwd},
+                function(data,status){
+                    if(data.status!=1){
+                        $(".login-error").text("用户名/密码错误");
+                    }else{
+                        var list ={user:data.user};
+                        var remember = $('.rmb-pwd').is(':checked');
+                        if(remember){
+                            setCookie('account',account);
+                            setCookie('pwd',pwd);
+                        }
+
+                        var html = template('login-tpl', list);
+                        $(".login-bar").html(html);
+
+                        //保存cookie
+                        $('.logout-get').click(function(){
+                            var url = $(this).attr('href');
+                            logout(url);
+                            return false;
+                        });
+                    }
+            });
+        }
+
+        function  logout(url){
+            $.get(url,function(data,status){
+                if(data.status==1){
+                    if(data.next==1){
+                        location.href = 'index.html';
+                        return;
+                    }
+                    var user ={};
+                    user.login =0;
+                    user_init(user);
+                    delCookie('account');
+                    delCookie('pwd');
+                }
+            });
+        }
+
+        function user_info_read_from_cookie(){
+            var account = getCookie('account');
+            var pwd = getCookie('pwd');
+
+            if(account && pwd){
+                login(account,pwd);
+            }else{
+                var user ={};
+                user.login =0;
+                user_init(user);
+            }
+        }
 
         function user_init(user){
             var list ={user:user};
@@ -121,66 +199,28 @@
             $(".login-btn").click(function(){
                 var account = $(".name").val();
                 var pwd = $(".pwd").val();
-
-                $.post("../user/login",
-                        {   account:account,
-                            pwd:pwd,
-                        },
-
-                        function(data,status){
-                            if(data.status!=1){
-                                $(".login-error").text("用户名/密码错误");
-                            }else{
-                                var list ={user:data.user};
-                                var html = template('login-tpl', list);
-                                $(".login-bar").html(html);
-
-                                $('.logout-get').click(function(){
-                                    var url = $(this).attr('href');
-                                    $.get(url,function(data,status){
-                                        if(data.status==1){
-                                            if(data.next==1){
-                                                location.href = 'index.html';
-                                                return;
-                                            }
-                                            user_init(user);
-                                        }
-                                    });
-
-                                    return false;
-                                });
-                            }
-                        });
+                login(account,pwd);
             });
 
-
-            if(user.login==1){
-                $('.logout-get').click(function(){
-                    var url = $(this).attr('href');
-                    $.get(url,function(data,status){
-                        if(data.status==1){
-                            if(data.next==1){
-                                location.href = 'index.html';
-                                return;
-                            }
-                            user_init(user);
-                        }
-                    });
-
-                    return false;
-                });
-            }
+            $('.logout-get').click(function(){
+                var url = $(this).attr('href');
+                logout(url);
+                return false;
+            });
         }
+
+
         $(document).ready(function(){
             $.get("../user/state",function(data,status){
-                var user =new Object();
-                user.login =0;
-                if(data.status==1 && data.user){
-                    user = data.user;
-                }
-
-                    user_init(user);
-
+                    var user =new Object();
+                    user.login =0;
+                    //先通过服务端session判断服务端是否在线，如果不在线，在通过读取cookie的方式登录
+                    if(data.status==1 && data.user){
+                        user = data.user;
+                        user_init(user);
+                    }else{
+                        user_info_read_from_cookie();
+                    }
                 });
         });
     </script>
