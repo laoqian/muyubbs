@@ -25,20 +25,22 @@
             </div>
             <div>
                 <ul>
-                    <li class="pic-hot">
-                        <a src=""><img class="pic-pic" src="__ROOT__/Application/Home/View/resource/img/common_2_icon.png" alt=""></a>
-                        <div class="pic-content">
-                            <h3 class="pic-shot"><a class="pic-title" src="">标题</a></h3>
-                            <p class="pic-bit">内容只是为了测试用内容只是为了测试用</p>
-                        </div>
-                    </li>
+                    <foreach name="hots" item="hot">
+                        <li class="pic-hot">
+                            <a href=href={$hot['path']}><img class="pic-pic" src="__ROOT__/Application/Home/View/resource/img/nophoto.gif" alt=""></a>
+                            <div class="pic-content">
+                                <h3 class="pic-shot"><a class="pic-title" href={$hot['path']}>{$hot['title']}</a></h3>
+                                <p class="pic-bit">{$hot['content']}</p>
+                            </div>
+                        </li>
+                    </foreach>
                 </ul>
             </div>
         </div>
         <div class="content-right">
             <div>
                 <div class="post-art">
-                    <button><a href={$newth}><i class="icon-comments"></i>发表主题</a></button>
+                    <button ><a href={$newth}><i class="icon-comments"></i>发表主题</a></button>
                 </div>
                 <div class="art-page">
                     <button class="pre-page">

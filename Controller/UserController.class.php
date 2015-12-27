@@ -184,7 +184,6 @@ class UserController extends Controller {
     session("user",null);
     $data['status'] = 1;
 
-
     //用于退出登录后，是否要进行页面跳转
     if(session('logout_next')){
       $data['next'] = 1;

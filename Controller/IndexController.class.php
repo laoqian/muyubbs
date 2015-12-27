@@ -10,6 +10,7 @@ class IndexController extends Controller {
     parent::__construct();
 
     $this->assign('bbs_title','彩虹桥云端');
+    $this->assign('user',session('user'));
   }
 
   public function index(){
@@ -144,6 +145,18 @@ class IndexController extends Controller {
     $this->assign("paged",$th);
     $this->assign("theme",$ret);
 
+
+    $article = M("article");
+    $hots = $article->order('reviewnum DESC')->limit(10)->select();
+    foreach($hots as $key=>$value){
+      $value['path'] = "thread.html?articleid=".''.$value['id'];
+      $value['content'] = strip_tags($value['content']);
+      $value['title'] =  mb_substr( $value['title'], 0, 9, 'utf-8' ) ;
+      $value['content'] =  mb_substr( $value['content'], 0, 20, 'utf-8' ) ;
+      $hots[$key] = $value;
+    }
+
+    $this->assign('hots',$hots);
     //生成网站索引
 //    $m_web['index'] = "theme?".''."category=".''.$map['categoryid']."&page=".$th['cur_page'];
 //    $query = [];

@@ -19,21 +19,32 @@
     vertical-align: middle;
     font-weight: bold;
   }
+  li{
+    display: flex;
+    align-items: flex-start;
+
+    a{
+      width: 30%;
+      margin-right: 5px;
+    }
+
+    &:hover{
+      background: lighten(@wb-main-color,30%);
+    }
+  }
   .pic-hot{
     width: 100%;
-    border-top:solid 1px #ccc;
+    border-top:solid 1px #f0f0f0;
 
     img{
-      width: 30%;
+      width: 100%;
       background: #ccc;
-      margin: 10px 0px 5px 10px;
-      float: left;
+      margin: 8px 10px 5px 10px;
     }
 
     .pic-content{
       width: 56%;
       margin:10px 5px 5px 10px;
-      float: left;
     }
 
     h3{
