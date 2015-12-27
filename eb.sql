@@ -13,7 +13,7 @@
 
 -- ******************************************************--
 -- ******************************************************--
-
+  
 /*
 CREATE USER eb_admin@localhost IDENTIFIED BY 'eb_123456'; 
 GRANT ALL ON *.* TO 'eb_admin'@'localhost'; 
