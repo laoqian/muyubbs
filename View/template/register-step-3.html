@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN" ng-app="rgApp" ng-controller="rgCtrl">
+<head>
+    <meta charset="UTF-8">
+    <title>{$bbs_title}</title>
+    <!-- Bootstrap -->
+    <link href="__ROOT__/Application/Home/View/Index/styles/register.less" rel="stylesheet/less">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+        <!--导航栏 -->
+    <include file="./Application/Home/View/Index/header.html" />
+
+    <div class="wrapper">
+        <div class="rg-container">
+            <h3>提交资料</h3>
+            <div class="step">
+                <ul>
+                    <li >第一步：校验邀请码</li>
+                    <li >第二步：填写注册信息</li>
+                    <li class="step-active">第三步：提交淘宝/京东用户资料</li>
+                    <li >第四步：提交店铺资料</li>
+                    <li >第五步：提交电脑配置审核</li>
+                </ul>
+            </div>
+            <div class="rg-content">
+                <form method="post" action="../user/submit_tb" class="rg-form-group" enctype="multipart/form-data">
+                    <table>
+                        <tr class="form-item">
+                            <td class="item-title">淘宝小号<big>*</big> ：</td>
+                            <td>
+                                <input class="tb-name" type="text"  maxlength="12"  name="tb-name" placeholder="密码确认" value="123456">
+                                <label class="account-error"></label>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">账号等级：</td>
+                            <td>
+                                <input class="pwd2" type="number"  maxlength="2"  name="level" placeholder="密码确认" value="123456">
+                                <label class="pwd2-error"></label>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">性别：</td>
+                            <td class="form-item-addon">
+                                <select name="sex" id="">
+                                    <option value="0">男</option>
+                                    <option value="1">女</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">年龄段：</td>
+                            <td class="form-item-addon">
+                                <select name="age" id="">
+                                    <option value="0">70后</option>
+                                    <option value="1">80后</option>
+                                    <option value="2">90后</option>
+                                    <option value="3">00后</option>
+                                </select>
+                             </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">消费范围：</td>
+                            <td class="form-item-addon">
+                                <select  name="consume" id="">
+                                    <option value="0">0-100</option>
+                                    <option value="1">101-200</option>
+                                    <option value="2">201-300</option>
+                                    <option value="3">301-400</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">淘宝小号照片<big>*</big> ：</td>
+                            <td>
+                                <input name="tb-img" class="tb-img" type="file"  >
+                                <label class="tb-img-error"></label>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">账号类别<big>*</big> ：</td>
+                            <td class="form-item-addon">
+                                <select name="accounttype" id="">
+                                    <option value="0">淘宝</option>
+                                    <option value="1">京东</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="2" class="submit-error" style="text-align: center; font-size:13px">&nbsp;</td>
+                        </tr>
+                        <tr class="form-submit">
+                            <td colspan="2">
+                                <input type="submit" class="rg-submit" value="下一步">
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+        <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
+
+
+    <script type="text/javascript">
+
+        function tb_img_verify(){
+            var path = $(".tb-img").val();
+
+            if(!path){
+                $(".tb-img-error").text("没有选择照片");
+                return false;
+            }else{
+                $(".tb-img-error").text("");
+            }
+
+            return true;
+        }
+
+
+        function account_verify(){
+            var account = $(".tb-name").val();
+
+            if(account.length<6){
+                $(".account-error").text("用户名长度过短");
+                return false;
+
+            }else{
+                $(".account-error").text("");
+            }
+
+            return true;
+        }
+
+        $(document).ready(function(){
+
+            //输入长度校验
+            $(".form-item input").bind('input propertychange',function(){
+                max = $(this).attr('maxlength');
+                if(!max) return;
+
+                value = $(this).val().toString();
+
+                if(value.length>max){
+                    value = value.substr(0,max);
+                    if($(this).attr('type')=='number'){
+                        $(this).val(parseInt(value));
+                    }else{
+                        $(this).val(value);
+                    }
+                }
+            });
+
+            $(".tb-name").blur(function(){
+                account_verify();
+            });
+
+            //身份证照片验证
+            $(".tb-img").change(function(){
+                tb_img_verify();
+            });
+
+            $(".rg-submit").click(function(){
+
+                if(!account_verify()||!tb_img_verify())
+                {
+                    $(".submit-error").text("资料错误，请核实后重新点击下一步");
+                    return false;
+                }
+
+                var options = {
+                    success: function(data,status){
+                        if(data.status==0){
+                            $(".submit-error").text(data.error);
+                        }else{
+                            location.href = data.next;
+                        }
+                    },
+                    timeout: 30000
+                };
+
+                $(".rg-form-group").ajaxSubmit(options);
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>

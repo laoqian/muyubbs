@@ -9,8 +9,7 @@ class IndexController extends Controller {
   function __construct() {
     parent::__construct();
 
-    $this->assign('bbs_title','彩虹桥');
-    $this->assign('user',session("user"));
+    $this->assign('bbs_title','彩虹桥云端');
   }
 
   public function index(){
@@ -292,20 +291,29 @@ class IndexController extends Controller {
 
   public function register(){
 
-    $step = (int)($_GET['step']);
+    $step = session('register')['reg-step'];
+
+    if(session('user')&& !$step){
+      $this->redirect('index');
+      return;
+    }
+
     if($step<=1 || $step>5 || !$step){
-      $this->display("register-step-1");
+      $this->display("template/register-step-1");
     }else if($step == 2){
-      $offer = session('offer');
-      if($offer){
-        $this->display("register-step-2");
-      }
+      $this->display("template/register-step-2");
+    }else if($step == 3){
+      $this->display("template/register-step-3");
+    }else if($step == 4){
+      $this->display("template/register-step-4");
+    }else if($step == 5){
+      $this->display("template/register-step-5");
     }
   }
 
   public function newth(){
     if(!session('user')){
-      $this->error("没有登录");
+      $this->redirect("index");
       return;
     }
 

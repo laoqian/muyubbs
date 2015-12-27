@@ -26,74 +26,47 @@
                 <ul>
                     <li >第一步：校验邀请码</li>
                     <li >第二步：填写注册信息</li>
-                    <li class="step-active">第三步：提交淘宝/京东用户资料</li>
-                    <li >第四步：提交店铺资料</li>
+                    <li >第三步：提交淘宝/京东用户资料</li>
+                    <li class="step-active">第四步：提交店铺资料</li>
                     <li >第五步：提交电脑配置审核</li>
                 </ul>
             </div>
             <div class="rg-content">
-                <form method="post" action="../user/submit_tb" class="rg-form-group" enctype="multipart/form-data">
-                    <div class="form-item">
-                        <span>淘宝小号<big>*</big> ：</span>
-                        <input class="tb-name" type="text"  maxlength="12"  name="tb-name" placeholder="密码确认" value="123456">
-                        <label class="account-error"></label>
-                    </div>
-                    <div class="form-item">
-                        <span>账号等级：</span>
-                        <input class="pwd2" type="number"  maxlength="2"  name="level" placeholder="密码确认" value="123456">
-                        <label class="pwd2-error"></label>
-                    </div>
-                    <div class="form-item">
-                        <span>性别：</span>
-                        <div class="form-item-addon">
-                            <select name="sex" id="">
-                                <option value="0">男</option>
-                                <option value="1">女</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <span>年龄段：</span>
-                        <div class="form-item-addon">
-                            <select name="age" id="">
-                                <option value="0">70后</option>
-                                <option value="1">80后</option>
-                                <option value="2">90后</option>
-                                <option value="3">00后</option>
-                            </select>
-                         </div>
-                    </div>
-                    <div class="form-item">
-                        <span>消费范围：</span>
-                        <div class="form-item-addon">
-                            <select  name="consume" id="">
-                                <option value="0">0-100</option>
-                                <option value="1">101-200</option>
-                                <option value="2">201-300</option>
-                                <option value="3">301-400</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <span>淘宝小号照片<big>*</big> ：</span>
-                        <input name="tb-img" class="tb-img" type="file"  >
-                        <label class="tb-img-error"></label>
-                    </div>
-                    <div class="form-item">
-                        <span>账号类别<big>*</big> ：</span>
-                        <div class="form-item-addon">
-                            <select name="accounttype" id="">
-                                <option value="0">淘宝</option>
-                                <option value="1">京东</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-submit">
-                        <div>
-                            <label class="submit-error"></label>
-                        </div>
-                        <input type="submit" class="rg-submit" value="下一步">
-                    </div>
+                <div>
+
+                </div>
+                <form method="post" action="../user/submit_shop" class="rg-form-group" enctype="multipart/form-data">
+                    <table>
+                        <tr class="form-item">
+                            <td class="item-title">店铺名称<big>*</big> ：</td>
+                            <td>
+                                <input class="name" type="text"  maxlength="12"  name="name" placeholder="密码确认" value="123456">
+                                <label class="account-error"></label>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">店铺等级：</td>
+                            <td>
+                                <input class="level" type="number"  maxlength="2"  name="level"   placeholder="密码确认" value="123456">
+                                <label class="pwd2-error"></label>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">店铺照片<big>*</big> ：</td>
+                            <td>
+                                <input name="img" class="img" type="file"  >
+                                <label class="tb-img-error"></label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="submit-error" style="text-align: center; font-size:13px">&nbsp;</td>
+                        </tr>
+                        <tr class="form-submit">
+                            <td colspan="2">
+                                <input type="submit" class="rg-submit" value="下一步">
+                            </td>
+                        </tr>
+                    </table>
                 </form>
             </div>
         </div>
@@ -109,7 +82,7 @@
     <script type="text/javascript">
 
         function tb_img_verify(){
-            var path = $(".tb-img").val();
+            var path = $(".img").val();
 
             if(!path){
                 $(".tb-img-error").text("没有选择照片");
@@ -123,7 +96,7 @@
 
 
         function account_verify(){
-            var account = $(".tb-name").val();
+            var account = $(".name").val();
 
             if(account.length<6){
                 $(".account-error").text("用户名长度过短");
@@ -137,7 +110,6 @@
         }
 
         $(document).ready(function(){
-
             //输入长度校验
             $(".form-item input").bind('input propertychange',function(){
                 max = $(this).attr('maxlength');
@@ -155,12 +127,12 @@
                 }
             });
 
-            $(".tb-name").blur(function(){
+            $(".name").blur(function(){
                 account_verify();
             });
 
             //身份证照片验证
-            $(".tb-img").change(function(){
+            $(".img").change(function(){
                 tb_img_verify();
             });
 
@@ -182,6 +154,8 @@
                     },
                     timeout: 30000
                 };
+
+                $(".submit-error").text("提交店铺信息中，请等待....");
 
                 $(".rg-form-group").ajaxSubmit(options);
                 return false;

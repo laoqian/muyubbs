@@ -33,32 +33,45 @@
             </div>
             <div class="rg-content">
                 <form method="post" action="../user/submit_com" class="rg-form-group" enctype="multipart/form-data">
-                    <div class="form-item">
-                        <span>电脑1图片<big>*</big> ：</span>
-                        <input class="com1-img" name="com1-img" type="file"  placeholder="真实姓名">
-                        <label class="com1-img-error"></label>
-                    </div>
-                    <div class="form-item">
-                        <span>电脑2图片<big>*</big> ：</span>
-                        <input class="com2-img" name="com2-img"  type="file"  placeholder="真实姓名">
-                        <label class="com2-img-error"></label>
-                    </div>
-                    <div class="form-item">
-                        <span>两台电脑放一起图片<big>*</big> ：</span>
-                        <input class="com-to-img" name="com-to-img"  type="file"  placeholder="真实姓名">
-                        <label class="com-to-error"></label>
-                    </div>
-                    <div class="form-item">
-                        <span>两台光猫放一起图片<big>*</big> ：</span>
-                        <input class="cat-to-img" name="cat-to-img"  type="file"  placeholder="真实姓名">
-                        <label class="cat-to-error"></label>
-                    </div>
-                    <div class="form-submit">
-                        <div>
-                            <label class="submit-error"></label>
-                        </div>
-                        <input type="submit" class="rg-submit" value="完成">
-                    </div>
+                    <table>
+                        <tr class="form-item">
+                            <td class="item-title">电脑1图片<big>*</big> ：</td>
+                            <td>
+                                <input class="com1-img" name="com1-img" type="file"  placeholder="真实姓名">
+                                <label class="com1-img-error"></label>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">电脑2图片<big>*</big> ：</td>
+                            <td>
+                                <input class="com2-img" name="com2-img"  type="file"  placeholder="真实姓名">
+                                <label class="com2-img-error"></label>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">两台电脑放一起图片<big>*</big> ：</td>
+                            <td>
+                                <input class="com-to-img" name="com-to-img"  type="file"  placeholder="真实姓名">
+                                <label class="com-to-error"></label>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">两台光猫放一起图片<big>*</big> ：</td>
+                            <td>
+                                <input class="cat-to-img" name="cat-to-img"  type="file"  placeholder="真实姓名">
+                                <label class="cat-to-error"></label>
+                            </td>
+                        </tr>
+
+                        <tr class="form-item">
+                            <td colspan="2" class="submit-error" style="text-align: center; font-size:13px">&nbsp;</td>
+                        </tr>
+                        <tr class="form-submit">
+                            <td colspan="2">
+                                <input type="submit" class="rg-submit" value="完成">
+                            </td>
+                        </tr>
+                    </table>
                 </form>
 
             </div>

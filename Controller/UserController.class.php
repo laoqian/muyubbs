@@ -9,7 +9,6 @@ class UserController extends Controller {
   function __construct() {
     parent::__construct();
     //构造函数
-
   }
 
 
@@ -34,7 +33,7 @@ class UserController extends Controller {
     $invite = M("invitecode");
 
     $query['code'] = session("register")['offer'];
-
+    $query['status'] =0; //校验邀请码未注册用户才能使用
     $ret = $invite->where($query)->select();
     if(!$ret){
       $data['status'] = 0;
@@ -65,9 +64,9 @@ class UserController extends Controller {
     $vip['tel'] =$_POST['phone'];
     $vip['serverdate'] = date("Y-m-d h:i:s");
     $vip['isaudit'] =  0;
-    $vip['status'] =1;
-    $vip['tvid'] =$_POST['tvid'];
-    $vip['tvpwd'] =$_POST['tvpwd'];
+    $vip['status'] =   1;
+    $vip['tvid'] = $_POST['tvid'];
+    $vip['tvpwd'] = $_POST['tvpwd'];
 
     $vip['handidpath'] = __ROOT__.'/'. "Application/Home/View/image/"."".$info["user-hand-id"]['savepath']."".$info["user-hand-id"]['savename'];
     $vip['useridpath'] = __ROOT__.'/'."Application/Home/View/image/"."".$info["user-id"]['savepath']."".$info["user-id"]['savename'];
@@ -119,16 +118,28 @@ class UserController extends Controller {
     //用户数据存进数据库
     $ret = $user->data($vip)->add();
     if($ret){
+      //注册成功就讲邀请码标记为使用状态。
+      $query=[];
+      $query['code'] = session('register')['offer'];
+      $invite->status = 1;
+      $invite->where($query)->save();
+
 
       //注册成功后就自动进入登录状态
       $query=[];
       $query["tel"] = $vip['tel'];
       $vip = $user->where($query)->select();
+      $vip[0]['login'] =1;//置登录状态为1
       session("user",$vip[0]);
+
+      //置注册流程到第三步
+      $reg = session('register');
+      $reg['reg-step'] =3;
+      session('register',$reg);
 
       //返回注册成功信息
       $data['status'] = 1;
-      $data['next'] = "register-step-3.html";
+      $data['next'] = "register.html";
       $this->ajaxReturn($data);
     }else{
       $data['status'] = 0;
@@ -280,13 +291,10 @@ class UserController extends Controller {
       $data['status'] = 0;
       $data['error'] = "邀请码无效.";
     }else{
-        //校验成功保存数据库
-        $invite->id = $ret[0]['id'];
-        $invite->status = 1;
-        $invite->save();
 
         //校验成功保存在session，后面还要使用
         $register['offer'] = $_POST['offer'];
+        $register['reg-step'] = 2;
         session("register",$register);
 
         $data['status'] = 1;
@@ -347,8 +355,13 @@ class UserController extends Controller {
     //保存数据库
     $ret = $account->data($acc)->add();
     if($ret){
+      //置注册流程到第三步
+      $reg = session('register');
+      $reg['reg-step'] =4;
+      session('register',$reg);
+
       $data['status'] = 1;
-      $data['next'] = "register-step-4.html";
+      $data['next'] = "register.html";
       $this->ajaxReturn($data);
     }else{
       $data['status'] = 0;
@@ -406,8 +419,13 @@ class UserController extends Controller {
     //保存数据库
     $ret = $shop->data($acc)->add();
     if($ret){
+      //置注册流程到第三步
+      $reg = session('register');
+      $reg['reg-step'] =5;
+      session('register',$reg);
+
       $data['status'] = 1;
-      $data['next'] = "register-step-5.html";
+      $data['next'] = "register.html";
       $this->ajaxReturn($data);
     }else{
       $data['status'] = 0;
@@ -467,9 +485,12 @@ class UserController extends Controller {
     $ret = $hd->data($acc)->add();
     if($ret){
       $data['status'] = 1;
-      $register = session('register');
+
+      session('register',null);
+      $register =[];
       $register['reg_result'] = 1;
       session('register',$register);
+
       $data['next'] = "../user/register_result.html";
       $this->ajaxReturn($data);
     }else{
@@ -484,7 +505,7 @@ class UserController extends Controller {
     $reg_result = session("register")["reg_result"];
 
     if($reg_result){
-      $this->display("index/register_result");
+      $this->display("template/register_result");
     }else{
       $this->error("访问错误");
     }
