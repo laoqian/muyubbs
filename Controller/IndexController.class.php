@@ -178,7 +178,7 @@ class IndexController extends Controller {
     if($_GET["articleid"]){
       $map['id'] = $_GET['articleid'];
     }else{
-      $this->error("页面错误");
+      $this->error("访问错误",'index',5);
       return;
     }
 
@@ -306,7 +306,7 @@ class IndexController extends Controller {
 
     $step = session('register')['reg-step'];
 
-    if(session('user')&& !$step){
+    if(session('user') && !$step){
       $this->redirect('index');
       return;
     }
@@ -363,7 +363,7 @@ class IndexController extends Controller {
 
   public function userbuy(){
     if(!session('user')){
-      $this->error("没有登录");
+      $this->error("请先登录再进行此操作",'index.html',3);
       return;
     }
 
@@ -392,20 +392,26 @@ class IndexController extends Controller {
   }
 
   public function usercharge(){
-
+    if(!session('user')){
+      $this->error("请先登录再进行此操作",'index.html',3);
+      return;
+    }
     $this->show();
   }
 
   public function userset(){
+    if(!session('user')){
+      $this->error("请先登录再进行此操作",'index.html',3);
+      return;
+    }
 
     $this->show();
   }
 
 
   public function shopinfo(){
-
     if(!session('user')){
-      $this->error("没有登录");
+      $this->error("请先登录再进行此操作",'index.html',3);
       return;
     }
 
@@ -428,7 +434,7 @@ class IndexController extends Controller {
   public function tbchange(){
 
     if(!session('user')){
-      $this->error("没有登录");
+      $this->error("请先登录再进行此操作",'index.html',3);
       return;
     }
 
@@ -456,7 +462,7 @@ class IndexController extends Controller {
   public function pcinfo(){
 
     if(!session('user')){
-      $this->error("没有登录");
+      $this->error("请先登录再进行此操作",'index.html',3);
       return;
     }
 
@@ -468,7 +474,7 @@ class IndexController extends Controller {
 
     $ret = $shop->where($query)->select();
     if(!$ret){
-      $this->error("没有登录");
+      $this->error("请先登录再进行此操作",'index.html',3);
       return;
     }
 

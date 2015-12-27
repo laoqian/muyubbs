@@ -258,3 +258,53 @@ function rights_format($rights){
 
   return $ret;
 }
+
+
+
+function web_path($name,$level){
+
+  $url = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
+
+  $path  = session('bbs_path');
+
+  $path[$level]['url'] = $url;
+  $path[$level]['name'] = $name;
+
+  foreach($path as $key=>$value){
+    if($key<=$level){
+      $_path[$key] = $value;
+    }else{
+      break;
+    }
+  }
+
+  session('bbs_path',$_path);
+  return $_path;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

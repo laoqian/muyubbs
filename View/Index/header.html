@@ -90,7 +90,7 @@
             <span class="login-error"></span>
         </div>
         <div class="pin3">
-            <input class="rmb-pwd" type="checkbox" checked="checked">
+            <input class="rmb-pwd" type="checkbox" >
             <span>记住</span>
             <button class="login-btn">登录</button>
         </div>
@@ -208,7 +208,6 @@
                 return false;
             });
         }
-
 
         $(document).ready(function(){
             $.get("../user/state",function(data,status){
