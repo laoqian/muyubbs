@@ -34,7 +34,7 @@
             <div class="rg-content">
                 <div class="offer-verify">
                     <span>邀请码:</span>
-                    <input type="text" placeholder="输入15位邀请码" maxlength="15" value="">
+                    <input type="text" placeholder="输入15位邀请码" onkeyup="value=value.replace(/[\W]/g,'')" maxlength="15" value="">
                     <span class="error" ></span>
                     <button class="next-step">下一步</button>
                 </div>

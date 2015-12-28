@@ -88,7 +88,7 @@
             <span>密&nbsp;&nbsp;码</span>
         </div>
         <div class="pin2">
-            <input class="name" type="text" placeholder="用户名" >
+            <input class="name" type="text" onkeyup="value=value.replace(/[\W]/g,'')" placeholder="用户名" >
             <input class="pwd" type="password" placeholder="密码" >
             <span class="login-error"></span>
         </div>

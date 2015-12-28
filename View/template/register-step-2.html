@@ -137,9 +137,10 @@
                             </td>
                         </tr>
                         <tr class="form-item">
-                            <td class="item-title">QQ:</td>
+                            <td class="item-title">QQ<big>*</big>:</td>
                             <td>
-                                <input type="number" name="qq" placeholder="QQ" maxlength="10"  value="">
+                                <input class="qq" type="number" name="qq" placeholder="QQ" maxlength="10"  value="">
+                                <label class="qq-error"></label>
                             </td>
                         </tr>
                         <tr class="form-item">
@@ -332,6 +333,19 @@
             return true;
         }
 
+        function qq_verify(){
+            var path = $(".qq").val();
+
+            if(!path){
+                $(".qq-error").text("QQ号码是必须的");
+                return false;
+            }else{
+                $(".qq-error").text("");
+            }
+
+            return true;
+        }
+
         function tvpwd_verify(){
             var path = $(".tvpwd").val();
 
@@ -409,7 +423,9 @@
             $(".tvpwd").change(function(){
                 tvpwd_verify();
             });
-
+            $(".qq").change(function(){
+                qq_verify();
+            });
             //身份证照片验证
             $(".user-id").change(function(){
                 user_id_varify();
@@ -451,7 +467,7 @@
             $(".rg-submit").click(function(){
 
                 if(!account_verify()||!pwd1_verify()||!pwd2_verify()||!hand_id_verify() ||!user_id_varify()||!phone_verify()
-                    || !code_varify() ||!tvid_verify()||!tvpwd_verify()
+                    || !code_varify() ||!tvid_verify()||!tvpwd_verify()||!qq_verify()
                 )
                 {
                     $(".submit-error").text("资料错误，请核实后重新点击下一步");
