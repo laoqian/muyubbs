@@ -15,7 +15,7 @@ class UserController extends Controller {
   public function  register()
   {
     $upload = new \Think\Upload();// 实例化上传类
-    $upload->maxSize   =     2*1024*1024 ;// 设置附件上传大小
+    $upload->maxSize   =     512*1024 ;// 设置附件上传大小
     $upload->exts      =     array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
     $upload->rootPath  =     './Application/Home/View/image/'; // 设置附件上传根目录
     $upload->savePath  =     ''; // 设置附件上传（子）目录
@@ -316,7 +316,7 @@ class UserController extends Controller {
 
     // 上传文件
     $upload = new \Think\Upload();// 实例化上传类
-    $upload->maxSize   =     2*1024*1024 ;// 设置附件上传大小
+    $upload->maxSize   =     512*1024 ;// 设置附件上传大小
     $upload->exts      =     array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
     $upload->rootPath  =     './Application/Home/View/image/'; // 设置附件上传根目录
     $upload->savePath  =     ''; // 设置附件上传（子）目录
@@ -386,7 +386,7 @@ class UserController extends Controller {
     //登录成功后才能处理
     // 上传文件
     $upload = new \Think\Upload();// 实例化上传类
-    $upload->maxSize   =     2*1024*1024 ;// 设置附件上传大小
+    $upload->maxSize   =     512*1024 ;// 设置附件上传大小
     $upload->exts      =     array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
     $upload->rootPath  =     './Application/Home/View/image/'; // 设置附件上传根目录
     $upload->savePath  =     ''; // 设置附件上传（子）目录
@@ -449,7 +449,7 @@ class UserController extends Controller {
 
     // 上传文件
     $upload = new \Think\Upload();// 实例化上传类
-    $upload->maxSize   =     2*1024*1024 ;// 设置附件上传大小
+    $upload->maxSize   =     512*1024 ;// 设置附件上传大小
     $upload->exts      =     array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
     $upload->rootPath  =     './Application/Home/View/image/'; // 设置附件上传根目录
     $upload->savePath  =     ''; // 设置附件上传（子）目录

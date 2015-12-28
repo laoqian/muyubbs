@@ -40,14 +40,14 @@
                         <tr class="form-item">
                             <td class="item-title">店铺名称<big>*</big> ：</td>
                             <td>
-                                <input class="name" type="text"  maxlength="12"  name="name" placeholder="密码确认" value="123456">
+                                <input class="name" type="text"   maxlength="18"  name="name" placeholder="店铺名称" value="">
                                 <label class="account-error"></label>
                             </td>
                         </tr>
                         <tr class="form-item">
                             <td class="item-title">店铺等级：</td>
                             <td>
-                                <input class="level" type="number"  maxlength="2"  name="level"   placeholder="密码确认" value="123456">
+                                <input class="level" type="number"  maxlength="2"  name="level"   placeholder="店铺等级" value="">
                                 <label class="pwd2-error"></label>
                             </td>
                         </tr>
@@ -59,7 +59,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2" class="submit-error" style="text-align: center; font-size:13px">&nbsp;</td>
+                            <td colspan="2" class="submit-error" style="text-align: center; font-size:13px;color: red;">&nbsp;</td>
                         </tr>
                         <tr class="form-submit">
                             <td colspan="2">
@@ -88,7 +88,14 @@
                 $(".tb-img-error").text("没有选择照片");
                 return false;
             }else{
-                $(".tb-img-error").text("");
+
+                var img = $('.img')[0];
+                if(img.files[0].size>512*1024){
+                    $(".tb-img-error").text("图片大小不能超过512K.");
+                    return false;
+                }else{
+                    $(".tb-img-error").text("");
+                }
             }
 
             return true;

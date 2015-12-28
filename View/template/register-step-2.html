@@ -37,7 +37,8 @@
                         <tr class="form-item">
                             <td class="item-title">用户名 <big>*</big>:</td>
                             <td>
-                                <input class="account" type="text" maxlength="15"  name="account" placeholder="6-24位用户名" value="">
+                                <input class="account" type="text" maxlength="15"  onkeyup="value=value.replace(/[\W]/g,'')" name="account" placeholder="6-24位用户名" value="">
+                                <span>用户名6-24位</span>
                                 <label class="account-error"></label>
                             </td>
                         </tr>
@@ -177,7 +178,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2" class="submit-error" style="text-align: center; font-size:13px">&nbsp;</td>
+                            <td colspan="2" class="submit-error" style="text-align: center; font-size:13px;color: red;">&nbsp;</td>
                         </tr>
                         <tr class="form-submit">
                             <td colspan="2">
@@ -287,7 +288,13 @@
                 $(".hand-id-error").text("没有选择照片");
                 return false;
             }else{
-                $(".hand-id-error").text("");
+                var img = $('.hand-id')[0];
+                if(img.files[0].size>512*1024){
+                    $(".hand-id-error").text("图片大小不能超过512K.");
+                    return false;
+                }else{
+                    $(".hand-id-error").text("");
+                }
             }
 
             return true;
@@ -300,7 +307,13 @@
                 $(".user-id-error").text("没有选择照片");
                 return false;
             }else{
-                $(".user-id-error").text("");
+                var img = $('.user-id')[0];
+                if(img.files[0].size>512*1024){
+                    $(".user-id-error").text("图片大小不能超过512K.");
+                    return false;
+                }else{
+                    $(".user-id-error").text("");
+                }
             }
 
             return true;

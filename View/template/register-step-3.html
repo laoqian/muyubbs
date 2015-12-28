@@ -37,14 +37,14 @@
                         <tr class="form-item">
                             <td class="item-title">淘宝小号<big>*</big> ：</td>
                             <td>
-                                <input class="tb-name" type="text"  maxlength="12"  name="tb-name" placeholder="密码确认" value="123456">
+                                <input class="tb-name" type="text"  maxlength="18"  name="tb-name" placeholder="店铺名称" value="">
                                 <label class="account-error"></label>
                             </td>
                         </tr>
                         <tr class="form-item">
                             <td class="item-title">账号等级：</td>
                             <td>
-                                <input class="pwd2" type="number"  maxlength="2"  name="level" placeholder="密码确认" value="123456">
+                                <input class="pwd2" type="number"  maxlength="2"  name="level" placeholder="店铺等级" value="">
                                 <label class="pwd2-error"></label>
                             </td>
                         </tr>
@@ -96,7 +96,7 @@
                             </td>
                         </tr>
                         <tr class="form-item">
-                            <td class="2" class="submit-error" style="text-align: center; font-size:13px">&nbsp;</td>
+                            <td  colspan="2" class="submit-error" style="text-align: center; font-size:13px;color: red;">&nbsp;</td>
                         </tr>
                         <tr class="form-submit">
                             <td colspan="2">
@@ -125,7 +125,13 @@
                 $(".tb-img-error").text("没有选择照片");
                 return false;
             }else{
-                $(".tb-img-error").text("");
+                var img = $('.tb-img')[0];
+                if(img.files[0].size>512*1024){
+                    $(".tb-img-error").text("图片大小不能超过512K.");
+                    return false;
+                }else{
+                    $(".tb-img-error").text("");
+                }
             }
 
             return true;

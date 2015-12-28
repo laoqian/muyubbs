@@ -37,34 +37,34 @@
                         <tr class="form-item">
                             <td class="item-title">电脑1图片<big>*</big> ：</td>
                             <td>
-                                <input class="com1-img" name="com1-img" type="file"  placeholder="真实姓名">
+                                <input class="com1-img" name="com1-img" type="file"  placeholder="电脑1配置图">
                                 <label class="com1-img-error"></label>
                             </td>
                         </tr>
                         <tr class="form-item">
                             <td class="item-title">电脑2图片<big>*</big> ：</td>
                             <td>
-                                <input class="com2-img" name="com2-img"  type="file"  placeholder="真实姓名">
+                                <input class="com2-img" name="com2-img"  type="file"  placeholder="电脑2配置图">
                                 <label class="com2-img-error"></label>
                             </td>
                         </tr>
                         <tr class="form-item">
                             <td class="item-title">两台电脑放一起图片<big>*</big> ：</td>
                             <td>
-                                <input class="com-to-img" name="com-to-img"  type="file"  placeholder="真实姓名">
+                                <input class="com-to-img" name="com-to-img"  type="file"  placeholder="两台电脑放一起图片">
                                 <label class="com-to-error"></label>
                             </td>
                         </tr>
                         <tr class="form-item">
                             <td class="item-title">两台光猫放一起图片<big>*</big> ：</td>
                             <td>
-                                <input class="cat-to-img" name="cat-to-img"  type="file"  placeholder="真实姓名">
+                                <input class="cat-to-img" name="cat-to-img"  type="file"  placeholder="两台光猫放一起图片">
                                 <label class="cat-to-error"></label>
                             </td>
                         </tr>
 
                         <tr class="form-item">
-                            <td colspan="2" class="submit-error" style="text-align: center; font-size:13px">&nbsp;</td>
+                            <td colspan="2" class="submit-error" style="text-align: center; font-size:13px;color: red;">&nbsp;</td>
                         </tr>
                         <tr class="form-submit">
                             <td colspan="2">
@@ -92,7 +92,13 @@
                 $(error).text("没有选择照片");
                 return false;
             }else{
-                $(error).text("");
+                var image= $(img)[0];
+                if(image.files[0].size>512*1024){
+                    $(error).text("图片大小不能超过512K.");
+                    return false;
+                }else{
+                    $(error).text("");
+                }
             }
             return true;
         }
