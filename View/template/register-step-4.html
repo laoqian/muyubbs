@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>{$bbs_title}</title>
     <!-- Bootstrap -->
-    <link href="__ROOT__/Application/Home/View/Index/styles/register.css" type="text/css" rel="stylesheet">
+    <link href="__ROOT__/Application/Home/View/Index/styles/register.less"  rel="stylesheet/less">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -38,28 +38,29 @@
                 <form method="post" action="../user/submit_shop" class="rg-form-group" enctype="multipart/form-data">
                     <table>
                         <tr class="form-item">
-                            <td class="item-title">店铺名称<big>*</big> ：</td>
+                            <td class="item-title">店铺名称<big>*</big>:</td>
                             <td>
                                 <input class="name" type="text"   maxlength="18"  name="name" placeholder="店铺名称" value="">
                                 <label class="account-error"></label>
                             </td>
                         </tr>
                         <tr class="form-item">
-                            <td class="item-title">店铺等级：</td>
+                            <td class="item-title">店铺等级:</td>
                             <td>
                                 <input class="level" type="number"  maxlength="2"  name="level"   placeholder="店铺等级" value="">
                                 <label class="pwd2-error"></label>
                             </td>
                         </tr>
                         <tr class="form-item">
-                            <td class="item-title">店铺照片<big>*</big> ：</td>
+                            <td class="item-title">店铺照片<big>*</big>:</td>
                             <td>
                                 <input name="img" class="img" type="file"  >
+                                <span>图片大小限制512K。</span>
                                 <label class="tb-img-error"></label>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2" class="submit-error" style="text-align: center; font-size:13px;color: red;">&nbsp;</td>
+                            <td colspan="2" class="submit-error" style="padding-left: 70px; font-size:13px;color: red;">&nbsp;</td>
                         </tr>
                         <tr class="form-submit">
                             <td colspan="2">
@@ -76,6 +77,7 @@
         <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
         <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="__ROOT__/Application/Home/View/styles/less/less.js"></script>
 
     <script type="text/javascript">
 

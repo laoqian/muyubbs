@@ -34,44 +34,68 @@
             <div class="rg-content">
                 <form method="post" action="../user/submit_tb" class="rg-form-group" enctype="multipart/form-data">
                     <table>
+                        <tr>
+                        <td colspan="2" style="text-align: center; height: 60px;color: red">小号1</td>
+                    </tr>
                         <tr class="form-item">
-                            <td class="item-title">淘宝小号<big>*</big> ：</td>
+                            <td class="item-title">账号<big>*</big>:</td>
                             <td>
-                                <input class="tb-name" type="text"  maxlength="18"  name="tb-name" placeholder="店铺名称" value="">
-                                <label class="account-error"></label>
+                                <input class="tb-name1" type="text"  maxlength="18"  name="tb-name" placeholder="账号" value="">
+                                <label class="account-error">&nbsp;</label>
                             </td>
                         </tr>
                         <tr class="form-item">
-                            <td class="item-title">账号等级：</td>
+                            <td class="item-title">等级<big>*</big>:</td>
                             <td>
-                                <input class="pwd2" type="number"  maxlength="2"  name="level" placeholder="店铺等级" value="">
+                                <select name="tb-lv1" id="">
+                                    <option value="1">1星级</option>
+                                    <option value="2">2星级</option>
+                                    <option value="3">3星级</option>
+                                    <option value="4">4星级</option>
+                                    <option value="5">5星级</option>
+                                    <option value="6">1钻石</option>
+                                    <option value="7">2钻石</option>
+                                    <option value="8">3钻石</option>
+                                    <option value="9">4钻石</option>
+                                    <option value="10">5钻石</option>
+                                    <option value="11">1皇冠</option>
+                                    <option value="12">2皇冠</option>
+                                    <option value="13">3皇冠</option>
+                                    <option value="14">4皇冠</option>
+                                    <option value="15">5皇冠</option>
+                                    <option value="16">1金冠</option>
+                                    <option value="17">2金冠</option>
+                                    <option value="18">3金冠</option>
+                                    <option value="19">4金冠</option>
+                                    <option value="20">5金冠</option>
+                                </select>
                                 <label class="pwd2-error"></label>
                             </td>
                         </tr>
                         <tr class="form-item">
-                            <td class="item-title">性别：</td>
+                            <td class="item-title">性别:</td>
                             <td class="form-item-addon">
-                                <select name="sex" id="">
+                                <select name="sex1" id="">
                                     <option value="0">男</option>
                                     <option value="1">女</option>
                                 </select>
                             </td>
                         </tr>
                         <tr class="form-item">
-                            <td class="item-title">年龄段：</td>
+                            <td class="item-title">年龄段:</td>
                             <td class="form-item-addon">
-                                <select name="age" id="">
+                                <select name="age1" id="">
                                     <option value="0">70后</option>
                                     <option value="1">80后</option>
                                     <option value="2">90后</option>
                                     <option value="3">00后</option>
                                 </select>
-                             </td>
+                            </td>
                         </tr>
                         <tr class="form-item">
-                            <td class="item-title">消费范围：</td>
+                            <td class="item-title">消费范围:</td>
                             <td class="form-item-addon">
-                                <select  name="consume" id="">
+                                <select  name="consume1" id="">
                                     <option value="0">0-100</option>
                                     <option value="1">101-200</option>
                                     <option value="2">201-300</option>
@@ -80,23 +104,196 @@
                             </td>
                         </tr>
                         <tr class="form-item">
-                            <td class="item-title">淘宝小号照片<big>*</big> ：</td>
+                            <td class="item-title">小号照片<big>*</big>:</td>
                             <td>
-                                <input name="tb-img" class="tb-img" type="file"  >
+                                <input name="tb-img1" class="tb-img" type="file"  >
+                                <span>图片大小限制512K。</span>
                                 <label class="tb-img-error"></label>
                             </td>
                         </tr>
                         <tr class="form-item">
-                            <td class="item-title">账号类别<big>*</big> ：</td>
+                            <td class="item-title">账号类别<big>*</big>:</td>
                             <td class="form-item-addon">
-                                <select name="accounttype" id="">
+                                <select name="accounttype1" id="">
+                                    <option value="0">淘宝</option>
+                                    <option value="1">京东</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: center; height: 60px;color: red">小号2</td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title2">账号<big>*</big>:</td>
+                            <td>
+                                <input class="tb-name" type="text"  maxlength="18"  name="tb-name" placeholder="账号" value="">
+                                <label class="account-error">&nbsp;</label>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">等级<big>*</big>:</td>
+                            <td>
+                                <select name="tb-lv2" id="">
+                                    <option value="1">1星级</option>
+                                    <option value="2">2星级</option>
+                                    <option value="3">3星级</option>
+                                    <option value="4">4星级</option>
+                                    <option value="5">5星级</option>
+                                    <option value="6">1钻石</option>
+                                    <option value="7">2钻石</option>
+                                    <option value="8">3钻石</option>
+                                    <option value="9">4钻石</option>
+                                    <option value="10">5钻石</option>
+                                    <option value="11">1皇冠</option>
+                                    <option value="12">2皇冠</option>
+                                    <option value="13">3皇冠</option>
+                                    <option value="14">4皇冠</option>
+                                    <option value="15">5皇冠</option>
+                                    <option value="16">1金冠</option>
+                                    <option value="17">2金冠</option>
+                                    <option value="18">3金冠</option>
+                                    <option value="19">4金冠</option>
+                                    <option value="20">5金冠</option>
+                                </select>
+                                <label class="pwd2-error"></label>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">性别:</td>
+                            <td class="form-item-addon">
+                                <select name="sex2" id="">
+                                    <option value="0">男</option>
+                                    <option value="1">女</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">年龄段:</td>
+                            <td class="form-item-addon">
+                                <select name="age2" id="">
+                                    <option value="0">70后</option>
+                                    <option value="1">80后</option>
+                                    <option value="2">90后</option>
+                                    <option value="3">00后</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">消费范围:</td>
+                            <td class="form-item-addon">
+                                <select  name="consume2" id="">
+                                    <option value="0">0-100</option>
+                                    <option value="1">101-200</option>
+                                    <option value="2">201-300</option>
+                                    <option value="3">301-400</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">小号照片<big>*</big>:</td>
+                            <td>
+                                <input name="tb-img2" class="tb-img" type="file"  >
+                                <span>图片大小限制512K。</span>
+                                <label class="tb-img-error"></label>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">账号类别<big>*</big>:</td>
+                            <td class="form-item-addon">
+                                <select name="accounttype2" id="">
+                                    <option value="0">淘宝</option>
+                                    <option value="1">京东</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: center; height: 60px;color: red">小号3</td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">账号<big>*</big>:</td>
+                            <td>
+                                <input class="tb-name3" type="text"  maxlength="18"  name="tb-name" placeholder="账号" value="">
+                                <label class="account-error">&nbsp;</label>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">等级<big>*</big>:</td>
+                            <td>
+                                <select name="tb-lv3" id="">
+                                    <option value="1">1星级</option>
+                                    <option value="2">2星级</option>
+                                    <option value="3">3星级</option>
+                                    <option value="4">4星级</option>
+                                    <option value="5">5星级</option>
+                                    <option value="6">1钻石</option>
+                                    <option value="7">2钻石</option>
+                                    <option value="8">3钻石</option>
+                                    <option value="9">4钻石</option>
+                                    <option value="10">5钻石</option>
+                                    <option value="11">1皇冠</option>
+                                    <option value="12">2皇冠</option>
+                                    <option value="13">3皇冠</option>
+                                    <option value="14">4皇冠</option>
+                                    <option value="15">5皇冠</option>
+                                    <option value="16">1金冠</option>
+                                    <option value="17">2金冠</option>
+                                    <option value="18">3金冠</option>
+                                    <option value="19">4金冠</option>
+                                    <option value="20">5金冠</option>
+                                </select>
+                                <label class="pwd2-error"></label>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">性别:</td>
+                            <td class="form-item-addon">
+                                <select name="sex3" id="">
+                                    <option value="0">男</option>
+                                    <option value="1">女</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">年龄段:</td>
+                            <td class="form-item-addon">
+                                <select name="age3" id="">
+                                    <option value="0">70后</option>
+                                    <option value="1">80后</option>
+                                    <option value="2">90后</option>
+                                    <option value="3">00后</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">消费范围:</td>
+                            <td class="form-item-addon">
+                                <select  name="consume3" id="">
+                                    <option value="0">0-100</option>
+                                    <option value="1">101-200</option>
+                                    <option value="2">201-300</option>
+                                    <option value="3">301-400</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">小号照片<big>*</big>:</td>
+                            <td>
+                                <input name="tb-img3" class="tb-img" type="file"  >
+                                <span>图片大小限制512K。</span>
+                                <label class="tb-img-error"></label>
+                            </td>
+                        </tr>
+                        <tr class="form-item">
+                            <td class="item-title">账号类别<big>*</big>:</td>
+                            <td class="form-item-addon">
+                                <select name="accounttype3" id="">
                                     <option value="0">淘宝</option>
                                     <option value="1">京东</option>
                                 </select>
                             </td>
                         </tr>
                         <tr class="form-item">
-                            <td  colspan="2" class="submit-error" style="text-align: center; font-size:13px;color: red;">&nbsp;</td>
+                            <td  colspan="2" class="submit-error" style="padding-left: 70px; font-size:13px;color: red;">&nbsp;</td>
                         </tr>
                         <tr class="form-submit">
                             <td colspan="2">

@@ -12,7 +12,9 @@ class AdminController extends Controller {
     //构造函数
 
     if(!session('admin') && ACTION_NAME!='login' && ACTION_NAME!='admin_login'){
-       $this->redirect('login');
+      //$this->redirect('login');
+      $data['status'] = 0;
+      $this->ajaxReturn($data);
     }
 
     if(session('admin')){
@@ -40,18 +42,15 @@ class AdminController extends Controller {
 
     $config = M("config");
     foreach($data as $value){
-      $ret = $config->save($value);
+      $config->save($value);
     }
 
-
-    $dd["status"]=1;
-
-    $this->ajaxReturn($dd);
+    $data["status"]=1;
+    $this->ajaxReturn($data);
   }
 
 
   public function  bbs_blk_load(){
-
     $config = M("category");
 
     $data = $config->select();

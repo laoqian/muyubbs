@@ -72,94 +72,90 @@
 
   .rg-content{
     margin-top: 30px;
-    display: flex;
-    justify-content: center;
+    margin-left: 400px;
   }
-  .rg-form-group{
-    font-family: 'Microsoft Yahei', Simsun;
-    font-size: 14px;
 
-    .form-item{
-      height: 54px;
+  .form-item{
+
+    td{
+      height: 50px;
       font-size: 13px;
-      .item-title{
-        width: 160px;
-        text-align: right;
-        padding-right: 20px;
+    }
+
+    .item-title{
+      text-align: right;
+      padding-right: 20px;
+    }
+
+    big{
+      color:red;
+    }
+
+    input[type="text"],input[type="file"],input[type="password"],input[type="number"]{
+      width: 160px;
+      height: 20px;
+
+      &::-webkit-inner-spin-button{
+        -webkit-appearance: none;
       }
+    }
+    span{
+      font-size: 12px;
+    }
 
-        big{
-          color:red;
-        }
+    label{
+      font-size: 12px;
+      color: red;
+      display: block;
+    }
 
-      input[type="text"],input[type="file"],input[type="password"],input[type="number"]{
-        width: 200px;
-        height: 24px;
+    .img-verify{
+      width: 120px;
+      height: 32px;
+      float: left;
+    }
 
-        &::-webkit-inner-spin-button{
-          -webkit-appearance: none;
-        }
+    #num-verify,#verify{
+      width: 80px;
+      height: 24px;
+      border-top:solid 1px inherit;
+      border-bottom:solid 1px inherit;
+      float: left;
+
+    }
+
+    .get-verify{
+      width: 120px;
+      height: 31px;
+      line-height: 31px;
+      vertical-align: middle;
+      text-align: center;
+      background: #2681D5;
+      color: white;
+      font-size: 12px;
+      float: left;
+
+      &:hover{
+        cursor:pointer;
       }
-      span{
-        font-size: 12px;
-      }
-      label{
-        width: 190px;
-        height: 16px;
-        display: block;
-        font-size: 12px;
-        color: red;
-        align-self: center;
-      }
+    }
 
+    .img-verify-error{
+      clear: left;
+    }
 
-
-      #num-verify,#verify{
-        width: 80px;
-        height: 24px;
-        border-top:solid 1px inherit;
-        border-bottom:solid 1px inherit;
-      }
-
-
-      .img-verify{
-        width: 120px;
-        height: 32px;
-        float: right;
-        margin-left: -1px;
-      }
-
-
-      .get-verify{
-        width: 120px;
-        height: 31px;
-        line-height: 31px;
-        vertical-align: middle;
-        text-align: center;
-        background: #2681D5;
-        border-top:solid 1px #2681D5;
-        color: white;
-        font-size: 12px;
-        float: right;
-        margin-left: -4px;
-        &:hover{
-          cursor:pointer;
-        }
-      }
-
-      select{
-        width: 100px;
-        height: 26px;
-        overflow-y: auto;
-      }
+    select{
+      width: 100px;
+      height: 26px;
+      overflow-y: auto;
     }
   }
 
 
 
+
   .form-submit{
     width: 100%;
-    margin: 0 auto;
     font-family: 'Microsoft Yahei', Simsun;
     font-size: 14px;
     margin-top: 80px;
@@ -169,14 +165,11 @@
       width: 340px;
       border: 0;
       margin-top: 20px;
-      margin-left: auto;
-      margin-right: auto;
+      margin-left: 20px;
       background: #2681D5;
       color: white;
       display: block;
     }
-
-
   }
 }
 

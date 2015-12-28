@@ -6,6 +6,7 @@
     <!-- Bootstrap -->
     <link href="__ROOT__/Application/Home/View/Index/styles/register.css" type="text/css" rel="stylesheet">
 
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -75,6 +76,7 @@
                             <td class="item-title">手持身份证上传<big>*</big>:</td>
                             <td>
                                 <input class="hand-id" type="file" name="user-hand-id" placeholder="真实姓名">
+                                <span>图片大小限制512K。</span>
                                 <label class="hand-id-error"></label>
                             </td>
                         </tr>
@@ -82,6 +84,7 @@
                             <td class="item-title">身份证正面<big>*</big>:</td>
                             <td>
                                 <input class="user-id" type="file" name="user-id" placeholder="真实姓名" >
+                                <span>图片大小限制512K。</span>
                                 <label class="user-id-error"></label>
                             </td>
                         </tr>
@@ -172,7 +175,7 @@
                         <tr class="form-item">
                             <td class="item-title">图片验证码<big>*</big>:</td>
                             <td>
-                                <input id="num-verify" type="number" name="phone" placeholder="验证码" maxlength="11"  value="">
+                                <input id="num-verify" type="number" name="phone" placeholder="验证码" maxlength="4"  value="">
                                 <img class="img-verify"  alt="验证码" src="{:U('Home/Index/verify_get',array())}" title="点击刷新">
                                 <label class="img-verify-error" ></label>
                             </td>
@@ -186,7 +189,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2" class="submit-error" style="text-align: center; font-size:13px;color: red;">&nbsp;</td>
+                            <td colspan="2" class="submit-error" style="padding-left: 70px; font-size:13px;color: red;">&nbsp;</td>
                         </tr>
                         <tr class="form-submit">
                             <td colspan="2">
@@ -442,7 +445,6 @@
                 user_id_varify();
             });
 
-
             //手机号码验证
             $(".phone").blur(function(){
                 phone_verify();
@@ -456,7 +458,6 @@
                 }else{
                     $(this).attr("src", verifyimg.replace(/\?.*$/,'')+'?'+Math.random());
                 }
-
             });
 
 
