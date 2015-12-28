@@ -11,6 +11,8 @@ class IndexController extends Controller {
 
     $this->assign('bbs_title','彩虹桥云端');
     $this->assign('user',session('user'));
+
+    set_path('index.html','网站首页',0);
   }
 
   public function index(){
@@ -101,6 +103,8 @@ class IndexController extends Controller {
     $this->assign('hots',$hots);
     $this->assign('rands',$rands);
 
+    $this->assign('path',get_path(0));
+
     $this->show();
   }
 
@@ -158,13 +162,13 @@ class IndexController extends Controller {
 
     $this->assign('hots',$hots);
     //生成网站索引
-//    $m_web['index'] = "theme?".''."category=".''.$map['categoryid']."&page=".$th['cur_page'];
-//    $query = [];
-//    $query['id'] = $map['categoryid'];
-//    $cate = M("category");
-//    $c = $cate->where($query)->select();
-//    $m_web['name'] = $c[0]['name'];
-//    $this->assign("map",web_map(1,$m_web));
+    $url = "theme.html?".''."category=".''.$map['categoryid']."&page=".$th['cur_page'];
+    $query = [];
+    $query['id'] = $map['categoryid'];
+    $cate = M("category");
+    $c = $cate->where($query)->select();
+    set_path($url,$c[0]['name'],1);
+    $this->assign('path',get_path(1));
 
     //生成发表主题链接
     $the = 'newth.html?categoryid='.''.$map['categoryid'];
@@ -290,6 +294,19 @@ class IndexController extends Controller {
 
       $replyer[$key] = $value;
     }
+
+    //生成网站索引
+    $url = "theme.html?".''."category=".''.$article['categoryid'];
+    $query = [];
+    $query['id'] = $article['categoryid'];
+    $cate = M("category");
+    $c = $cate->where($query)->select();
+    set_path($url,$c[0]['name'],1);
+
+    $url = "thread.html?".''."articleid=".''.$article['id'];
+    set_path($url,$article['title'],2);
+    $this->assign('path',get_path(2));
+
 
     $the = 'newth.html?categoryid='.''.$article['categoryid'];
     $this->assign('newth',$the);

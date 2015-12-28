@@ -261,29 +261,36 @@ function rights_format($rights){
 
 
 
-function web_path($name,$level){
+function set_path($str,$name,$level){
 
-  $url = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
+  $url = $_SERVER["REQUEST_URI"];
 
-  $path  = session('bbs_path');
+  $pos = strrpos($url,ACTION_NAME);
+  $url = substr($url,0,$pos);
+  $url ='http://'.$_SERVER['SERVER_NAME'].$url.$str;
 
-  $path[$level]['url'] = $url;
-  $path[$level]['name'] = $name;
+  $path['url'] = $url;
+  $path['name'] = $name;
 
-  foreach($path as $key=>$value){
-    if($key<=$level){
-      $_path[$key] = $value;
-    }else{
-      break;
-    }
-  }
+  $bbs = session('bbs_path');
 
-  session('bbs_path',$_path);
-  return $_path;
+  $bbs[$level] = $path;
+
+  session('bbs_path',$bbs);
 }
 
 
+function get_path($level){
+  $path = session('bbs_path');
 
+  foreach($path as $key => $value){
+    if($key<=$level){
+      $_path[$key] = $value;
+    }
+  }
+
+  return $_path;
+}
 
 
 

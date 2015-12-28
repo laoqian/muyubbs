@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <body>
-
+<link href="__ROOT__/Application/Home/View/styles/Font-Awesome-3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
 <div class="wrapper">
     <div class="header">
         <div class="logo">
@@ -56,15 +56,18 @@
     </div>
 </div>
 
-<!--<div class="wrapper">-->
-    <!--<div class="map">-->
-        <!--<ul>-->
-            <!--<foreach name="map" item="value">-->
-                <!--<li><a href={$value['index']}>{$value['name']}</a><em>&raquo;</em></li>-->
-            <!--</foreach>-->
-        <!--</ul>-->
-    <!--</div>-->
-<!--</div>-->
+<div class="wrapper">
+    <div class="map">
+        <ul>
+            <foreach name="path" item="value" key="index">
+                <if condition="$index eq 0">
+                    <li><a href={$value['index']}><i class="icon-home" style="font-size: 15px;color:#BBB"></i></a><em>&raquo;</em></li>
+                </if>
+                <li><a href={$value['url']}>{$value['name']}</a><em>&raquo;</em></li>
+            </foreach>
+        </ul>
+    </div>
+</div>
 
 <script id="login-tpl" type="text/html">
 
