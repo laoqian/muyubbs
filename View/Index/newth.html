@@ -27,7 +27,7 @@
             </div>
             <form class="form-group" method="post"  >
                 <div class="am">
-                    <input class="title" type="text" id="" name="title"  placeholder="主题" value="我的测试文章。">
+                    <input class="title" type="text" id="" name="title"  placeholder="主题" value="" maxlength="40">
                     <select class="categoryid" name="categoryid" id="">
                         <option value="0">选择板块</option>
                         <foreach  name="new_blk" item="it" key="i">
@@ -58,7 +58,19 @@
         var ue;
         var error= 0;
 
+
         $(document).ready(function(){
+            $(".title").bind('input propertychange',function(){
+                max = $(this).attr('maxlength');
+                if(!max) return;
+
+                var value = $(this).val().toString();
+                if(value.length>max){
+                    value = value.substr(0,max);
+                    $(this).val(value);
+                }
+            });
+
 
             $(".title").change(function(){
                 if(error!=1) return;

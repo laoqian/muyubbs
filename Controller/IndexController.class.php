@@ -31,7 +31,11 @@ class IndexController extends Controller {
 
       //首页版块信息下显示的文章提取
       $hotest = $article->where($query)->order('reviewnum DESC')->limit(1)->select();
-      $cate['hot_name'] = $hotest[0]['title'];
+      if(mb_strwidth($hotest[0]['title'],'utf-8')>30)
+        $cate['hot_name'] =mb_strimwidth($hotest[0]['title'],0,30,'...','utf-8');
+      else
+        $cate['hot_name'] =$hotest[0]['title'];
+
       $cate['hot_path'] = 'thread.html?articleid='.''.$hotest[0]['id'];
 
       //统计最近24小时发帖数
@@ -81,6 +85,9 @@ class IndexController extends Controller {
     $news = $article->order('id DESC')->limit($link_num)->select();
     foreach($news as $key=>$value){
       $value['path'] = "thread.html?articleid=".''.$value['id'];
+
+      if(mb_strwidth($value['title'],'utf-8')>40)
+        $value['title'] =mb_strimwidth($value['title'],0,40,'...','utf-8');
       $news[$key] = $value;
     }
 
@@ -89,6 +96,8 @@ class IndexController extends Controller {
     $hots = $article->order('reviewnum DESC')->limit($link_num)->select();
     foreach($hots as $key=>$value){
       $value['path'] = "thread.html?articleid=".''.$value['id'];
+      if(mb_strwidth($value['title'],'utf-8')>40)
+        $value['title'] =mb_strimwidth($value['title'],0,40,'...','utf-8');
       $hots[$key] = $value;
     }
     //生成随机文章链接
@@ -96,6 +105,8 @@ class IndexController extends Controller {
     $rands = $article->order('rand()')->limit($link_num)->select();
     foreach($rands as $key=>$value){
       $value['path'] = "thread.html?articleid=".''.$value['id'];
+      if(mb_strwidth($value['title'],'utf-8')>40)
+        $value['title'] =mb_strimwidth($value['title'],0,40,'...','utf-8');
       $rands[$key] = $value;
     }
 
