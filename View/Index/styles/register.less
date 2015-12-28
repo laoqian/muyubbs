@@ -93,8 +93,8 @@
         }
 
       input[type="text"],input[type="file"],input[type="password"],input[type="number"]{
-        width: 180px;
-        height: 20px;
+        width: 200px;
+        height: 24px;
 
         &::-webkit-inner-spin-button{
           -webkit-appearance: none;
@@ -109,25 +109,38 @@
         display: block;
         font-size: 12px;
         color: red;
+        align-self: center;
       }
 
-      #verify{
+
+
+      #num-verify,#verify{
         width: 80px;
+        height: 24px;
         border-top:solid 1px inherit;
         border-bottom:solid 1px inherit;
       }
 
+
+      .img-verify{
+        width: 120px;
+        height: 32px;
+        float: right;
+        margin-left: -1px;
+      }
+
+
       .get-verify{
-        width: 100px;
-        height: 28px;
-        line-height: 28px;
+        width: 120px;
+        height: 31px;
+        line-height: 31px;
         vertical-align: middle;
         text-align: center;
         background: #2681D5;
         border-top:solid 1px #2681D5;
         color: white;
         font-size: 12px;
-        display: inline-block;
+        float: right;
         margin-left: -4px;
         &:hover{
           cursor:pointer;

@@ -1,11 +1,30 @@
 <!DOCTYPE html>
+<html lang="zh-CN" ng-app="articleApp" ng-controller="articleCtrl">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!-- Bootstrap -->
+    <link href="/bbs/Application/Home/View/Index/styles/study.less" rel="stylesheet/less" >
+    <link href="/bbs/Application/Home/View/styles/Font-Awesome-3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!--导航栏 -->
+    <!DOCTYPE html>
 <html lang="en">
 <body>
-<link href="__ROOT__/Application/Home/View/styles/Font-Awesome-3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+<link href="/bbs/Application/Home/View/styles/Font-Awesome-3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
 <div class="wrapper">
     <div class="header">
         <div class="logo">
-            <a href="./"><img src="__ROOT__/Application/Home/View/resource/img/logo.png" ></a>
+            <a href="./"><img src="/bbs/Application/Home/View/resource/img/logo.png" ></a>
         </div>
         <div class="login-bar">
 
@@ -29,28 +48,28 @@
 <div class="wrapper">
     <div class="ad-lg">
         <a href="#">
-            <img src="__ROOT__/Application/Home/View/resource/img/big-ad.jpg" alt="">
+            <img src="/bbs/Application/Home/View/resource/img/big-ad.jpg" alt="">
         </a>
     </div>
     <div class="ad-lg">
         <div class="ad-sm">
             <a href="#">
-                <img src="__ROOT__/Application/Home/View/resource/img/sm-ad.jpg" alt="">
+                <img src="/bbs/Application/Home/View/resource/img/sm-ad.jpg" alt="">
             </a>
         </div>
         <div class="ad-sm">
             <a href="#">
-                <img src="__ROOT__/Application/Home/View/resource/img/sm-ad.jpg" alt="">
+                <img src="/bbs/Application/Home/View/resource/img/sm-ad.jpg" alt="">
             </a>
         </div>
         <div class="ad-sm">
             <a href="#">
-                <img src="__ROOT__/Application/Home/View/resource/img/sm-ad.jpg" alt="">
+                <img src="/bbs/Application/Home/View/resource/img/sm-ad.jpg" alt="">
             </a>
         </div>
         <div class="ad-sm">
             <a href="#">
-                <img src="__ROOT__/Application/Home/View/resource/img/sm-ad.jpg" alt="">
+                <img src="/bbs/Application/Home/View/resource/img/sm-ad.jpg" alt="">
             </a>
         </div>
     </div>
@@ -59,13 +78,7 @@
 <div class="wrapper">
     <div class="map">
         <ul>
-            <foreach name="path" item="value" key="index">
-                <if condition="$index eq 0">
-                    <li><a href={$value['index']}><i class="icon-home" style="font-size: 15px;color:#BBB"></i></a><em>&raquo;</em></li>
-                </if>
-                <li><a href={$value['url']}>{$value['name']}</a><em>&raquo;</em></li>
-            </foreach>
-        </ul>
+                    </ul>
     </div>
 </div>
 
@@ -108,10 +121,10 @@
 </script>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+<script src="/bbs/Application/Home/View/styles/jquery/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="__ROOT__/Application/Home/View/styles/lesscss/less.min.js"></script>
-<script src="__ROOT__/Application/Home/View//styles/arttemplate/template.js"></script>
+<script src="/bbs/Application/Home/View/styles/lesscss/less.min.js"></script>
+<script src="/bbs/Application/Home/View//styles/arttemplate/template.js"></script>
 
     <script type="text/javascript">
         function setCookie(name,value){
@@ -226,5 +239,38 @@
                 });
         });
     </script>
+</body>
+</html>
+
+    <div class="wrapper">
+        <div class="container">
+            <p>我的教程哈哈哈哈。</p>        </div>
+    </div>
+
+    <!DOCTYPE html>
+<html lang="zh-CN">
+
+<body>
+
+
+<div class="footer">
+        Powered by 彩虹桥云端
+</div>
+
+
+</body>
+</html>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/bbs/Application/Home/View/styles/jquery/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/bbs/Application/Home/View/styles/lesscss/less.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+        });
+
+    </script>
+
 </body>
 </html>

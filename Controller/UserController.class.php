@@ -536,7 +536,7 @@ class UserController extends Controller {
     $ret = post_code($tel);
     if($ret<0){
       $data['status']=0;
-      $data['error'] = "发送验证码失败.";
+      $data['error'] = "发送验证码失败:".$ret;
       $data['error_code'] = $ret;
       $this->ajaxReturn($data);
       return;

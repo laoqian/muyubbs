@@ -644,4 +644,34 @@ class AdminController extends Controller {
     session('admin',null);
     $this->redirect('login');
   }
+
+  public function  tutorial_post(){
+
+    $content = $_POST['content'];
+    if(strlen($content)==0){
+      $data['status'] =0;
+      $data['error'] ='发表的教程没有内容';
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $this->assign('content',$content);
+
+    $tpl = $this->fetch('template/study');
+
+    $path = './Application/Home/View/Index/study.html';
+    $fp = fopen($path, "w+");
+    if(!$fp){
+      $data['status'] =0;
+      $data['error'] ='无法打开文件';
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    fwrite($fp,$tpl);
+    fclose($fp);
+
+    $data['status'] =1;
+    $this->ajaxReturn($data);
+  }
 }

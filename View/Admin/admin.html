@@ -5,6 +5,7 @@
     <title>{$bbs_title}</title>
     <!-- Bootstrap -->
     <link href="__ROOT__/Application/Home/View/Index/styles/admin.less" rel="stylesheet/less">
+    <link href="__ROOT__/Application/Home/View/styles/umeditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
 </head>
 <body>
 <!--导航栏 -->
@@ -30,6 +31,7 @@
         <li><a href="config.html">订单管理</a></li>
         <li><a href="charged.html">充值记录</a></li>
         <li><a href="rights.html">权&nbsp;益&nbsp;表</a></li>
+        <li><a href="tutorial.html" >编辑教程</a></li>
     </ul>
 </div>
 
@@ -46,10 +48,30 @@
 <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="__ROOT__/Application/Home/View//styles/lesscss/less.min.js"></script>
+<script src="__ROOT__/Application/Home/View/styles/umeditor/umeditor.config.js"></script>
+<script src="__ROOT__/Application/Home/View/styles/umeditor/umeditor.js"></script>
+
+
 
 <script type="text/javascript">
+    var ue =0;
+
+    function tutor_edit(){
+        ue = UM.getEditor('container');
+        $('.save-tutor').click(function(){
+            var content = ue.getContent();
+            $.post('./tutorial_post',{content:content},function(data,status){
+                if(data.status==1){
+                    $('.tutor-error').text('保存成功');
+                }else{
+                    $('.tutor-error').text(data.error);
+                }
+            });
+        });
+    }
+
     $(document).ready(function(){
-        $(".ad-content").load("user.html",function(data,status,xhr){
+        $(".ad-content").load("bbs.html",function(data,status,xhr){
             var ret=JSON.parse(data);
             if(ret.status==0){
                 window.location.href="../Index/login.html"
@@ -69,10 +91,16 @@
 
             $(".ad-head").text($(this).text());
 
-            $(".ad-content").load($(this).attr("href"),function(data,status,xhr){
-                var ret=JSON.parse(data);
-                if(ret.status==0){
-                    window.location.href="../Index/login.html"
+            var href =$(this).attr("href");
+
+            $(".ad-content").load(href,function(data,status,xhr){
+
+                if(data.status==0){
+                    location.href="login.html"
+                }
+
+                if(href=='tutorial.html'){
+                    tutor_edit();
                 }
             });
             return false;

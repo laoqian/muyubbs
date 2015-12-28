@@ -9,7 +9,7 @@ class IndexController extends Controller {
   function __construct() {
     parent::__construct();
 
-    $this->assign('bbs_title','彩虹桥云端');
+    $this->assign('bbs_title','彩虹桥云端淘宝精准补单平台');
     $this->assign('user',session('user'));
 
     set_path('index.html','网站首页',0);
@@ -330,6 +330,32 @@ class IndexController extends Controller {
     $this->show();
   }
 
+  public function verify_get(){
+    $Verify = new \Think\Verify();
+    $Verify->fontSize = 18;
+    $Verify->length   = 4;
+    $Verify->useNoise = false;
+    $Verify->codeSet = '0123456789';
+    $Verify->imageW = 120;
+    $Verify->imageH = 32;
+    $Verify->entry();
+  }
+
+  public function verify_check(){
+    $Verify = new \Think\Verify();
+
+    $code = $_POST['code'];
+
+    $ret = $Verify->check($code);
+    if(!$ret){
+      $data['status'] =0;
+    }else{
+      $data['status'] =1;
+    }
+
+    $this->ajaxReturn($data);
+  }
+
   public function register(){
 
     $step = session('register')['reg-step'];
@@ -340,7 +366,7 @@ class IndexController extends Controller {
     }
 
     if($step<=1 || $step>5 || !$step){
-      $this->display("template/register-step-1");
+      $this->display("template/register-step-5");
     }else if($step == 2){
       $this->display("template/register-step-2");
     }else if($step == 3){
