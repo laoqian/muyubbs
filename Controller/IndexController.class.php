@@ -366,7 +366,7 @@ class IndexController extends Controller {
     }
 
     if($step<=1 || $step>5 || !$step){
-      $this->display("template/register-step-5");
+      $this->display("template/register-step-2");
     }else if($step == 2){
       $this->display("template/register-step-2");
     }else if($step == 3){
