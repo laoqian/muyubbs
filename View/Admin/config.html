@@ -7,7 +7,33 @@
 </head>
 <body>
 
+<style type="text/css">
+    .pop-up {
+        display: none;
+        position: fixed;
+        top: 40%;
+        left: 35%;
+        width: 30%;
+        height: 20%;
+        z-index:1002;
+        overflow: auto;
+        background: #f0f0f0;
+        border: solid 1px #ccc;
+        padding: 2px;
+    }
 
+    .text-a{
+        width: 70%;
+        height: 50%;
+        margin: 5px auto;
+        display: block;
+    }
+
+    .pop-up button{
+        display: block;
+        margin-left:15%;
+    }
+</style>
 
 <div class="config">
     <div class="conf_container">
@@ -51,6 +77,11 @@
     {{/each}}
 </script>
 
+<div id="light" class="pop-up" style="overflow: hidden;">
+    <span style="font-size: 13px">在以下文本框输入需要修改的值:</span>
+   <textarea class="text-a" rows="3" cols="30">这里是文本域中的文本 ... ... ... ..</textarea>
+    <button class="save-config" style="margin-top: 20px">确定</button>
+</div>
 
 <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
 <script src="__ROOT__/Application/Home/View//styles/arttemplate/template.js"></script>
@@ -58,32 +89,25 @@
 
 <script type="text/javascript">
     var config= new Object();
+    var cur = 0;
+
+    function tutor_edit(){
+        ue =UM.getEditor('container');
+    }
 
     function config_chg(col){
+        if(cur) return;
+        cur = col;
         var text = $(col).text();
-        $(col).text("");
-        var e =document.createElement("input");
-        e.type  = "text";
-        e.value = text;
-
-        $(e).addClass("key-in");
-        $(col).append(e);
-
-        $(e).focus();
-
-        $(col).unbind("dblclick");
-
-        $(e).blur(function(){
-            var t = $(this).val();
-            var td = $(this).parent();
-
-            $(td).text(t);
-            var index = parseInt($(td).parent().find(".index").text());
-            //配置保存
+        $('.text-a').val(text);
+        $('.pop-up').css('display','block');
+        $('.save-config').click(function(){
+            $('.pop-up').css('display','none');
+            var t = $('.text-a').val();
+            $(cur).text(t);
+            var index = parseInt($(cur).parent().find(".index").text());
             config.source[index-1].ebvalue = t;
-            $(td).dblclick(function(the){
-                config_chg(td);
-            });
+            cur = 0;
         });
     }
 
@@ -116,36 +140,9 @@
     }
 
     $(document).ready(function(){
+
         $(".config-bot").css("display","none");
         config_load();
-
-//        $(".config-add").click(function(){
-//
-//            var index = $(".index").length;
-//
-//            var tpl = template('conf-add-tpl',{index:index});
-//
-//            var html = $(".config table tbody").html();
-//            var html =html+tpl;
-//
-//
-//            $(".config table tbody").html(html);
-//
-//            $(".key-in").blur(function(){
-//                var t = $(this).val();
-//                var td = $(this).parent();
-//                $(td).text(t);
-//                $(td).dblclick(function(){
-//                    config_chg(td);
-//                });
-//            });
-//
-//            $(".td-chg").dblclick(function(){
-//                config_chg(this);
-//            });
-//
-//            $(".key-in").parent().unbind("dblclick");
-//        });
 
         $(".page-up").click(function(){
             config.page_turn("up");

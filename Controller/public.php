@@ -202,8 +202,14 @@ function acc_info_format($acc){
     '3'=>'401以上',
   );
 
+  $type = array(
+    '0'=>'淘宝',
+    '1'=>'京东',
+  );
+
   $acc['sex'] = $sex[$acc['sex']];
   $acc['age'] = $age[$acc['age']];
+  $acc['accounttype'] = $type[$acc['accounttype']];
   $acc['consume'] = $statuscz[$acc['consume']];
 
   return $acc;

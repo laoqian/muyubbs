@@ -19,21 +19,32 @@
 
 <div class="tb-acc-1">
     <h4>小号资料</h4>
-    <foreach name="account" item="tb" >
-        <div class="tb-info" id={$tb['id']}>
-            <h5>小号1</h5>
-            <table>
-                <tr><td>小号:</td><td>{$tb['name']}</td></tr>
-                <tr><td>等级:</td><td>{$tb['accountlevel']}</td></tr>
-                <tr><td>性别：</td><td>{$tb['sex']}</td></tr>
-                <tr><td>年龄段：</td><td>{$tb['age']}</td></tr>
-                <tr><td>消费范围：</td><td>{$tb['consume']}</td></tr>
-                <tr><td>类目标签：</td><td>{$tb['category']}</td></tr>
-                <tr><td>账号类型：</td><td>{$tb['accouttype']}</td></tr>
-                <tr><td>图片：</td><td><img style="width: 200px" src={$tb['img']} alt=""></td></tr>
-            </table>
-        </div>
-    </foreach>
+    <table>
+        <tr>
+            <td>序号</td>
+            <td>小号</td>
+            <td>等级:</td>
+            <td>性别：</td>
+            <td>年龄段：</td>
+            <td>消费范围：</td>
+            <td>类目标签：</td>
+            <td>账号类型：</td>
+            <td>图片：</td>
+        </tr>
+        <foreach name="account" item="tb" key="index" >
+            <tr tbid="{$tb['id']}">
+                <td>{$index+1}</td>
+                <td>{$tb['name']}</td>
+                <td>{$tb['accountlevel']}</td>
+                <td>{$tb['sex']}</td>
+                <td>{$tb['age']}</td>
+                <td>{$tb['consume']}</td>
+                <td>{$tb['category']}</td>
+                <td>{$tb['accounttype']}</td>
+                <td><img src={$tb['img']} alt=""></td>
+            </tr>
+        </foreach>
+    </table>
 </div>
 
 <div id="light" class="white_content" style="overflow: hidden">
