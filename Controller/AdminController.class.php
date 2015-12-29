@@ -10,9 +10,8 @@ class AdminController extends Controller {
   function __construct() {
     parent::__construct();
     //构造函数
-
     if(!session('admin') && ACTION_NAME!='login' && ACTION_NAME!='admin_login'){
-      if(ACTION_NAME=='admin'){
+      if(ACTION_NAME =='admin'){
         $this->redirect('login');
       }else{
         $data['status'] = 0;
