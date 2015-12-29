@@ -359,14 +359,13 @@ class IndexController extends Controller {
   public function register(){
 
     $step = session('register')['reg-step'];
-
     if(session('user') && !$step){
       $this->redirect('index');
       return;
     }
 
     if($step<=1 || $step>5 || !$step){
-      $this->display("template/register-step-3");
+      $this->display("template/register-step-1");
     }else if($step == 2){
       $this->display("template/register-step-2");
     }else if($step == 3){

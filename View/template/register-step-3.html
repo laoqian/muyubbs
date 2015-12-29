@@ -40,8 +40,8 @@
                         <tr class="form-item">
                             <td class="item-title">账号<big>*</big>:</td>
                             <td>
-                                <input class="tb-name1" type="text"  maxlength="18"  name="tb-name" placeholder="账号" value="">
-                                <label class="account-error">&nbsp;</label>
+                                <input class="tb-name1" type="text"  maxlength="18"  name="tb-name1" placeholder="账号" value="">
+                                <label class="account-error1">&nbsp;</label>
                             </td>
                         </tr>
                         <tr class="form-item">
@@ -69,7 +69,6 @@
                                     <option value="19">4金冠</option>
                                     <option value="20">5金冠</option>
                                 </select>
-                                <label class="pwd2-error"></label>
                             </td>
                         </tr>
                         <tr class="form-item">
@@ -106,9 +105,9 @@
                         <tr class="form-item">
                             <td class="item-title">小号照片<big>*</big>:</td>
                             <td>
-                                <input name="tb-img1" class="tb-img" type="file"  >
+                                <input name="tb-img1" class="tb-img1" type="file"  >
                                 <span>图片大小限制512K。</span>
-                                <label class="tb-img-error"></label>
+                                <label class="tb-img-error1"></label>
                             </td>
                         </tr>
                         <tr class="form-item">
@@ -126,8 +125,8 @@
                         <tr class="form-item">
                             <td class="item-title2">账号<big>*</big>:</td>
                             <td>
-                                <input class="tb-name" type="text"  maxlength="18"  name="tb-name" placeholder="账号" value="">
-                                <label class="account-error">&nbsp;</label>
+                                <input class="tb-name2" type="text"  maxlength="18"  name="tb-name2" placeholder="账号" value="">
+                                <label class="account-error2">&nbsp;</label>
                             </td>
                         </tr>
                         <tr class="form-item">
@@ -155,7 +154,6 @@
                                     <option value="19">4金冠</option>
                                     <option value="20">5金冠</option>
                                 </select>
-                                <label class="pwd2-error"></label>
                             </td>
                         </tr>
                         <tr class="form-item">
@@ -192,9 +190,9 @@
                         <tr class="form-item">
                             <td class="item-title">小号照片<big>*</big>:</td>
                             <td>
-                                <input name="tb-img2" class="tb-img" type="file"  >
+                                <input name="tb-img2" class="tb-img2" type="file"  >
                                 <span>图片大小限制512K。</span>
-                                <label class="tb-img-error"></label>
+                                <label class="tb-img-error2"></label>
                             </td>
                         </tr>
                         <tr class="form-item">
@@ -212,8 +210,8 @@
                         <tr class="form-item">
                             <td class="item-title">账号<big>*</big>:</td>
                             <td>
-                                <input class="tb-name3" type="text"  maxlength="18"  name="tb-name" placeholder="账号" value="">
-                                <label class="account-error">&nbsp;</label>
+                                <input class="tb-name3" type="text"  maxlength="18"  name="tb-name3" placeholder="账号" value="">
+                                <label class="account-error3">&nbsp;</label>
                             </td>
                         </tr>
                         <tr class="form-item">
@@ -241,7 +239,6 @@
                                     <option value="19">4金冠</option>
                                     <option value="20">5金冠</option>
                                 </select>
-                                <label class="pwd2-error"></label>
                             </td>
                         </tr>
                         <tr class="form-item">
@@ -278,9 +275,9 @@
                         <tr class="form-item">
                             <td class="item-title">小号照片<big>*</big>:</td>
                             <td>
-                                <input name="tb-img3" class="tb-img" type="file"  >
+                                <input name="tb-img3" class="tb-img3" type="file"  >
                                 <span>图片大小限制512K。</span>
-                                <label class="tb-img-error"></label>
+                                <label class="tb-img-error3"></label>
                             </td>
                         </tr>
                         <tr class="form-item">
@@ -312,44 +309,39 @@
 
     <script type="text/javascript">
 
-        function tb_img_verify(){
-            var path = $(".tb-img").val();
+        function tb_img_verify(img,error){
+            var path = $(img).val();
 
             if(!path){
-                $(".tb-img-error").text("没有选择照片");
+                $(error).text("没有选择照片");
                 return false;
-            }else{
-                var img = $('.tb-img')[0];
-                if(img.files[0].size>512*1024){
-                    $(".tb-img-error").text("图片大小不能超过512K.");
-                    return false;
-                }else{
-                    $(".tb-img-error").text("");
-                }
             }
 
+            var image = $(img)[0];
+            if(image.files[0].size>512*1024){
+                $(error).text("图片大小不能超过512K.");
+                return false;
+            }
+
+            $(error).text("");
             return true;
         }
 
 
-        function account_verify(){
-            var account = $(".tb-name").val();
-
+        function account_verify(text,error){
+            var account = $(text).val();
             if(account.length<6){
-                $(".account-error").text("用户名长度过短");
+                $(error).text("用户名长度过短");
                 return false;
-
-            }else{
-                $(".account-error").text("");
             }
-
+            $(error).text("");
             return true;
         }
 
         $(document).ready(function(){
 
             //输入长度校验
-            $(".form-item input").bind('input propertychange',function(){
+            $(".form-item input[type='text']").bind('input propertychange',function(){
                 max = $(this).attr('maxlength');
                 if(!max) return;
 
@@ -365,18 +357,35 @@
                 }
             });
 
-            $(".tb-name").blur(function(){
-                account_verify();
+            $(".tb-name1").blur(function(){
+                account_verify(".tb-name1",".account-error1");
+            });
+            $(".tb-name2").blur(function(){
+                account_verify(".tb-name2",".account-error2");
+            });
+            $(".tb-name3").blur(function(){
+                account_verify(".tb-name3",".account-error3");
             });
 
             //身份证照片验证
-            $(".tb-img").change(function(){
-                tb_img_verify();
+            $(".tb-img1").change(function(){
+                tb_img_verify('.tb-img1','.tb-img-error1');
+            });
+            $(".tb-img2").change(function(){
+                tb_img_verify('.tb-img2','.tb-img-error2');
+            });
+            $(".tb-img3").change(function(){
+                tb_img_verify('.tb-img3','.tb-img-error3');
             });
 
             $(".rg-submit").click(function(){
 
-                if(!account_verify()||!tb_img_verify())
+                if(!account_verify(".tb-name1",".account-error1")||
+                !account_verify(".tb-name2",".account-error2")||
+                !account_verify(".tb-name3",".account-error3")||
+                !tb_img_verify('.tb-img1','.tb-img-error1')||
+                !tb_img_verify('.tb-img2','.tb-img-error2')||
+                !tb_img_verify('.tb-img3','.tb-img-error3'))
                 {
                     $(".submit-error").text("资料错误，请核实后重新点击下一步");
                     return false;

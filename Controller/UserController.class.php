@@ -317,7 +317,7 @@ class UserController extends Controller {
     // 上传文件
     $upload = new \Think\Upload();// 实例化上传类
     $upload->maxSize   =     512*1024 ;// 设置附件上传大小
-    $upload->exts      =     array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
+    $upload->exts      =     array('jpg', 'gif', 'png', 'jpeg','ico');// 设置附件上传类型
     $upload->rootPath  =     './Application/Home/View/image/'; // 设置附件上传根目录
     $upload->savePath  =     ''; // 设置附件上传（子）目录
     $info   =   $upload->upload();
@@ -332,42 +332,75 @@ class UserController extends Controller {
     $account = M("account");
 
     $acc['ownerid'] = $user['id'];
-    $acc['name'] = $_POST['tb-name'];
-    $acc['accountlevel'] = $_POST['level'];
-    $acc['img'] = __ROOT__.'/'."Application/Home/View/image/"."".$info["tb-img"]['savepath']."".$info["tb-img"]['savename'];
-    $acc['sex'] = $_POST['sex'];
-    $acc['age'] = $_POST['age'];
-    $acc['consume'] = $_POST['consume'];
+    $acc['name'] = $_POST['tb-name1'];
+    $acc['accountlevel'] = $_POST['tb-lv1'];
+    $acc['img'] = __ROOT__.'/'."Application/Home/View/image/"."".$info["tb-img1"]['savepath']."".$info["tb-img1"]['savename'];
+    $acc['sex'] = $_POST['sex1'];
+    $acc['age'] = $_POST['age1'];
+    $acc['consume'] = $_POST['consume1'];
     $acc['category'] = "初出茅庐";
-    $acc['accounttype'] = $_POST['accounttype'];
+    $acc['accounttype'] = $_POST['accounttype1'];
 
     $query['name'] = $acc["name"];
-
     $ret = $account->where($query)->select();
     if($ret){
       $data['status'] = 0;
-      $data['error'] = "该小号已存在,请更改后重试。";
+      $data['error'] = "小号1已存在,请更改后重试。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $acc1['ownerid'] = $user['id'];
+    $acc1['name'] = $_POST['tb-name2'];
+    $acc1['accountlevel'] = $_POST['tb-lv2'];
+    $acc1['img'] = __ROOT__.'/'."Application/Home/View/image/"."".$info["tb-img2"]['savepath']."".$info["tb-img2"]['savename'];
+    $acc1['sex'] = $_POST['sex2'];
+    $acc1['age'] = $_POST['age2'];
+    $acc1['consume'] = $_POST['consume2'];
+    $acc1['category'] = "初出茅庐";
+    $acc1['accounttype'] = $_POST['accounttype2'];
+
+    $query['name'] = $acc1["name"];
+    $ret = $account->where($query)->select();
+    if($ret){
+      $data['status'] = 0;
+      $data['error'] = "小号2已存在,请更改后重试。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $acc2['ownerid'] = $user['id'];
+    $acc2['name'] = $_POST['tb-name3'];
+    $acc2['accountlevel'] = $_POST['tb-lv3'];
+    $acc2['img'] = __ROOT__.'/'."Application/Home/View/image/"."".$info["tb-img3"]['savepath']."".$info["tb-img3"]['savename'];
+    $acc2['sex'] = $_POST['sex3'];
+    $acc2['age'] = $_POST['age3'];
+    $acc2['consume'] = $_POST['consume3'];
+    $acc2['category'] = "初出茅庐";
+    $acc2['accounttype'] = $_POST['accounttype3'];
+
+    $query['name'] = $acc3["name"];
+    $ret = $account->where($query)->select();
+    if($ret){
+      $data['status'] = 0;
+      $data['error'] = "小号3已存在,请更改后重试。";
       $this->ajaxReturn($data);
       return;
     }
 
     //保存数据库
-    $ret = $account->data($acc)->add();
-    if($ret){
-      //置注册流程到第三步
-      $reg = session('register');
-      $reg['reg-step'] =4;
-      session('register',$reg);
+    $account->data($acc)->add();
+    $account->data($acc1)->add();
+    $account->data($acc2)->add();
 
-      $data['status'] = 1;
-      $data['next'] = "register.html";
-      $this->ajaxReturn($data);
-    }else{
-      $data['status'] = 0;
-      $data['error'] = "上传小号资料失败，请稍后重试。";
-      $this->ajaxReturn($data);
-      return;
-    }
+      //置注册流程到第三步
+    $reg = session('register');
+    $reg['reg-step'] =4;
+    session('register',$reg);
+
+    $data['status'] = 1;
+    $data['next'] = "register.html";
+    $this->ajaxReturn($data);
   }
 
 
