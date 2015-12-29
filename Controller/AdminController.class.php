@@ -12,9 +12,12 @@ class AdminController extends Controller {
     //构造函数
 
     if(!session('admin') && ACTION_NAME!='login' && ACTION_NAME!='admin_login'){
-      //$this->redirect('login');
-      $data['status'] = 0;
-      $this->ajaxReturn($data);
+      if(ACTION_NAME=='admin'){
+        $this->redirect('login');
+      }else{
+        $data['status'] = 0;
+        $this->ajaxReturn($data);
+      }
     }
 
     if(session('admin')){

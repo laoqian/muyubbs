@@ -9683,7 +9683,7 @@ UM.ui.define('separator', {
             _activeWidget = $widget;
         },
         getEditor: function (id, options) {
-            var editor = _editors[id] || (_editors[id] = this.createEditor(id, options));
+            var editor = (_editors[id] = this.createEditor(id, options));
             _maxZIndex = _maxZIndex ? Math.max(editor.getOpt('zIndex'), _maxZIndex):editor.getOpt('zIndex');
             return editor;
         },

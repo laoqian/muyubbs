@@ -54,7 +54,9 @@
     var ue =0;
 
     function tutor_edit(){
-        ue = UM.getEditor('container');
+
+        ue =UM.getEditor('container');
+
         $('.save-tutor').click(function(){
             var content = ue.getContent();
             $.post('./tutorial_post',{content:content},function(data,status){
@@ -71,7 +73,7 @@
         $(".ad-content").load("bbs.html",function(data,status,xhr){
             var ret=JSON.parse(data);
             if(ret.status==0){
-                window.location.href="../Index/login.html"
+                location.href="./login.html"
             }
         });
 
@@ -91,13 +93,13 @@
             var href =$(this).attr("href");
 
             $(".ad-content").load(href,function(data,status,xhr){
-                var ret = JSON.parse(data);
+                if(href =='tutorial.html'){
+                    tutor_edit();
+                }
+                
+                var ret = Json.parse(data);
                 if(ret.status==0){
                     location.href="login.html"
-                }
-
-                if(href=='tutorial.html'){
-                    tutor_edit();
                 }
             });
             return false;
