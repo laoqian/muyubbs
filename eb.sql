@@ -1,4 +1,4 @@
--- ******************************************************--
+  -- ******************************************************--
 -- ******************************************************--
 
 -- 版本记录
@@ -13,11 +13,6 @@
 
 -- ******************************************************--
 -- ******************************************************--
-  
-/*
-CREATE USER eb_admin@localhost IDENTIFIED BY 'eb_123456'; 
-GRANT ALL ON *.* TO 'eb_admin'@'localhost'; 
-*/
 
 /*创建数据库*/
 
@@ -30,7 +25,7 @@ USE eb;								/*使用数据库*/
 /*创建表*/
 
 /*配置表*/
--- DROP TABLE IF EXISTS eb_config;
+DROP TABLE IF EXISTS eb_config;
 CREATE TABLE IF NOT EXISTS `eb_config` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `ebkey` INT NOT NULL COMMENT 'key-键',  
@@ -41,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `eb_config` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='配置表';
 
 /*管理员表*/
--- DROP TABLE IF EXISTS eb_admin;
+DROP TABLE IF EXISTS eb_admin;
 CREATE TABLE IF NOT EXISTS `eb_admin` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `account` VARCHAR(20) NOT NULL UNIQUE COMMENT '账号',
@@ -62,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `eb_admin` (
 
 
 /*邀请码表*/
--- DROP TABLE IF EXISTS eb_invitecode;
+DROP TABLE IF EXISTS eb_invitecode;
 CREATE TABLE IF NOT EXISTS `eb_invitecode` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `adminid` INT NOT NULL COMMENT '管理员id，外键',
@@ -77,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `eb_invitecode` (
 
 
 /*vip用户表*/
--- DROP TABLE IF EXISTS eb_vip;
+DROP TABLE IF EXISTS eb_vip;
 CREATE TABLE IF NOT EXISTS `eb_vip` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `adminid` INT NOT NULL COMMENT '管理员id，外键',
@@ -105,8 +100,7 @@ CREATE TABLE IF NOT EXISTS `eb_vip` (
   `ipcz` VARCHAR(20) NOT NULL DEFAULT "" COMMENT 'IP-操作端',
   `ipgx` VARCHAR(20) NOT NULL DEFAULT "" COMMENT 'IP-共享端',
   `macgx` VARCHAR(24) NOT NULL DEFAULT "" COMMENT 'MAC-共享端',
-  `tvid` VARCHAR(32) NOT NULL COMMENT "teamviewer 账号",
-  `tvpwd` VARCHAR(32) NOT NULL COMMENT "teamviewer 密码",
+  `anydeskid` VARCHAR(32) NOT NULL DEFAULT "" COMMENT "AnyDesk ID号",
   `cht` INT NOT NULL DEFAULT 0 COMMENT '彩虹糖',
   `chd` INT NOT NULL DEFAULT 0 COMMENT '彩虹豆',
   PRIMARY KEY (`id`),
@@ -118,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `eb_vip` (
 
 
 /*vip权益表*/
--- DROP TABLE IF EXISTS eb_vip_interest;
+DROP TABLE IF EXISTS eb_vip_interest;
 CREATE TABLE IF NOT EXISTS `eb_vip_interest` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `type` VARCHAR(30) NOT NULL COMMENT '权益类型',
@@ -148,7 +142,7 @@ onceczshorpj			操作端收货/评价一次获得2
 
 
 /*在线记录表*/
--- DROP TABLE IF EXISTS eb_online_record;
+DROP TABLE IF EXISTS eb_online_record;
 CREATE TABLE IF NOT EXISTS `eb_online_record` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `vipid` INT NOT NULL COMMENT 'vip id，vip用户表外键',
@@ -165,26 +159,8 @@ CREATE TABLE IF NOT EXISTS `eb_online_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='在线记录表';
 
 
-
-/* 触发器 在更新某个会员的在线时间之前，如果没有该条记录，就创建一条默认记录 */
--- DROP TRIGGER IF EXISTS trg_update_online_record;
-DELIMITER $$
-CREATE
-    TRIGGER `trg_update_online_record`
-    BEFORE UPDATE
-    ON eb_online_record FOR EACH ROW
-    BEGIN
-		IF NOT EXISTS(SELECT id FROM eb_online_record WHERE vipid=new.vipid AND onlinedate=new.onlinedate AND onlinetype=new.onlinetype)
-		THEN
-			INSERT INTO eb_online_record(vipid, onlinedate, onlinetype) VALUES(new.vipid, CURDATE(), new.onlinetype);
-		END IF;
-	END $$
-DELIMITER ;
-
-
-
 /*硬件表*/
--- DROP TABLE IF EXISTS eb_hardware;
+DROP TABLE IF EXISTS eb_hardware;
 CREATE TABLE IF NOT EXISTS `eb_hardware` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `ownerid` INT NOT NULL COMMENT '拥有者id，vip用户表外键',
@@ -199,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `eb_hardware` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='硬件表';
 
 /*小号表*/
--- DROP TABLE IF EXISTS eb_account;
+DROP TABLE IF EXISTS eb_account;
 CREATE TABLE IF NOT EXISTS `eb_account` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `ownerid` INT NOT NULL COMMENT '拥有者id，vip用户表外键',
@@ -218,7 +194,7 @@ CREATE TABLE IF NOT EXISTS `eb_account` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='小号表';
 
 /*店铺表*/
--- DROP TABLE IF EXISTS eb_shop;
+DROP TABLE IF EXISTS eb_shop;
 CREATE TABLE IF NOT EXISTS `eb_shop` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `ownerid` INT NOT NULL COMMENT '拥有者id，vip用户表外键',
@@ -232,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `eb_shop` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='店铺表';
 
 /*充值表*/
--- DROP TABLE IF EXISTS eb_recharge;
+DROP TABLE IF EXISTS eb_recharge;
 CREATE TABLE IF NOT EXISTS `eb_recharge` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `oprid` INT NOT NULL COMMENT '操作员id，admin外键',
@@ -256,7 +232,7 @@ CREATE TABLE IF NOT EXISTS `eb_recharge` (
 
 /*刷单表*/
 -- 刷单所在日期以结束时间为准
--- DROP TABLE IF EXISTS eb_sd;
+DROP TABLE IF EXISTS eb_sd;
 CREATE TABLE IF NOT EXISTS `eb_sd` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `czid` INT NOT NULL COMMENT '操作端id，vip用户表外键',
@@ -303,7 +279,7 @@ CREATE TABLE IF NOT EXISTS `eb_sd` (
 
 
 /* 操作端使用共享的统计表 */
--- DROP TABLE IF EXISTS eb_usegx_count;
+DROP TABLE IF EXISTS eb_usegx_count;
 CREATE TABLE IF NOT EXISTS `eb_usegx_count` (
 	`id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
 	`czid` INT NOT NULL COMMENT '操作端id，vip用户表外键',
@@ -323,7 +299,7 @@ CREATE TABLE IF NOT EXISTS `eb_usegx_count` (
 
 
 /* 触发器 在新插入刷单记录时，自动更新操作端使用共享端的统计表 */
--- DROP TRIGGER IF EXISTS trg_insert_sd;
+DROP TRIGGER IF EXISTS trg_insert_sd;
 DELIMITER $$
 CREATE
     TRIGGER `trg_insert_sd`
@@ -341,7 +317,7 @@ DELIMITER ;
 
 
 /*广告表*/
--- DROP TABLE IF EXISTS eb_ad;
+DROP TABLE IF EXISTS eb_ad;
 CREATE TABLE IF NOT EXISTS `eb_ad` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `img` VARCHAR(260) NOT NULL COMMENT '广告图片路径',
@@ -353,7 +329,7 @@ CREATE TABLE IF NOT EXISTS `eb_ad` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='广告表';
 
 /*公告表*/
--- DROP TABLE IF EXISTS eb_notice;
+DROP TABLE IF EXISTS eb_notice;
 CREATE TABLE IF NOT EXISTS `eb_notice` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `img` VARCHAR(260) NOT NULL COMMENT '公告图片路径',
@@ -368,7 +344,7 @@ CREATE TABLE IF NOT EXISTS `eb_notice` (
 /* * 论坛表 * */
 
 /*栏目表*/
--- DROP TABLE IF EXISTS eb_category ;
+DROP TABLE IF EXISTS eb_category ;
 CREATE TABLE IF NOT EXISTS `eb_category` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `name` VARCHAR(20) NOT NULL COMMENT '栏目名称',
@@ -381,7 +357,7 @@ ALTER TABLE eb_category AUTO_INCREMENT 1;
 
 
 /*文章表*/
--- DROP TABLE IF EXISTS eb_article;
+DROP TABLE IF EXISTS eb_article;
 CREATE TABLE IF NOT EXISTS `eb_article` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `categoryid` INT NOT NULL COMMENT '栏目id，category表外键',
@@ -402,7 +378,7 @@ CREATE TABLE IF NOT EXISTS `eb_article` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章表';
 
 /* 评论表 */
--- DROP TABLE IF EXISTS eb_review;
+DROP TABLE IF EXISTS eb_review;
 CREATE TABLE IF NOT EXISTS `eb_review` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键，自动增长',
   `articleid` INT NOT NULL COMMENT '文章id，article表外键',
@@ -457,14 +433,14 @@ INSERT INTO eb_admin (account,pwd,sn,name,idcard,tel,qq) VALUES
 VIP 数据
 */
 INSERT INTO eb_vip
-(adminid, account, pwd, sn, name, area, address, qq, tel, isaudit, serverdate, tvid, tvpwd) 
+(adminid, account, pwd, sn, name, area, address, qq, tel, isaudit, serverdate, anydeskid) 
 VALUES
-(1, 'account001', MD5('88888888'), 10001, 'name001', '四川省', '成都', 'qq001', '15000000001', 0, '2016-01-01', 'tv0001', '123456'),
-(2, 'account002', MD5('88888888'), 10002, 'name002', '湖北省', '武汉', 'qq002', '15000000002', 0, '2016-01-01', 'tv0002', '123456'),
-(3, 'account003', MD5('88888888'), 10003, 'name003', '湖南省', '长沙', 'qq003', '15000000003', 1, '2016-01-01', 'tv0003', '123456'),
-(4, 'account004', MD5('88888888'), 10004, 'name004', '重庆', '重庆', 'qq004', '15000000004', 1, '2016-01-01', 'tv0004', '123456'),
-(5, 'account005', MD5('88888888'), 10005, 'name005', '广东省', '广州', 'qq005', '15000000005', 1, '2016-01-01', 'tv0005', '123456'),
-(6, 'account006', MD5('88888888'), 10006, 'name006', '山西省', '大同', 'qq006', '15000000006', 1, '2016-01-01', 'tv0006', '123456');
+(1, 'account001', MD5('88888888'), 10001, 'name001', '四川省', '成都', 'qq001', '15000000001', 0, '2016-01-01', 'AnyDesk0001'),
+(2, 'account002', MD5('88888888'), 10002, 'name002', '湖北省', '武汉', 'qq002', '15000000002', 0, '2016-01-01', 'AnyDesk0002'),
+(3, 'account003', MD5('88888888'), 10003, 'name003', '湖南省', '长沙', 'qq003', '15000000003', 1, '2016-01-01', 'AnyDesk0003'),
+(4, 'account004', MD5('88888888'), 10004, 'name004', '重庆', '重庆', 'qq004', '15000000004', 1, '2016-01-01', 'AnyDesk0004'),
+(5, 'account005', MD5('88888888'), 10005, 'name005', '广东省', '广州', 'qq005', '15000000005', 1, '2016-01-01', 'AnyDesk0005'),
+(6, 'account006', MD5('88888888'), 10006, 'name006', '山西省', '大同', 'qq006', '15000000006', 1, '2016-01-01', 'AnyDesk0006');
 
 /*
 权益表数据
@@ -475,40 +451,40 @@ VALUES
 INSERT INTO eb_vip_interest
 (type, level, value) 
 VALUES
-('oncegxsd', 1, 1),
-('oncegxsd', 2, 2),
-('oncegxsd', 3, 2),
-('oncegxsd', 4, 3),
-('oncegxsd', 5, 4),
-('oncegxsd', 6, 5),
+('oncegxsd', 1, 20),
+('oncegxsd', 2, 40),
+('oncegxsd', 3, 40),
+('oncegxsd', 4, 60),
+('oncegxsd', 5, 80),
+('oncegxsd', 6, 100),
 
-('oncegxscorjg', 1, 1),
-('oncegxscorjg', 2, 2),
-('oncegxscorjg', 3, 2),
-('oncegxscorjg', 4, 3),
-('oncegxscorjg', 5, 4),
-('oncegxscorjg', 6, 5),
+('oncegxscorjg', 1, 5),
+('oncegxscorjg', 2, 10),
+('oncegxscorjg', 3, 10),
+('oncegxscorjg', 4, 15),
+('oncegxscorjg', 5, 20),
+('oncegxscorjg', 6, 25),
 
-('oncegxllorztc', 1, 1),
-('oncegxllorztc', 2, 2),
-('oncegxllorztc', 3, 2),
-('oncegxllorztc', 4, 3),
+('oncegxllorztc', 1, 2),
+('oncegxllorztc', 2, 4),
+('oncegxllorztc', 3, 4),
+('oncegxllorztc', 4, 4),
 ('oncegxllorztc', 5, 4),
-('oncegxllorztc', 6, 5),
+('oncegxllorztc', 6, 4),
 
-('oncegxshorpj', 1, 1),
-('oncegxshorpj', 2, 2),
-('oncegxshorpj', 3, 2),
-('oncegxshorpj', 4, 3),
+('oncegxshorpj', 1, 2),
+('oncegxshorpj', 2, 4),
+('oncegxshorpj', 3, 4),
+('oncegxshorpj', 4, 4),
 ('oncegxshorpj', 5, 4),
-('oncegxshorpj', 6, 5),
+('oncegxshorpj', 6, 4),
 
-('onhookonehouraward', 1, 1),
-('onhookonehouraward', 2, 2),
-('onhookonehouraward', 3, 2),
-('onhookonehouraward', 4, 2),
-('onhookonehouraward', 5, 2),
-('onhookonehouraward', 6, 2),
+('onhookonehouraward', 1, 10),
+('onhookonehouraward', 2, 20),
+('onhookonehouraward', 3, 20),
+('onhookonehouraward', 4, 20),
+('onhookonehouraward', 5, 20),
+('onhookonehouraward', 6, 20),
 
 ('monthaward', 1, 600),
 ('monthaward', 2, 600),
@@ -552,47 +528,63 @@ VALUES
 ('chargediscount', 5, 1),
 ('chargediscount', 6, 1),
 
-('onceczsd', 1, 1),
-('onceczsd', 2, 1),
-('onceczsd', 3, 1),
-('onceczsd', 4, 1),
-('onceczsd', 5, 1),
-('onceczsd', 6, 1),
+('onceczsd', 1, 30),
+('onceczsd', 2, 30),
+('onceczsd', 3, 30),
+('onceczsd', 4, 30),
+('onceczsd', 5, 30),
+('onceczsd', 6, 30),
 
-('onceczscorjg', 1, 1),
-('onceczscorjg', 2, 1),
-('onceczscorjg', 3, 1),
-('onceczscorjg', 4, 1),
-('onceczscorjg', 5, 1),
-('onceczscorjg', 6, 1),
+('onceczscorjg', 1, 5),
+('onceczscorjg', 2, 5),
+('onceczscorjg', 3, 5),
+('onceczscorjg', 4, 5),
+('onceczscorjg', 5, 5),
+('onceczscorjg', 6, 5),
 
-('onceczllorztc', 1, 1),
-('onceczllorztc', 2, 1),
-('onceczllorztc', 3, 1),
-('onceczllorztc', 4, 1),
-('onceczllorztc', 5, 1),
-('onceczllorztc', 6, 1);
+('onceczllorztc', 1, 5),
+('onceczllorztc', 2, 5),
+('onceczllorztc', 3, 5),
+('onceczllorztc', 4, 5),
+('onceczllorztc', 5, 5),
+('onceczllorztc', 6, 5),
+
+('onceczshorpj', 1, 2),
+('onceczshorpj', 2, 2),
+('onceczshorpj', 3, 2),
+('onceczshorpj', 4, 2),
+('onceczshorpj', 5, 2),
+('onceczshorpj', 6, 2),
+
+
+('payfortenmin', 1, 15),
+('payfortenmin', 2, 15),
+('payfortenmin', 3, 15),
+('payfortenmin', 4, 15),
+('payfortenmin', 5, 15),
+('payfortenmin', 6, 15);
 
 
 
 
 
 /*
-oncegxsd				共享端刷单一次获得20*x
-oncegxscorjg			共享端收藏/加购一次获得5*x
-oncegxllorztc			共享端流量/直通车一次获得5*x
-oncegxshorpj			共享端收货/评价一次获得2*x
-onhookonehouraward		共享端挂机一小时获得10*x
-monthaward				共享端当月在线600小时获得x
-shopnum					可绑定的店铺数x
-imgquality				远程画质x 1/2
-lastonlinetime			昨日在线时间x hour
+oncegxsd				共享端刷单一次获得
+oncegxscorjg			共享端收藏/加购一次获得
+oncegxllorztc			共享端流量/直通车一次获得
+oncegxshorpj			共享端收货/评价一次获得
+onhookonehouraward		共享端挂机一小时获得
+monthaward				共享端当月在线600小时获得
+shopnum					可绑定的店铺数
+imgquality				远程画质 1/2
+lastonlinetime			昨日在线时间 (小时)
 connecttimes			每日可连接次数
 chargediscount			充值折扣
 onceczsd				操作端刷单一次消耗30
 onceczscorjg			操作端收藏/加购一次获得5
 onceczllorztc			操作端流量/直通车一次获得5
 onceczshorpj			操作端收货/评价一次获得2
+payfortenmin			每10分钟收费
 */
 
 
