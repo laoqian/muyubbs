@@ -152,20 +152,6 @@
                             </td>
                         </tr>
                         <tr class="form-item">
-                            <td class="item-title">AnyDestID<big>*</big>:</td>
-                            <td>
-                                <input class="tvid" type="number" name="tvid" placeholder="AnyDestID" maxlength="11"  value="">
-                                <label class="tvid-error"></label>
-                            </td>
-                        </tr>
-                        <tr class="form-item">
-                            <td class="item-title">AnyDesk密码<big>*</big>:</td>
-                            <td>
-                                <input class="tvpwd" type="password" name="tvpwd" placeholder="AnyDesk密码" maxlength="11"  value="">
-                                <label class="tvpwd-error"></label>
-                            </td>
-                        </tr>
-                        <tr class="form-item">
                             <td class="item-title">手机号码<big>*</big>:</td>
                             <td >
                                 <input class="phone" type="number" name="phone" placeholder="手机号码" maxlength="11"  value="">
@@ -334,18 +320,6 @@
             return true;
         }
 
-        function tvid_verify(){
-            var path = $(".tvid").val();
-
-            if(!path){
-                $(".tvid-error").text("用户名是必须的");
-                return false;
-            }else{
-                $(".tvid-error").text("");
-            }
-
-            return true;
-        }
 
         function qq_verify(){
             var path = $(".qq").val();
@@ -355,19 +329,6 @@
                 return false;
             }else{
                 $(".qq-error").text("");
-            }
-
-            return true;
-        }
-
-        function tvpwd_verify(){
-            var path = $(".tvpwd").val();
-
-            if(!path){
-                $(".tvpwd-error").text("密码是必须的");
-                return false;
-            }else{
-                $(".tvpwd-error").text("");
             }
 
             return true;
@@ -430,12 +391,6 @@
             //手持身份证照片验证
             $(".hand-id").change(function(){
                 hand_id_verify();
-            });
-            $(".tvid").change(function(){
-                tvid_verify();
-            });
-            $(".tvpwd").change(function(){
-                tvpwd_verify();
             });
             $(".qq").change(function(){
                 qq_verify();
@@ -507,7 +462,7 @@
             $(".rg-submit").click(function(){
 
                 if(!account_verify()||!pwd1_verify()||!pwd2_verify()||!hand_id_verify() ||!user_id_varify()||!phone_verify()
-                    || !code_varify() ||!tvid_verify()||!tvpwd_verify()||!qq_verify()
+                    || !code_varify() ||!qq_verify()
                 )
                 {
                     $(".submit-error").text("资料错误，请核实后重新点击下一步");
