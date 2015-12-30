@@ -688,4 +688,56 @@ class AdminController extends Controller {
       $this->ajaxReturn($data);
     }
   }
+
+  public  function admin_user_search(){
+
+    $key = $_POST['key'];
+
+    if(!$key){
+      $data["status"] =0;
+      $data["error"] ="数据错误。";
+      $this->ajaxReturn($data);
+    }
+
+    $vip = M("admin");
+
+    $th['data_count'] = $vip->where( $query)->count();
+    $th['cur_page'] = $key['cur_page'];
+    $th['per_page_num'] = $key['per_page_num'];
+    $th['menu_num'] = $key['menu_num'];
+
+    $th = paged($th);
+
+    $str = $th['cur_page'].','.$th['per_page_num'];
+    $user = $vip->where($query)->page($str)->select();
+    if(!$user){
+      $ret["status"] = 0;
+      $data["error"] ="没有查询到管理员数据。";
+      $this->ajaxReturn($ret);
+      return;
+    }
+
+//    foreach($user as $k=>$value){
+//      $user[$k] = user_info_format($value);
+//    }
+
+    $ret["user"] = $user;
+    $ret['paged'] =$th;
+    $ret["status"] =1;
+
+    $this->ajaxReturn($ret);
+  }
+
+  public function admin_user_change(){
+    $admin = M('admin');
+
+    foreach ($_POST['key'] as  $key=>$item) {
+      $query['id'] = $item['id'];
+      $admin->where($query)->save($item);
+    }
+
+    $data['status'] =1;
+    $data['info'] ='修改管理员成功';
+    $this->ajaxReturn($data);
+  }
 }

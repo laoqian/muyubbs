@@ -16,7 +16,6 @@
 </head>
 
 <body>
-
     <form id="form-add-admin" action="./admin_add_admin.html" method="post">
         <table>
             <tr>
@@ -113,10 +112,7 @@
             });
 
             $(".user-add-submit").click(function(){
-
-                if(!$('#form-add-admin').validationEngine('validate')){
-                    return false;
-                }
+                if(!$('#form-add-admin').validationEngine('validate')) return false;
 
                 var options = {
                     success: function(data,status){

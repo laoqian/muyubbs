@@ -17,7 +17,7 @@
 body[dir='rtl'] .formError .formErrorArrow,
 body.rtl .formError .formErrorArrow{margin:-2px 13px 0 0;}
 .formError .formErrorArrowBottom{top:2px;margin:0 0 0 12px;box-shadow:none;}
-.formError .formErrorArrow div{display:block;height:1px;margin:0 auto;border-right:2px solid #ddd;border-left:2px solid #ddd;background-color:#ee0101;box-shadow:0 2px 3px #444;font-size:0;font-size:0;line-height:0;}
+.formError .formErrorArrow div{display:block;height:1px;margin:0 auto;background-color:#fff;box-shadow:0 1px 1px red;font-size:0;font-size:0;line-height:0;}
 .formError .formErrorArrowBottom div{box-shadow:none;}
 .greenPopup .formErrorArrow div{background-color:#33be40;}
 .blackPopup .formErrorArrow div{background-color:#393939;color:#fff;}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{$bbs_title}</title>
+    <!-- Bootstrap -->
+    <link href="__ROOT__/Application/Home/View/Index/styles/admin.less" rel="stylesheet/less">
+    <link href="__ROOT__/Application/Home/View/styles/Validation-ciaoca/css/validationEngine.jquery.css" type="text/css" rel="stylesheet">
+    <link href="__ROOT__/Application/Home/View/styles/Font-Awesome-3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="admin-user-li">
+        <ul>
+            <li><a href="admin-user.html">查看管理员</a></li>
+            <li><a href="admin-add.html">添加管理员</a></li>
+        </ul>
+    </div>
+    <div class="admin-user-content">
+    </div>
+    <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/less/less.js"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".admin-user-content").load("admin-user.html",function(data,status,xhr){
+                var ret=JSON.parse(data);
+                if(ret.status==0){
+                    location.href="./login.html"
+                }
+            });
+
+            $(".admin-user-li a").click(function(){
+
+                var href =$(this).attr("href");
+
+                $(".admin-user-content").load(href,function(data,status,xhr){
+                    var ret = JSON.parse(data);
+                    if(ret.status==0){
+                        location.href="login.html"
+                    }
+                });
+
+                return false;
+            })
+        });
+
+    </script>
+</body>
+</html>
