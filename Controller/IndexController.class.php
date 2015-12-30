@@ -11,8 +11,21 @@ class IndexController extends Controller {
 
     $this->assign('bbs_title','彩虹桥云端淘宝精准补单平台');
     $this->assign('user',session('user'));
-
     set_path('index.html','网站首页',0);
+
+
+    $ad = M('ad');
+    $data = $ad->select();
+    foreach($data as $key=>$value){
+      //先判断广告有否过期，过期就不要展示了
+      $str = $value['publishtime'].' +'.''.$value['displaydays'].' month';
+      $time = strtotime($str,$value['publishtime']);
+      $now = strtotime('now');
+      if($time>$now){
+        $str = 'ad'.$value['pos'];
+        $this->assign($str,$value);
+      }
+    }
   }
 
   public function index(){

@@ -28,30 +28,40 @@
 
 <div class="wrapper">
     <div class="ad-lg">
-        <a href="#">
-            <img src="__ROOT__/Application/Home/View/resource/img/big-ad.jpg" alt="">
-        </a>
+        <if condition="$ad0" >
+            <a href={$ad0['url']}><img src={$ad0['img']} alt="广告位置"></a>
+        <else/>
+            <a href="#"><img src="__ROOT__/Application/Home/View/resource/img/big-ad.jpg" alt=""></a>
+        </if>
     </div>
     <div class="ad-lg">
         <div class="ad-sm">
-            <a href="#">
-                <img src="__ROOT__/Application/Home/View/resource/img/sm-ad.jpg" alt="">
-            </a>
+            <if condition="$ad1" >
+                <a href={$ad1['url']}><img src={$ad1['img']} alt="广告位置"></a>
+            <else/>
+                <a href="#"><img src="__ROOT__/Application/Home/View/resource/img/sm-ad.jpg" alt=""></a>
+            </if>
         </div>
         <div class="ad-sm">
-            <a href="#">
-                <img src="__ROOT__/Application/Home/View/resource/img/sm-ad.jpg" alt="">
-            </a>
+            <if condition="$ad2" >
+                <a href={$ad2['url']}><img src={$ad2['img']} alt="广告位置"></a>
+            <else/>
+                <a href="#"><img src="__ROOT__/Application/Home/View/resource/img/sm-ad.jpg" alt=""></a>
+            </if>
         </div>
         <div class="ad-sm">
-            <a href="#">
-                <img src="__ROOT__/Application/Home/View/resource/img/sm-ad.jpg" alt="">
-            </a>
+            <if condition="$ad3" >
+                <a href={$ad3['url']}><img src={$ad3['img']} alt="广告位置"></a>
+            <else/>
+                <a href="#"><img src="__ROOT__/Application/Home/View/resource/img/sm-ad.jpg" alt=""></a>
+            </if>
         </div>
         <div class="ad-sm">
-            <a href="#">
-                <img src="__ROOT__/Application/Home/View/resource/img/sm-ad.jpg" alt="">
-            </a>
+            <if condition="$ad4" >
+                <a href={$ad4['url']}><img src={$ad4['img']} alt="广告位置"></a>
+            <else/>
+                <a href="#"><img src="__ROOT__/Application/Home/View/resource/img/sm-ad.jpg" alt=""></a>
+            </if>
         </div>
     </div>
 </div>
