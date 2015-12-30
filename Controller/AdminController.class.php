@@ -10,14 +10,14 @@ class AdminController extends Controller {
   function __construct() {
     parent::__construct();
     //构造函数
-    if(!session('admin') && ACTION_NAME!='login' && ACTION_NAME!='admin_login'){
-      if(ACTION_NAME =='admin'){
-        $this->redirect('login');
-      }else{
-        $data['status'] = 0;
-        $this->ajaxReturn($data);
-      }
-    }
+//    if(!session('admin') && ACTION_NAME!='login' && ACTION_NAME!='admin_login'){
+//      if(ACTION_NAME =='admin'){
+//        $this->redirect('login');
+//      }else{
+//        $data['status'] = 0;
+//        $this->ajaxReturn($data);
+//      }
+//    }
 
     if(session('admin')){
       $this->assign('admin',session('admin'));
@@ -647,7 +647,6 @@ class AdminController extends Controller {
   }
 
   public function  tutorial_post(){
-
     $content = $_POST['content'];
     if(strlen($content)==0){
       $data['status'] =0;
@@ -674,5 +673,19 @@ class AdminController extends Controller {
 
     $data['status'] =1;
     $this->ajaxReturn($data);
+  }
+
+  public function admin_add_admin(){
+    $admin = D('admin');
+
+    $ret  = $admin->create();
+    if(!$ret){
+      $this->error($admin->getError());
+    }else{
+      $admin->add();
+      $data['status'] =1;
+      $data['info'] ='添加成功';
+      $this->ajaxReturn($data);
+    }
   }
 }

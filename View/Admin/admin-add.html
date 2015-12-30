@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{$bbs_title}</title>
+    <!-- Bootstrap -->
+    <link href="__ROOT__/Application/Home/View/Index/styles/admin.less" rel="stylesheet/less">
+    <link href="__ROOT__/Application/Home/View/styles/Validation-ciaoca/css/validationEngine.jquery.css" type="text/css" rel="stylesheet">
+    <link href="__ROOT__/Application/Home/View/styles/Font-Awesome-3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <form id="form-add-admin" action="./admin_add_admin.html" method="post">
+        <table>
+            <tr>
+                <td><big>*</big>账号:</td>
+                <td><input name="account" type="text" value="admin" class="validate[required,minSize[5],maxSize[12],custom[onlyLetterNumber]]" placeholder="5-12位数字英文组合"></td>
+            </tr>
+            <tr>
+                <td><big>*</big>密码:</td>
+                <td><input id="pwd" name="pwd" type="text" value="123123" class="validate[required,minSize[6],maxSize[20],custom[onlyLetterNumber]]" placeholder="6-20位数字英文组合"></td>
+            </tr>
+            <tr>
+                <td><big>*</big>密码重复:</td>
+                <td><input name="pwd1" type="text" value="123123" class="validate[required,minSize[6],maxSize[20],custom[onlyLetterNumber],equals[pwd]]" placeholder="密码重复"></td>
+            </tr>
+            <tr>
+                <td><big>*</big>名字:</td>
+                <td><input name="name" type="text" value="老千121" class="validate[required,minSize[5],maxSize[12]" placeholder="5-12位"></td>
+            </tr>            <tr>
+                <td><big>*</big>身份证号码:</td>
+                <td><input name="idcard" type="text" value="123123123123123123" class="validate[required,custom[chinaIdLoose]" placeholder="18位身份证号码"></td>
+            </tr>
+            <tr>
+                <td><big>*</big>QQ:</td>
+                <td><input name="qq" type="text" value="123123" class="validate[required,custom[qq]]" placeholder="QQ号码"></td>
+            </tr>
+            <tr>
+                <td><big>*</big>手机号码:</td>
+                <td><input name="tel" type="text" value="12312312312" class="validate[required,minSize[11],maxSize[11],custom[number]]" placeholder="11位手机号码"></td>
+            </tr>
+            <tr>
+                <td><big>*</big>状态:</td>
+                <td>
+                    <select name="status" id="">
+                        <option value="0">正常</option>
+                        <option value="1">冻结</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><big>*</big>权限-查看会员:</td>
+                <td>
+                    <select name="priviewvip" id="">
+                        <option value="0">无</option>
+                        <option value="1">有</option>
+                    </select>
+                </td>
+            </tr>
+           <tr>
+                <td><big>*</big>权限-激活会员:</td>
+                <td>
+                    <select name="priactive" id="">
+                        <option value="0">无</option>
+                        <option value="1">有</option>
+                    </select>
+                </td>
+            </tr>
+           <tr>
+                <td><big>*</big>权限-审核会员:</td>
+               <td>
+                   <select name="priaudit" id="">
+                       <option value="0">无</option>
+                       <option value="1">有</option>
+                   </select>
+               </td>
+            </tr>
+           <tr>
+                <td><big>*</big>权限-冻结会员:</td>
+               <td>
+                   <select name="prifrost" id="">
+                       <option value="0">无</option>
+                       <option value="1">有</option>
+                   </select>
+               </td>
+            </tr>
+            <tr>
+                <td><input class="user-add-submit" type="submit" value="添加管理员">
+                <td><span class="error-info" style="font-size: 12px ; color :red"></span></td>
+            </tr>
+        </table>
+    </form>
+
+    <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/Validation-ciaoca/js/jquery.validationEngine-zh_CN.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/Validation-ciaoca/js/jquery.validationEngine.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/less/less.js"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#form-add-admin').validationEngine('attach', {
+                promptPosition: 'topRight',
+                scroll: false
+            });
+
+            $(".user-add-submit").click(function(){
+
+                if(!$('#form-add-admin').validationEngine('validate')){
+                    return false;
+                }
+
+                var options = {
+                    success: function(data,status){
+                        $(".error-info").text(data.info);
+                    },
+                    timeout: 30000
+                };
+
+                $(".error-info").text("注册中，请等待....");
+
+                $("#form-add-admin").ajaxSubmit(options);
+                return false;
+            });
+
+        });
+
+    </script>
+</body>
+</html>
