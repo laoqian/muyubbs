@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+<script id="act-code" type="text/html">
+    <table>
+        <tr class="tr-title" >
+            <td>序号</td>
+            <td>操作端用户</td>
+            <td>共享端用户</td>
+            <td>操作类型</td>
+            <td>小号</td>
+            <td>刷单类型</td>
+            <td>类目</td>
+            <td>店铺名</td>
+            <td>订单号</td>
+            <td>金额</td>
+            <td>链接</td>
+            <td>开始时间</td>
+            <td>结束时间</td>
+            <td>订单状态</td>
+            <td>评价</td>
+            <td>评价时间</td>
+            <td>刷单状态</td>
+            <td>投诉内容</td>
+            <td>投诉时间</td>
+        </tr>
+        {{each list as value i}}
+        <tr>
+            <td >{{i+1+paged.index_start}}</td>
+            <td >{{value.czname}}</td>
+            <td >{{value.gxname}}</td>
+            <td >{{value.oprtype}}</td>
+            <td >{{value.xh}}</td>
+            <td >{{value.sdtype}}</td>
+            <td >{{value.category}}</td>
+            <td >{{value.shop}}</td>
+            <td >{{value.orderid}}</td>
+            <td >{{value.money}}</td>
+            <td >{{value.linknum}}</td>
+            <td >{{value.begintime}}</td>
+            <td >{{value.endtime}}</td>
+            <td >{{value.orderstatus}}</td>
+            <td>{{value.reply}}</td>
+            <td>{{value.replytime}}</td>
+            <td>{{value.status}}</td>
+            <td>{{value.complaintcontent}}</td>
+            <td>{{value.complainttime}}</td>
+        </tr>
+        {{/each}}
+    </table>
+    <div>
+        <span>总共{{paged.page_total}}页,</span>
+        <span>当前第{{paged.cur_page}}页。</span>
+        {{if paged.cur_page>1}}
+        <button class="pre-page">上一页</button>
+        {{/if}}
+        <ul class="th-menu">
+            {{each paged.menus as value i}}
+            <li><button class="loc-page">{{value}}</button></li>
+            {{/each}}
+        </ul>
+        {{if paged.page_total>paged.cur_page}}
+        <button class="next-page">下一页</button>
+        {{/if}}
+    </div>
+</script>
+
+<div class="art-tt">
+    <div class="at-li">
+    </div>
+</div>
+
+<script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+<script src="__ROOT__/Application/Home/View//styles/arttemplate/template.js"></script>
+
+
+<script type="text/javascript">
+
+    //请求文章的关键词
+    var key ={
+        per_page_num :20,
+        menu_num :10,
+        cur_page:1,
+    };
+
+    function template_dom_init(data){
+
+        //生成模板
+        var list ={list:data.sd,paged:data.paged};
+        var html = template('act-code', list);
+        $(".at-li").html(html);
+        $('.reply-content').each(function(){
+            var text = $(this).text();
+            $(this).html(text);
+            var text = $(this).text();
+            text = text.substr(0,30);
+            $(this).text(text);
+        });
+        $(".next-page").click(function(){
+            key.cur_page++;
+            reply_search();
+        });
+
+        $(".pre-page").click(function(){
+            if(key.cur_page>1)
+                key.cur_page--;
+            reply_search();
+        });
+
+        $(".loc-page").click(function(){
+            key.cur_page = $(this).text();
+            reply_search();
+        });
+    }
+
+    function reply_search(){
+        $.post("./sd_search",
+            {key:key},
+            function(data,status){
+                if(data.status==1){
+                    template_dom_init(data);
+                }else{
+                    $(".at-li").html(data.error);
+                }
+            });
+    }
+
+    $(document).ready(function(){
+        reply_search('','');
+        $(".at button").click(function(){
+            key.cur_page =1;
+            reply_search();
+        });
+    });
+
+</script>
+</body>
+</html>

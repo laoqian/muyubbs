@@ -768,4 +768,52 @@ class AdminController extends Controller {
     $data['info'] ='修改管理员成功';
     $this->ajaxReturn($data);
   }
+
+  public function sd_search(){
+    $key = $_POST["key"];
+
+    $model = M("sd");
+    $vip = M('vip');
+
+    //计算分页数据
+    $th["per_page_num"] = $key['per_page_num']; //每页条数
+    $th["menu_num"] =  $key['menu_num']; //每页页码数量
+    $th["cur_page"] =  $key['cur_page']; //每页页码数量
+
+    $th['data_count'] = $model->count();
+
+    $th = paged($th);
+
+    $str =$key['cur_page'].','.$key['per_page_num'];
+
+    $res = $model->order('endtime DESC')->page($str)->select();
+    if($res){
+      //查询到数据后。读取刷单者信息
+      foreach($res as $key=>$value){
+        $query =[];
+        $query['id'] = $value['czid'];
+        $auth = $vip->where($query)->select();
+        if($auth){
+          $value['czname'] = $auth[0]['name'];
+        }
+
+        $query['id'] = $value['gxid'];
+        $auth = $vip->where($query)->select();
+        if($auth){
+          $value['gxname'] = $auth[0]['name'];
+        }
+
+        $res[$key] = $value;
+      }
+
+      $res = sd_format($res);
+
+      $ret["sd"] = $res;
+      $ret['paged'] =$th;
+      $ret["status"] =1;
+    }else{
+      $ret["status"] = 0;
+    }
+    $this->ajaxReturn($ret);
+  }
 }

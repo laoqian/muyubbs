@@ -301,6 +301,44 @@ function get_path($level){
 
 
 
+function sd_format($sd){
+
+  $optype =array(
+    0=>'刷单',
+    1=>'收藏/加购',
+    2=>'流量/直通车',
+    3=>'评价收货',
+  );
+
+  $sdtype =array(
+    0=>'淘宝',
+    1=>'京东',
+  );
+  $orderstatus =array(
+    0=>'已收藏',
+    1=>'已下单',
+    2=>'已付款',
+    3=>'已收货',
+  );
+
+  $sdstatus =array(
+    0=>'失败',
+    1=>'成功',
+  );
+
+
+  foreach($sd as $k=>$item){
+    $item['oprtype'] = $optype[$item['oprtype']];
+    $item['sdtype'] = $sdtype[$item['sdtype']];
+    $item['orderstatus'] = $orderstatus[$item['orderstatus']];
+    $item['status'] = $sdstatus[$item['status']];
+
+    $sd[$k] = $item;
+  }
+
+  return $sd;
+}
+
 
 
 
