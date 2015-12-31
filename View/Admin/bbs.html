@@ -47,11 +47,11 @@
                 <td class="index">{{config.cur_index+k+1}}</td>
                 <td class="key td-chg" style="width: 30%">{{value.name}}</td>
                 {{if value.pid==0}}
-                    <td class="parent td-chg" style="color: red">顶级板块</td>
+                    <td class="parent td-chg" style="color: red;width: 30%">顶级板块</td>
                 {{else}}
-                    <td class="parent td-chg">{{config.source[value.pid-1].name}}</td>
+                    <td class="parent td-chg" style="width: 30%">{{config.source[value.pid-1].name}}</td>
                 {{/if}}
-                <td class="td-chg">{{value.comm}}</td>
+                <td class="td-chg" style="width: 30%">{{value.comm}}</td>
             </tr>
             {{if (!((k+1)%num) ||(config.data.length==(k+1)) ) }}
 
