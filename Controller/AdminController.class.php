@@ -10,14 +10,14 @@ class AdminController extends Controller {
   function __construct() {
     parent::__construct();
     //构造函数
-//    if(!session('admin') && ACTION_NAME!='login' && ACTION_NAME!='admin_login'){
-//      if(ACTION_NAME =='admin'){
-//        $this->redirect('login');
-//      }else{
-//        $data['status'] = 0;
-//        $this->ajaxReturn($data);
-//      }
-//    }
+    if(!session('admin') && ACTION_NAME!='login' && ACTION_NAME!='admin_login'){
+      if(ACTION_NAME =='admin'|| ACTION_NAME =='login'){
+        $this->redirect('login');
+      }else{
+        $data['status'] = 0;
+        $this->ajaxReturn($data);
+      }
+    }
 
     if(session('admin')){
       $this->assign('admin',session('admin'));
@@ -170,6 +170,10 @@ class AdminController extends Controller {
     if($key['share_status']<3)
       $query['statusgx'] = $key['share_status'];
 
+    $admin = session('admin');
+
+    $query['adminid'] =$admin['id'];
+
     $vip = M("vip");
 
     $th['data_count'] = $vip->where( $query)->count();
@@ -201,6 +205,15 @@ class AdminController extends Controller {
 
   public  function audit()
   {
+
+    $admin = session('admin');
+    if(!$admin['priaudit']){
+      $data['status'] =0;
+      $data['info'] ='本管理员没有权限审核用户';
+      $this->ajaxReturn($data);
+      return;
+    }
+
     if ($_GET['id']) {
       $query['id'] = $_GET['id'];
     }else {
@@ -403,6 +416,7 @@ class AdminController extends Controller {
     $user_id = $_POST['userid'];
     $user_op = $_POST['opcode'];
 
+    $admin = session('admin');
 
     if(!$user_id || !$user_op ){
       $data['status'] =0;
@@ -417,8 +431,22 @@ class AdminController extends Controller {
       $vip->where($query)->delete();
     }elseif($user_op=='freeze'){
       $merge['status'] = 1;
+
+      if(!$admin['prifrost']){
+        $data['status'] =0;
+        $data['info'] ='本管理员没有权限冻结用户';
+        $this->ajaxReturn($data);
+        return;
+      }
       $vip->where($query)->data($merge)->save();
     }else{
+      if(!$admin['priactive']){
+        $data['status'] =0;
+        $data['info'] ='本管理员没有权限激活用户';
+        $this->ajaxReturn($data);
+        return;
+      }
+
       $merge['status'] = 0;
       $vip->where($query)->data($merge)->save();
     }

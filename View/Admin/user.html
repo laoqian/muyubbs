@@ -34,7 +34,7 @@
             <td>{{value.status}}</td>
             <td userid={{value.id}} class="op">
                 <button class="freeze">冻结</button>
-                <button class="nofreeze">解除</button>
+                <button class="nofreeze">激活</button>
             </td>
         </tr>
         {{/each}}
@@ -53,6 +53,7 @@
         {{if paged.page_total>paged.cur_page}}
         <button class="next-page">下一页</button>
         {{/if}}
+        <span class="error-info" style="color: red; font-size: 12px"></span>
     </div>
 </script>
 
@@ -122,6 +123,8 @@
         $.post("./user_op",{userid:id,opcode:op},function(data,status){
             if(data.status==1){
                 user_search();
+            }else{
+                $('.error-info').text(data.info);
             }
         })
     }
@@ -152,8 +155,8 @@
             var url = $(this).attr('href');
             $(".at-li").load(url,function(data,status,xhr){
                 var ret=JSON.parse(data);
-                if(ret.status==0){
-                    window.location.href="../Index/login.html"
+                if(ret.status== 0){
+                    $(".at-li").text(ret.info);
                 }
             });
             return false;
