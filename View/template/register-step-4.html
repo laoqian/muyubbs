@@ -13,7 +13,11 @@
     <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-
+<style type="text/css">
+    .click-show{
+        background: #fff;
+    }
+</style>
 <body>
 
         <!--导航栏 -->
@@ -47,8 +51,28 @@
                         <tr class="form-item">
                             <td class="item-title">店铺等级:</td>
                             <td>
-                                <input class="level" type="number"  maxlength="2"  name="level"   placeholder="店铺等级" value="">
-                                <label class="pwd2-error"></label>
+                                <select name="level" id="">
+                                    <option value="1">1星级</option>
+                                    <option value="2">2星级</option>
+                                    <option value="3">3星级</option>
+                                    <option value="4">4星级</option>
+                                    <option value="5">5星级</option>
+                                    <option value="6">1钻石</option>
+                                    <option value="7">2钻石</option>
+                                    <option value="8">3钻石</option>
+                                    <option value="9">4钻石</option>
+                                    <option value="10">5钻石</option>
+                                    <option value="11">1皇冠</option>
+                                    <option value="12">2皇冠</option>
+                                    <option value="13">3皇冠</option>
+                                    <option value="14">4皇冠</option>
+                                    <option value="15">5皇冠</option>
+                                    <option value="16">1金冠</option>
+                                    <option value="17">2金冠</option>
+                                    <option value="18">3金冠</option>
+                                    <option value="19">4金冠</option>
+                                    <option value="20">5金冠</option>
+                                </select>
                             </td>
                         </tr>
                         <tr class="form-item">
@@ -56,6 +80,7 @@
                             <td>
                                 <input name="img" class="img" type="file"  >
                                 <span>图片大小限制512K。</span>
+                                <button class="click-show">点击查看样图</button>
                                 <label class="tb-img-error"></label>
                             </td>
                         </tr>
@@ -72,7 +97,9 @@
             </div>
         </div>
     </div>
-
+        <div id="light" class="white_content" style="overflow: hidden;border: solid 1px #ccc">
+            <img style="width: 100%;height: 100%;" src="__ROOT__/Application/Home/View/resource/img/shop.png" alt="">
+        </div>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
         <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
@@ -117,6 +144,15 @@
         }
 
         $(document).ready(function(){
+
+            $('.click-show').click(function(){
+                $('.white_content').css('display','block');
+                return false;
+            });
+            $('.white_content').click(function(){
+                $('.white_content').css('display','none');
+            });
+
             //输入长度校验
             $(".form-item input").bind('input propertychange',function(){
                 max = $(this).attr('maxlength');

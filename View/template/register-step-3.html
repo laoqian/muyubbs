@@ -14,6 +14,12 @@
     <![endif]-->
 </head>
 
+<style type="text/css">
+    .click-show{
+        background: #fff;
+    }
+</style>
+
 <body>
 
         <!--导航栏 -->
@@ -35,7 +41,7 @@
                 <form method="post" action="../user/submit_tb" class="rg-form-group" enctype="multipart/form-data">
                     <table>
                         <tr>
-                        <td colspan="2" style="text-align: center; height: 60px;color: red">小号1</td>
+                        <td colspan="2" style="text-align: center; height: 60px;color: red">淘宝小号(1)</td>
                     </tr>
                         <tr class="form-item">
                             <td class="item-title">账号<big>*</big>:</td>
@@ -103,10 +109,11 @@
                             </td>
                         </tr>
                         <tr class="form-item">
-                            <td class="item-title">小号照片<big>*</big>:</td>
+                            <td class="item-title">淘宝小号后台截图增加<big>*</big>:</td>
                             <td>
                                 <input name="tb-img1" class="tb-img1" type="file"  >
                                 <span>图片大小限制512K。</span>
+                                <button class="click-show">点击查看样图</button>
                                 <label class="tb-img-error1"></label>
                             </td>
                         </tr>
@@ -120,10 +127,10 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2" style="text-align: center; height: 60px;color: red">小号2</td>
+                            <td colspan="2" style="text-align: center; height: 60px;color: red">淘宝小号(2)</td>
                         </tr>
                         <tr class="form-item">
-                            <td class="item-title2">账号<big>*</big>:</td>
+                            <td class="item-title">账号<big>*</big>:</td>
                             <td>
                                 <input class="tb-name2" type="text"  maxlength="18"  name="tb-name2" placeholder="账号" value="">
                                 <label class="account-error2">&nbsp;</label>
@@ -188,10 +195,11 @@
                             </td>
                         </tr>
                         <tr class="form-item">
-                            <td class="item-title">小号照片<big>*</big>:</td>
+                            <td class="item-title">淘宝小号后台截图增加<big>*</big>:</td>
                             <td>
                                 <input name="tb-img2" class="tb-img2" type="file"  >
                                 <span>图片大小限制512K。</span>
+                                <button class="click-show">点击查看样图</button>
                                 <label class="tb-img-error2"></label>
                             </td>
                         </tr>
@@ -205,7 +213,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2" style="text-align: center; height: 60px;color: red">小号3</td>
+                            <td colspan="2" style="text-align: center; height: 60px;color: red">淘宝小号(3)</td>
                         </tr>
                         <tr class="form-item">
                             <td class="item-title">账号<big>*</big>:</td>
@@ -273,10 +281,11 @@
                             </td>
                         </tr>
                         <tr class="form-item">
-                            <td class="item-title">小号照片<big>*</big>:</td>
+                            <td class="item-title">淘宝小号后台截图增加<big>*</big>:</td>
                             <td>
                                 <input name="tb-img3" class="tb-img3" type="file"  >
                                 <span>图片大小限制512K。</span>
+                                <button class="click-show">点击查看样图</button>
                                 <label class="tb-img-error3"></label>
                             </td>
                         </tr>
@@ -302,7 +311,9 @@
             </div>
         </div>
     </div>
-
+        <div id="light" class="white_content" style="overflow: hidden;border: solid 1px #ccc">
+            <img style="width: 100%;height: 100%;" src="__ROOT__/Application/Home/View/resource/img/tb.png" alt="">
+        </div>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
         <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
@@ -339,6 +350,14 @@
         }
 
         $(document).ready(function(){
+
+            $('.click-show').click(function(){
+                $('.white_content').css('display','block');
+                return false;
+            });
+            $('.white_content').click(function(){
+                $('.white_content').css('display','none');
+            });
 
             //输入长度校验
             $(".form-item input[type='text']").bind('input propertychange',function(){
