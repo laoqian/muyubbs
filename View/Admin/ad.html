@@ -46,6 +46,8 @@
     $(document).ready(function(){
 
         $(".at-li").load('adshow',function(data,status,xhr){
+            var i = data.indexOf('{');
+            if(i!=0) return ;
             var ret=JSON.parse(data);
             if(ret.status==0){
                 window.location.href="../Index/login.html"
@@ -56,6 +58,8 @@
         $('.ad-next').click(function(){
 
             $(".at-li").load($(this).attr("href"),function(data,status,xhr){
+                var i = data.indexOf('{');
+                if(i!=0) return ;
                 var ret=JSON.parse(data);
                 if(ret.status==0){
                     window.location.href="../Index/login.html"

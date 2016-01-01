@@ -17,6 +17,8 @@
 <style type="text/css">
     .click-show{
         background: #fff;
+        text-decoration: underline;
+        color:red;
     }
 </style>
 
@@ -341,8 +343,8 @@
 
         function account_verify(text,error){
             var account = $(text).val();
-            if(account.length<6){
-                $(error).text("用户名长度过短");
+            if(!account){
+                $(error).text("用户名不能为空");
                 return false;
             }
             $(error).text("");
