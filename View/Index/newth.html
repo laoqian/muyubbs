@@ -5,7 +5,6 @@
     <title>{$bbs_title}</title>
     <!-- Bootstrap -->
     <link href="__ROOT__/Application/Home/View/Index/styles/newth.css" type="text/css" rel="stylesheet">
-    <link href="__ROOT__/Application/Home/View/styles/umeditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
     <link href="__ROOT__/Application/Home/View/styles/Font-Awesome-3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -48,8 +47,9 @@
     </div>
 
     <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
-    <script src="__ROOT__/Application/Home/View/styles/umeditor/umeditor.config.js"></script>
-    <script src="__ROOT__/Application/Home/View/styles/umeditor/umeditor.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/umeditor/ueditor.config.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/umeditor/ueditor.all.min.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/umeditor/lang/zh-cn/zh-cn.js"></script>
     <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
 
 
@@ -96,7 +96,7 @@
             });
 
             //初始化输入区域
-            ue = UM.getEditor('container');
+            ue = UE.getEditor('container');
 
             $(".art-submit").click(function(){
 

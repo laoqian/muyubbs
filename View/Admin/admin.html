@@ -5,7 +5,6 @@
     <title>{$bbs_title}</title>
     <!-- Bootstrap -->
     <link href="__ROOT__/Application/Home/View/Index/styles/admin.css" type="text/css" rel="stylesheet">
-    <link href="__ROOT__/Application/Home/View/styles/umeditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
 </head>
 <body>
 <!--导航栏 -->
@@ -51,8 +50,9 @@
 <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
 <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="__ROOT__/Application/Home/View/styles/umeditor/umeditor.config.js"></script>
-<script src="__ROOT__/Application/Home/View/styles/umeditor/umeditor.js"></script>
+<script src="__ROOT__/Application/Home/View/styles/umeditor/ueditor.config.js"></script>
+<script src="__ROOT__/Application/Home/View/styles/umeditor/ueditor.all.min.js"></script>
+<script src="__ROOT__/Application/Home/View/styles/umeditor/lang/zh-cn/zh-cn.js"></script>
 
 <myid id="tutorial" type="text/plain">
     <script id="container" name="content" maxlength="20000" type="text/plain" style="width:100%;height:400px;">在此编辑教程 </script>
@@ -67,7 +67,8 @@
 
     function tutor_edit(){
         $('.ad-content').html(tpl);
-        ue =UM.getEditor('container');
+        var ue = new UE.ui.Editor();
+        ue.render("container");
 
         $('.save-tutor').click(function(){
             var content = ue.getContent();
