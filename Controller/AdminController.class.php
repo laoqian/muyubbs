@@ -19,7 +19,10 @@ class AdminController extends Controller {
       }
     }
 
+    //刷新session
     if(session('admin')){
+      $admin = session('admin');
+      session('admin',$admin);
       $this->assign('admin',session('admin'));
     }
   }
@@ -172,7 +175,8 @@ class AdminController extends Controller {
 
     $admin = session('admin');
 
-    $query['adminid'] =$admin['id'];
+    if($admin['account']!='admin')
+      $query['adminid'] =$admin['id'];
 
     $vip = M("vip");
 
@@ -758,10 +762,16 @@ class AdminController extends Controller {
 
   public function admin_user_change(){
     $admin = M('admin');
+    $ad = session('admin');
 
     foreach ($_POST['key'] as  $key=>$item) {
       $query['id'] = $item['id'];
       $admin->where($query)->save($item);
+
+      if($query['id']==$ad['id']){
+        $user = $admin->where($query)->select();
+        session('admin',$user);
+      }
     }
 
     $data['status'] =1;
@@ -815,5 +825,25 @@ class AdminController extends Controller {
       $ret["status"] = 0;
     }
     $this->ajaxReturn($ret);
+  }
+
+  function admin_chg_pwd(){
+    $admin = session('admin');
+
+    if(!$_POST['pwd']){
+      $data['status'] = 0;
+      $data['info'] = '修改失败';
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $ad = M('admin');
+    $ad->pwd = md5($_POST['pwd']);
+
+    $query['id'] = $admin['id'];
+    $ad->where($query)->save();
+    $data['status'] = 1;
+    $data['info'] = '修改成功';
+    $this->ajaxReturn($data);
   }
 }

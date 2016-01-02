@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{$bbs_title}</title>
+    <!-- Bootstrap -->
+    <link href="__ROOT__/Application/Home/View/Index/styles/admin.less" rel="stylesheet/less">
+    <link href="__ROOT__/Application/Home/View/styles/Validation-ciaoca/css/validationEngine.jquery.css" type="text/css" rel="stylesheet">
+    <link href="__ROOT__/Application/Home/View/styles/Font-Awesome-3.2.1/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <form id="form-add-admin" action="./admin_chg_pwd.html" method="post">
+        <table>
+            <tr>
+                <td>账号:</td>
+                <td>{$admin['account']}</td>
+            </tr>
+            <tr>
+                <td>新密码:</td>
+                <td><input id="pwd" name="pwd" type="password" value="" class="validate[required,minSize[6],maxSize[20],custom[onlyLetterNumber]]" placeholder="6-20位数字英文组合"></td>
+            </tr>
+            <tr>
+                <td>密码重复:</td>
+                <td><input name="pwd1" type="password" value="" class="validate[required,minSize[6],maxSize[20],custom[onlyLetterNumber],equals[pwd]]" placeholder="密码重复"></td>
+            </tr>
+            <tr>
+                <td><input class="user-add-submit" type="submit" value="保存修改">
+                <td><span class="error-info" style="font-size: 12px ; color :red"></span></td>
+            </tr>
+        </table>
+    </form>
+
+    <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.min.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/jquery/jquery.form.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/Validation-ciaoca/js/jquery.validationEngine-zh_CN.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/Validation-ciaoca/js/jquery.validationEngine.js"></script>
+    <script src="__ROOT__/Application/Home/View/styles/less/less.js"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#form-add-admin').validationEngine('attach', {
+                promptPosition: 'topRight',
+                scroll: false
+            });
+
+            $(".user-add-submit").click(function(){
+                if(!$('#form-add-admin').validationEngine('validate')) return false;
+
+                var options = {
+                    success: function(data,status){
+                        $(".error-info").text(data.info);
+                    },
+                    timeout: 30000
+                };
+
+                $(".error-info").text("注册中，请等待....");
+
+                $("#form-add-admin").ajaxSubmit(options);
+                return false;
+            });
+
+        });
+
+    </script>
+</body>
+</html>

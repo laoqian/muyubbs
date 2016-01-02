@@ -7,7 +7,10 @@
     <table>
         <tr class="tr-title">
             <td>序号</td>
+            <td>账号</td>
+            <td>编号</td>
             <td>名字</td>
+            <td>手机号码</td>
             <td>注册时间</td>
             <td>省份</td>
             <td>地址</td>
@@ -22,7 +25,10 @@
         {{each list as value i}}
         <tr>
             <td class="index">{{i+1+paged.index_start}}</td>
+            <td>{{value.account}}</td>
+            <td>{{value.sn}}</td>
             <td ><a class="user-name" href={{'audit.html?id='+value.id}}>{{value.name}}</a></td>
+            <td>{{value.tel}}</td>
             <td>{{value.regtime}}</td>
             <td>{{value.area}}</td>
             <td>{{value.address}}</td>

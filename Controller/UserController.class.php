@@ -110,7 +110,7 @@ class UserController extends Controller {
     if($acc){
       $vip['sn'] = $acc[0]['sn']+1;
     }else{
-      $vip['sn'] = 77556688;
+      $vip['sn'] = 10000;
     }
 
     //用户数据存进数据库

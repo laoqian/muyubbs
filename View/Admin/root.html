@@ -18,9 +18,11 @@
 <body>
     <div class="admin-user-li">
         <ul>
-            <li><a href="admin-user.html">查看管理员</a></li>
-            <li><a href="admin-add.html">添加管理员</a></li>
-            <li><a href="admin-pwdchg.html">资料变更</a></li>
+            <if condition="$admin['account'] eq 'admin' ">
+                <li><a href="admin-user.html">查看管理员</a></li>
+                <li><a href="admin-add.html">添加管理员</a></li>
+            </if>
+            <li><a href="admin-chg.html">修改密码</a></li>
         </ul>
     </div>
     <div class="admin-user-content">
@@ -31,13 +33,6 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-            $(".admin-user-content").load("admin-user.html",function(data,status,xhr){
-                var ret=JSON.parse(data);
-                if(ret.status==0){
-                    location.href="./login.html"
-                }
-            });
-
             $(".admin-user-li a").click(function(){
 
                 var href =$(this).attr("href");
