@@ -770,7 +770,7 @@ class AdminController extends Controller {
 
       if($query['id']==$ad['id']){
         $user = $admin->where($query)->select();
-        session('admin',$user);
+        session('admin',$user[0]);
       }
     }
 

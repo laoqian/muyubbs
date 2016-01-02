@@ -133,8 +133,8 @@
         function account_verify(){
             var account = $(".name").val();
 
-            if(account.length<6){
-                $(".account-error").text("用户名长度过短");
+            if(!account){
+                $(".account-error").text("店铺名称不能为空");
                 return false;
 
             }else{
