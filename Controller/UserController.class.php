@@ -336,7 +336,6 @@ class UserController extends Controller {
     $acc['sex'] = $_POST['sex1'];
     $acc['age'] = $_POST['age1'];
     $acc['consume'] = $_POST['consume1'];
-    $acc['category'] = "初出茅庐";
     $acc['accounttype'] = $_POST['accounttype1'];
 
     $query['name'] = $acc["name"];

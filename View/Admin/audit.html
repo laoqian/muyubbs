@@ -110,8 +110,10 @@
         </div>
     </if>
     <span class="audit-error">&nbsp;</span>
-    <button class="audit-pass">通过审核</button>
-
+    <div>
+        <button class="audit-pass">审核通过</button>
+        <button class="audit-no-pass">审核不通过</button>
+    </div>
 </div>
 
 <div id="light" class="white_content" style="overflow: hidden">
@@ -131,13 +133,24 @@
 
             $.post('audit_pass',{id:id},function(data,status){
                 if(data.status==1){
-                    $(".audit-error").text("已通过审核");
+                    $(".audit-error").text("通过审核.");
                 }else{
                     $(".audit-error").text(data.error);
                 }
             });
         });
 
+        $(".audit-no-pass").click(function(){
+            id = $(".vip-id").attr('id');
+
+            $.post('audit_not_pass',{id:id},function(data,status){
+                if(data.status==1){
+                    $(".audit-error").text("未通过审核");
+                }else{
+                    $(".audit-error").text(data.error);
+                }
+            });
+        });
 
         $('img').click(function(){
             var src = $(this).attr('src');

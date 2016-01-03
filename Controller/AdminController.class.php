@@ -232,8 +232,8 @@ class AdminController extends Controller {
       $this->ajaxReturn("no this error");
       return;
     }
-
-    $this->assign('user',$user[0]);
+    $user= user_info_format($user[0]);
+    $this->assign('user',$user);
 
     //读取小号数据
     $query=[];
@@ -242,6 +242,9 @@ class AdminController extends Controller {
     $tb = M("account");
     $tb_accout = $tb->where($query)->select();
     if($tb_accout){
+      foreach($tb_accout as $key=>$value){
+        $tb_accout[$key] = acc_info_format($value);
+      }
       $this->assign('tb',$tb_accout);
     }
 
@@ -298,6 +301,33 @@ class AdminController extends Controller {
       $this->ajaxReturn($data);
       return;
     }
+
+    $data['status'] =1;
+    $this->ajaxReturn($data);
+    return;
+  }
+
+  public  function  audit_not_pass(){
+
+    if ($_POST['id']) {
+      $query['id'] = $_POST['id'];
+    }else {
+      $data['status'] = 0;
+      $data['error'] = "服务器异常。";
+      $this->ajaxReturn($data);
+      return;
+    }
+
+    $vip = M("vip");
+    $account = M('account');
+    $shop = M('shop');
+    $hd = M('hardware');
+    $vip->where($query)->delete();
+    $query=[];
+    $query['ownerid'] = $_POST['id'];
+    $account->where($query)->delete();
+    $shop->where($query)->delete();
+    $hd->where($query)->delete();
 
     $data['status'] =1;
     $this->ajaxReturn($data);
