@@ -51,12 +51,7 @@ class UserController extends Controller {
 
     $vip['name'] =$_POST['name'];
 
-    if($_POST['sex-man']=="on"){
-      $vip['sex'] =0;
-    } else{
-      $vip['sex'] =1;
-    }
-
+    $vip['sex'] =$_POST['sex'];
     $vip['area'] =$_POST['area'];
     $vip['address'] =$_POST['address'];
     $vip['qq'] =$_POST['qq'];
