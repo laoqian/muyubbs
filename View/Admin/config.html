@@ -125,7 +125,7 @@
     function config_load(){
         $.get("config_load",function(data,status){
            if(data.status==1){
-               config = data_paged(data.config,20);
+               config = data_paged(data.config,10);
                config.page_turn(1);
                config_to_html();
                $(".config-bot").css("display","block");

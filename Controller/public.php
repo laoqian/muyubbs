@@ -247,7 +247,8 @@ function rights_format($rights){
     'onceczsd'=>'操作端刷单一次消耗30',
     'onceczscorjg'=>'操作端收藏/加购一次获得5',
     'onceczllorztc'=>'操作端流量/直通车一次获得5',
-    'onceczshorpj'=>'操作端收货/评价一次获得2'
+    'onceczshorpj'=>'操作端收货/评价一次获得2',
+	'payfortenmin'=>'每10分钟收费',
   );
 
 

@@ -10,16 +10,22 @@
 --											修改表 eb_vip_interest 字段 interesttype 增加限制唯一
 --											将投诉表合并到刷单记录表中
 --	ver-1.03	2015-12-31		wanghaowen	修改权益表,开始测试运行
+--  ver-1.04	2016-01-08		wanghaowen  按新增垫付功能修改; 未避免影响到原有数据库，更名为 eb_df
+-- 											修改表 eb_vip 字段 cht 单位，其单位与chd等同，每个表示1分钱，只是用于垫付交易
+-- 											修改表 eb_vip 增加字段 df 表示是否开启垫付功能；
+--											修改表 eb_sd 增加字段 df 表示该订单是否需要垫付； 0--不需要 1--需要 2--需要，共享端已经确认付款 3--操作端已经确认付款 
+--											修改表 eb_sd 字段 money 为INT型，单位改为分
+--											确定一个平台账号， sn=10000； 用于垫付金币中转
 
 -- ******************************************************--
 -- ******************************************************--
 
 /*创建数据库*/
 
-DROP DATABASE IF EXISTS eb;			/*删除数据库*/
-CREATE DATABASE IF NOT EXISTS eb;	/*创建数据库*/
+DROP DATABASE IF EXISTS eb_df;			/*删除数据库*/
+CREATE DATABASE IF NOT EXISTS eb_df;	/*创建数据库*/
 ALTER DATABASE eb CHARSET=utf8;
-USE eb;								/*使用数据库*/
+USE eb_df;								/*使用数据库*/
 
 
 /*创建表*/
@@ -101,6 +107,7 @@ CREATE TABLE IF NOT EXISTS `eb_vip` (
   `ipgx` VARCHAR(20) NOT NULL DEFAULT "" COMMENT 'IP-共享端',
   `macgx` VARCHAR(24) NOT NULL DEFAULT "" COMMENT 'MAC-共享端',
   `anydeskid` VARCHAR(32) NOT NULL DEFAULT "" COMMENT "AnyDesk ID号",
+  `df` INT NOT NULL DEFAULT 0 COMMENT '垫付功能， 0-关闭垫付， 1-开启垫付',
   `cht` INT NOT NULL DEFAULT 0 COMMENT '彩虹糖',
   `chd` INT NOT NULL DEFAULT 0 COMMENT '彩虹豆',
   PRIMARY KEY (`id`),
@@ -187,6 +194,7 @@ CREATE TABLE IF NOT EXISTS `eb_account` (
   `consume` INT NOT NULL DEFAULT 0 COMMENT '消费范围，0-（0-100），1-（101-200），2-（201-400），3-401以上',
   `category` VARCHAR(30) NOT NULL DEFAULT '女装/女士精品' COMMENT '类目标签',
   `accounttype` INT NOT NULL DEFAULT 0 COMMENT '账号类型，0-淘宝账号，1-京东账号',
+  `isaudit` INT NOT NULL DEFAULT 0 COMMENT '是否审核，0-未审核， 1-已审核',
   PRIMARY KEY (`id`),
   KEY `fk_ownerid_account` (`ownerid`),
   CONSTRAINT `fk_ownerid_account` FOREIGN KEY (`ownerid`)
@@ -243,7 +251,7 @@ CREATE TABLE IF NOT EXISTS `eb_sd` (
   `category` VARCHAR(20) NOT NULL COMMENT '类目',
   `shop` VARCHAR(60) NOT NULL COMMENT '店铺名',
   `orderid` VARCHAR(60) NOT NULL COMMENT '订单号',
-  `money` decimal(11,2) NOT NULL DEFAULT 0.00 COMMENT '金额',
+  `money` INT NOT NULL DEFAULT 0 COMMENT '金额 单位：分',
   `linknum` INT NOT NULL DEFAULT 0 COMMENT '拍下的链接数',
   `begintime` DATETIME NOT NULL COMMENT '开始时间',
   `endtime` DATETIME NOT NULL COMMENT '结束时间',
@@ -251,6 +259,8 @@ CREATE TABLE IF NOT EXISTS `eb_sd` (
   `evaluatetime` DATETIME NOT NULL COMMENT '评价时间',
   `evaluate` VARCHAR(600) NOT NULL COMMENT '评价',
   `status` INT NOT NULL DEFAULT 0 COMMENT '刷单状态，0-失败，1-成功',
+  `df` INT NOT NULL DEFAULT 0 COMMENT '垫付状态， 0-不需要垫付， 1-需要垫付， 2-共享端已经确认付款， 3-操作端已经确认付款',
+  `punish` INT NOT NULL DEFAULT 0 COMMENT '超时未垫付的惩罚, 0-未惩罚，1-已经惩罚',
   `complaintcontent` VARCHAR(1000) COMMENT '投诉内容 可以为空，表示没有投诉',
   `complainttime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '投诉时间',
   PRIMARY KEY (`id`),
@@ -414,7 +424,8 @@ VALUES
 (7, '共享端离线时间超过?小时，冻结账号并扣除一定金币', '120'),
 (8, '共享端离线时间超过?小时，直接删除账号', '240'),
 (9, '共享端前一天在线时间不足，如需继续登录，扣除的金币数', '150'),
-(10, '冻结会员账号时扣除的金币数', '2000');
+(10, '冻结会员账号时扣除的金币数', '2000'),
+(11, '当前客户端版本号，110表示V1.10，以此类推', '110');
 
 
 -- 权益表数据
@@ -471,105 +482,114 @@ INSERT INTO eb_admin (account,pwd,sn,name,idcard,tel,qq) VALUES
 -- ('admin6', MD5('88888888'), 100006, 'AA6', '123456789012345676', '13000000006', '123456786');
 
 
--- -- VIP 数据
--- INSERT INTO eb_vip
--- (adminid, account, pwd, sn, name, area, address, qq, tel, isaudit, serverdate, anydeskid) 
--- VALUES
--- (1, 'account001', MD5('88888888'), 10001, 'name001', '四川省', '成都', 'qq001', '15000000001', 0, '2016-01-01', 'AnyDesk0001'),
--- (2, 'account002', MD5('88888888'), 10002, 'name002', '湖北省', '武汉', 'qq002', '15000000002', 0, '2016-01-01', 'AnyDesk0002'),
--- (3, 'account003', MD5('88888888'), 10003, 'name003', '湖南省', '长沙', 'qq003', '15000000003', 1, '2016-01-01', 'AnyDesk0003'),
--- (4, 'account004', MD5('88888888'), 10004, 'name004', '重庆', '重庆', 'qq004', '15000000004', 1, '2016-01-01', 'AnyDesk0004'),
--- (5, 'account005', MD5('88888888'), 10005, 'name005', '广东省', '广州', 'qq005', '15000000005', 1, '2016-01-01', 'AnyDesk0005'),
--- (6, 'account006', MD5('88888888'), 10006, 'name006', '山西省', '大同', 'qq006', '15000000006', 1, '2016-01-01', 'AnyDesk0006');
--- UPDATE eb_vip SET chd=1000;
+-- VIP 数据
+INSERT INTO eb_vip
+(adminid, account, pwd, sn, name, area, address, qq, tel, isaudit, serverdate, anydeskid) 
+VALUES
+(1, 'account001', MD5('88888888'), 10001, 'name001', '四川省', '成都', 'qq001', '15000000001', 0, '2016-01-01', 'AnyDesk0001'),
+(1, 'account002', MD5('88888888'), 10002, 'name002', '湖北省', '武汉', 'qq002', '15000000002', 0, '2016-01-01', 'AnyDesk0002'),
+(1, 'account003', MD5('88888888'), 10003, 'name003', '湖南省', '长沙', 'qq003', '15000000003', 1, '2016-01-01', 'AnyDesk0003'),
+(1, 'account004', MD5('88888888'), 10004, 'name004', '重庆', '重庆', 'qq004', '15000000004', 1, '2016-01-01', 'AnyDesk0004'),
+(1, 'account005', MD5('88888888'), 10005, 'name005', '广东省', '广州', 'qq005', '15000000005', 1, '2016-01-01', 'AnyDesk0005'),
+(1, 'account006', MD5('88888888'), 10006, 'name006', '山西省', '大同', 'qq006', '15000000006', 1, '2016-01-01', 'AnyDesk0006');
+UPDATE eb_vip SET chd=1000;
 
--- -- 在线记录数据
--- INSERT INTO 
--- eb_online_record(vipid, onlinetype, onlinedate, onlinetime) 
--- VALUES
--- ((SELECT id FROM eb_vip WHERE sn=10001), 0, CURDATE(), 10*60),
--- ((SELECT id FROM eb_vip WHERE sn=10002), 0, CURDATE(), 10*60),
--- ((SELECT id FROM eb_vip WHERE sn=10003), 0, CURDATE(), 10*60),
--- ((SELECT id FROM eb_vip WHERE sn=10004), 0, CURDATE(), 10*60),
--- ((SELECT id FROM eb_vip WHERE sn=10005), 0, CURDATE(), 10*60),
--- ((SELECT id FROM eb_vip WHERE sn=10006), 0, CURDATE(), 10*60),
--- ((SELECT id FROM eb_vip WHERE sn=10001), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 10*60),
--- ((SELECT id FROM eb_vip WHERE sn=10002), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 10*60),
--- ((SELECT id FROM eb_vip WHERE sn=10003), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 10*60),
--- ((SELECT id FROM eb_vip WHERE sn=10004), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 12*60),
--- ((SELECT id FROM eb_vip WHERE sn=10005), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 12*60),
--- ((SELECT id FROM eb_vip WHERE sn=10006), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 12*60);
+-- 平台账号，用于垫付金币中转
+INSERT INTO eb_vip
+(adminid, account, pwd, sn, name, area, address, qq, tel, isaudit, serverdate, anydeskid) 
+VALUES
+(1, '10000', MD5('88888888'), 10000, 'name001', '四川省', '成都', '-', '-', 1, '2016-01-01', '-');
 
 
-
--- -- 小号表
--- INSERT INTO 
--- eb_account(ownerid, name, accountlevel, img, sex, age, consume, category, accounttype) 
--- VALUES
--- ((SELECT id FROM eb_vip WHERE sn=10001), 'xiaohao001', 1, 'img', 0, 20, 0, 'category001', 0),
--- ((SELECT id FROM eb_vip WHERE sn=10002), 'xiaohao002', 1, 'img', 0, 20, 0, 'category001', 0),
--- ((SELECT id FROM eb_vip WHERE sn=10003), 'xiaohao003', 1, 'img', 0, 20, 0, 'category001', 0),
--- ((SELECT id FROM eb_vip WHERE sn=10004), 'xiaohao004', 1, 'img', 0, 20, 0, 'category001', 0),
--- ((SELECT id FROM eb_vip WHERE sn=10005), 'xiaohao005', 1, 'img', 0, 20, 0, 'category001', 0),
--- ((SELECT id FROM eb_vip WHERE sn=10006), 'xiaohao0061', 1, 'img', 0, 20, 0, 'category001', 0),
--- ((SELECT id FROM eb_vip WHERE sn=10006), 'xiaohao0062', 2, 'img', 0, 20, 0, 'category001', 0);
+-- 在线记录数据
+INSERT INTO 
+eb_online_record(vipid, onlinetype, onlinedate, onlinetime) 
+VALUES
+((SELECT id FROM eb_vip WHERE sn=10001), 0, CURDATE(), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10002), 0, CURDATE(), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10003), 0, CURDATE(), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10004), 0, CURDATE(), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10005), 0, CURDATE(), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10006), 0, CURDATE(), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10001), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10002), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10003), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 10*60),
+((SELECT id FROM eb_vip WHERE sn=10004), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 12*60),
+((SELECT id FROM eb_vip WHERE sn=10005), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 12*60),
+((SELECT id FROM eb_vip WHERE sn=10006), 1, DATE_SUB(CURDATE(), INTERVAL "1" DAY), 12*60);
 
 
 
--- -- 店铺表
--- INSERT INTO 
--- eb_shop(ownerid, name, shoplevel, img)
--- VALUES
--- ((SELECT id FROM eb_vip WHERE sn=10001), 'shopname001', 1, 'img'),
--- ((SELECT id FROM eb_vip WHERE sn=10002), 'shopname002', 1, 'img'),
--- ((SELECT id FROM eb_vip WHERE sn=10003), 'shopname003', 1, 'img'),
--- ((SELECT id FROM eb_vip WHERE sn=10004), 'shopname004', 1, 'img'),
--- ((SELECT id FROM eb_vip WHERE sn=10005), 'shopname005', 1, 'img'),
--- ((SELECT id FROM eb_vip WHERE sn=10006), 'shopname0061', 1, 'img'),
--- ((SELECT id FROM eb_vip WHERE sn=10006), 'shopname0062', 1, 'img');
+-- 小号表
+INSERT INTO 
+eb_account(ownerid, name, accountlevel, img, sex, age, consume, category, accounttype) 
+VALUES
+((SELECT id FROM eb_vip WHERE sn=10001), 'xiaohao001', 1, 'img', 0, 20, 0, 'category001', 0),
+((SELECT id FROM eb_vip WHERE sn=10002), 'xiaohao002', 1, 'img', 0, 20, 0, 'category001', 0),
+((SELECT id FROM eb_vip WHERE sn=10003), 'xiaohao003', 1, 'img', 0, 20, 0, 'category001', 0),
+((SELECT id FROM eb_vip WHERE sn=10004), 'xiaohao004', 1, 'img', 0, 20, 0, 'category001', 0),
+((SELECT id FROM eb_vip WHERE sn=10005), 'xiaohao005', 1, 'img', 0, 20, 0, 'category001', 0),
+((SELECT id FROM eb_vip WHERE sn=10006), 'xiaohao0061', 1, 'img', 0, 20, 0, 'category001', 0),
+((SELECT id FROM eb_vip WHERE sn=10006), 'xiaohao0062', 2, 'img', 0, 20, 0, 'category001', 0);
 
 
--- -- 充值表
--- INSERT INTO eb_recharge(oprid, vipid, sn, money, chicon, status, rechargetime) 
--- VALUES
--- (1, (SELECT id FROM eb_vip WHERE sn=10004), '987654321', 100, 1000, 0, '2015-12-22 20:00:00'),
--- (1, (SELECT id FROM eb_vip WHERE sn=10004), '987654323', 10, 100, 0, '2015-12-23 20:00:00'),
--- (1, (SELECT id FROM eb_vip WHERE sn=10004), '987654324', 20, 200, 0, '2015-12-20 20:00:00'),
--- (1, (SELECT id FROM eb_vip WHERE sn=10004), '987654325', 30, 300, 0, '2015-12-15 20:00:00'),
--- (1, (SELECT id FROM eb_vip WHERE sn=10004), '987654322', 40, 400, 1, '2015-12-12 20:00:00'),
--- (1, (SELECT id FROM eb_vip WHERE sn=10004), '987654329', 50, 500, 1, '2015-12-10 20:00:00'),
--- (1, (SELECT id FROM eb_vip WHERE sn=10004), '987654327', 60, 600, 1, '2015-12-21 20:00:00');
+
+-- 店铺表
+INSERT INTO 
+eb_shop(ownerid, name, shoplevel, img)
+VALUES
+((SELECT id FROM eb_vip WHERE sn=10001), 'shopname001', 1, 'img'),
+((SELECT id FROM eb_vip WHERE sn=10002), 'shopname002', 1, 'img'),
+((SELECT id FROM eb_vip WHERE sn=10003), 'shopname003', 1, 'img'),
+((SELECT id FROM eb_vip WHERE sn=10004), 'shopname004', 1, 'img'),
+((SELECT id FROM eb_vip WHERE sn=10005), 'shopname005', 1, 'img'),
+((SELECT id FROM eb_vip WHERE sn=10006), 'shopname0061', 1, 'img'),
+((SELECT id FROM eb_vip WHERE sn=10006), 'shopname0062', 1, 'img');
 
 
--- -- 刷单表
--- INSERT INTO 
--- eb_sd(czid, gxid, oprtype, xh, sdtype, category, shop, orderid, money, begintime, endtime, orderstatus, evaluatetime, evaluate, status)
--- VALUES
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10002), 0, 'xiaohao20', 0, 'category001', 'shop001', 'orderid00001', 255, '2015-12-11 20:20:20', '2015-12-11 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10002), 1, 'xiaohao21', 1, 'category001', 'shop001', 'orderid00002', 255, '2015-12-12 20:20:20', '2015-12-12 20:55:55', 1, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10002), 2, 'xiaohao22', 1, 'category001', 'shop001', 'orderid00003', 255, '2015-12-13 20:20:20', '2015-12-13 20:55:55', 2, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10002), 3, 'xiaohao23', 1, 'category001', 'shop001', 'orderid00004', 255, '2015-12-14 20:20:20', '2015-12-14 20:55:55', 3, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10003), 0, 'xiaohao30', 0, 'category001', 'shop001', 'orderid00005', 255, '2015-12-15 20:20:20', '2015-12-15 20:55:55', 4, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10003), 1, 'xiaohao31', 0, 'category001', 'shop001', 'orderid00006', 255, '2015-12-11 20:20:20', '2015-12-11 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10003), 2, 'xiaohao32', 0, 'category001', 'shop001', 'orderid00007', 255, '2015-12-12 20:20:20', '2015-12-12 20:55:55', 1, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10003), 3, 'xiaohao33', 1, 'category001', 'shop001', 'orderid00008', 255, '2015-12-13 20:20:20', '2015-12-13 20:55:55', 2, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10004), 0, 'xiaohao40', 0, 'category001', 'shop001', 'orderid00009', 255, '2015-12-14 20:20:20', '2015-12-14 20:55:55', 3, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10004), 1, 'xiaohao41', 0, 'category001', 'shop001', 'orderid00010', 255, '2015-12-15 20:20:20', '2015-12-15 20:55:55', 4, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10004), 2, 'xiaohao41', 1, 'category001', 'shop001', 'orderid00011', 255, '2015-12-11 20:20:20', '2015-12-11 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10004), 3, 'xiaohao41', 1, 'category001', 'shop001', 'orderid00012', 255, '2015-12-12 20:20:20', '2015-12-12 20:55:55', 1, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10004), 0, 'xiaohao41', 0, 'category001', 'shop001', 'orderid00013', 255, '2015-12-13 20:20:20', '2015-12-13 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10004), 1, 'xiaohao42', 0, 'category001', 'shop001', 'orderid00014', 255, '2015-12-14 20:20:20', '2015-12-14 20:55:55', 2, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10005), 0, 'xiaohao51', 1, 'category001', 'shop001', 'orderid00015', 255, '2015-12-15 20:20:20', '2015-12-15 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10005), 1, 'xiaohao51', 1, 'category001', 'shop001', 'orderid00016', 255, '2015-12-11 20:20:20', '2015-12-11 20:55:55', 3, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10005), 2, 'xiaohao51', 1, 'category001', 'shop001', 'orderid00017', 255, '2015-12-12 20:20:20', '2015-12-12 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10005), 3, 'xiaohao52', 0, 'category001', 'shop001', 'orderid00018', 255, '2015-12-13 20:20:20', '2015-12-13 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10005), 0, 'xiaohao50', 0, 'category001', 'shop001', 'orderid00019', 255, '2015-12-14 20:20:20', '2015-12-14 20:55:55', 4, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10006), 0, 'xiaohao60', 1, 'category001', 'shop001', 'orderid00020', 255, '2015-12-15 20:20:20', '2015-12-15 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10006), 1, 'xiaohao61', 0, 'category001', 'shop001', 'orderid00021', 255, '2015-12-11 20:20:20', '2015-12-11 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10006), 2, 'xiaohao62', 0, 'category001', 'shop001', 'orderid00022', 255, '2015-12-12 20:20:20', '2015-12-12 20:55:55', 1, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10006), 3, 'xiaohao62', 1, 'category001', 'shop001', 'orderid00023', 255, '2015-12-13 20:20:20', '2015-12-13 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10006), 0, 'xiaohao63', 0, 'category001', 'shop001', 'orderid00024', 255, '2015-12-14 20:20:20', '2015-12-14 20:55:55', 2, '2015-12-25 22:22:22', 'evaluate001', 1),
--- ((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10006), 0, 'xiaohao63', 1, 'category001', 'shop001', 'orderid00025', 255, '2015-12-15 20:20:20', '2015-12-15 20:55:55', 4, '2015-12-25 22:22:22', 'evaluate001', 1);
+-- 充值表
+INSERT INTO eb_recharge(oprid, vipid, sn, money, chicon, status, rechargetime) 
+VALUES
+(1, (SELECT id FROM eb_vip WHERE sn=10004), '987654321', 100, 1000, 0, '2015-12-22 20:00:00'),
+(1, (SELECT id FROM eb_vip WHERE sn=10004), '987654323', 10, 100, 0, '2015-12-23 20:00:00'),
+(1, (SELECT id FROM eb_vip WHERE sn=10004), '987654324', 20, 200, 0, '2015-12-20 20:00:00'),
+(1, (SELECT id FROM eb_vip WHERE sn=10004), '987654325', 30, 300, 0, '2015-12-15 20:00:00'),
+(1, (SELECT id FROM eb_vip WHERE sn=10004), '987654322', 40, 400, 1, '2015-12-12 20:00:00'),
+(1, (SELECT id FROM eb_vip WHERE sn=10004), '987654329', 50, 500, 1, '2015-12-10 20:00:00'),
+(1, (SELECT id FROM eb_vip WHERE sn=10004), '987654327', 60, 600, 1, '2015-12-21 20:00:00');
+
+
+-- 刷单表
+INSERT INTO 
+eb_sd(czid, gxid, oprtype, xh, sdtype, category, shop, orderid, money, begintime, endtime, orderstatus, evaluatetime, evaluate, status)
+VALUES
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10002), 0, 'xiaohao20', 0, 'category001', 'shop001', 'orderid00001', 255, '2015-12-11 20:20:20', '2015-12-11 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10002), 1, 'xiaohao21', 1, 'category001', 'shop001', 'orderid00002', 255, '2015-12-12 20:20:20', '2015-12-12 20:55:55', 1, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10002), 2, 'xiaohao22', 1, 'category001', 'shop001', 'orderid00003', 255, '2015-12-13 20:20:20', '2015-12-13 20:55:55', 2, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10002), 3, 'xiaohao23', 1, 'category001', 'shop001', 'orderid00004', 255, '2015-12-14 20:20:20', '2015-12-14 20:55:55', 3, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10003), 0, 'xiaohao30', 0, 'category001', 'shop001', 'orderid00005', 255, '2015-12-15 20:20:20', '2015-12-15 20:55:55', 4, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10003), 1, 'xiaohao31', 0, 'category001', 'shop001', 'orderid00006', 255, '2015-12-11 20:20:20', '2015-12-11 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10003), 2, 'xiaohao32', 0, 'category001', 'shop001', 'orderid00007', 255, '2015-12-12 20:20:20', '2015-12-12 20:55:55', 1, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10003), 3, 'xiaohao33', 1, 'category001', 'shop001', 'orderid00008', 255, '2015-12-13 20:20:20', '2015-12-13 20:55:55', 2, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10004), 0, 'xiaohao40', 0, 'category001', 'shop001', 'orderid00009', 255, '2015-12-14 20:20:20', '2015-12-14 20:55:55', 3, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10004), 1, 'xiaohao41', 0, 'category001', 'shop001', 'orderid00010', 255, '2015-12-15 20:20:20', '2015-12-15 20:55:55', 4, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10004), 2, 'xiaohao41', 1, 'category001', 'shop001', 'orderid00011', 255, '2015-12-11 20:20:20', '2015-12-11 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10004), 3, 'xiaohao41', 1, 'category001', 'shop001', 'orderid00012', 255, '2015-12-12 20:20:20', '2015-12-12 20:55:55', 1, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10004), 0, 'xiaohao41', 0, 'category001', 'shop001', 'orderid00013', 255, '2015-12-13 20:20:20', '2015-12-13 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10004), 1, 'xiaohao42', 0, 'category001', 'shop001', 'orderid00014', 255, '2015-12-14 20:20:20', '2015-12-14 20:55:55', 2, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10005), 0, 'xiaohao51', 1, 'category001', 'shop001', 'orderid00015', 255, '2015-12-15 20:20:20', '2015-12-15 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10005), 1, 'xiaohao51', 1, 'category001', 'shop001', 'orderid00016', 255, '2015-12-11 20:20:20', '2015-12-11 20:55:55', 3, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10005), 2, 'xiaohao51', 1, 'category001', 'shop001', 'orderid00017', 255, '2015-12-12 20:20:20', '2015-12-12 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10005), 3, 'xiaohao52', 0, 'category001', 'shop001', 'orderid00018', 255, '2015-12-13 20:20:20', '2015-12-13 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10005), 0, 'xiaohao50', 0, 'category001', 'shop001', 'orderid00019', 255, '2015-12-14 20:20:20', '2015-12-14 20:55:55', 4, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10006), 0, 'xiaohao60', 1, 'category001', 'shop001', 'orderid00020', 255, '2015-12-15 20:20:20', '2015-12-15 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10006), 1, 'xiaohao61', 0, 'category001', 'shop001', 'orderid00021', 255, '2015-12-11 20:20:20', '2015-12-11 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10006), 2, 'xiaohao62', 0, 'category001', 'shop001', 'orderid00022', 255, '2015-12-12 20:20:20', '2015-12-12 20:55:55', 1, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10006), 3, 'xiaohao62', 1, 'category001', 'shop001', 'orderid00023', 255, '2015-12-13 20:20:20', '2015-12-13 20:55:55', 0, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10006), 0, 'xiaohao63', 0, 'category001', 'shop001', 'orderid00024', 255, '2015-12-14 20:20:20', '2015-12-14 20:55:55', 2, '2015-12-25 22:22:22', 'evaluate001', 1),
+((SELECT id FROM eb_vip WHERE sn=10001), (SELECT id FROM eb_vip WHERE sn=10006), 0, 'xiaohao63', 1, 'category001', 'shop001', 'orderid00025', 255, '2015-12-15 20:20:20', '2015-12-15 20:55:55', 4, '2015-12-25 22:22:22', 'evaluate001', 1);
+
+
 
 
 
